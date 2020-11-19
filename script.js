@@ -127,6 +127,8 @@ function refreshPreview() {
 }
 
 function formatMenu(e) {
+  // Activate formatting buttons only when item is selected
+  let formats = controls.querySelectorAll('.control');
   e.target.classList.toggle('selected');
   // console.log(e.target);
   let isSelected = e.target.classList.contains('selected');
@@ -134,13 +136,25 @@ function formatMenu(e) {
   // isSelected ? console.log(e.target.dataset.func) : '';
   let isItem = e.target.classList.contains('draggable');
   let isFormat = e.target.classList.contains('control');
+  // Gets selected items and adds class
+  let formatItems = build.querySelectorAll('.draggable.selected');
   // Only apply style to selected item
-  if (isItem && isSelected) {
-    console.log('ready to format item ' + e.target.id);
+  if (isItem) {
+    if (isSelected) {
+      console.log('ready to format item ' + e.target.id);
+      // console.log(formats);
+      formats.forEach((format) => {
+        format.disabled = false;
+      });
+    } else if (formatItems.length == 0) {
+      console.log(isSelected);
+      formats.forEach((format) => {
+        format.disabled = true;
+      });
+    }
   }
+
   if (isFormat) {
-    // Gets selected items and adds class
-    let formatItems = build.querySelectorAll('.draggable.selected');
     // console.log(formatItems);
     if (isSelected) {
       formatItems.forEach((item) => {
