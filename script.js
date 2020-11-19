@@ -112,94 +112,151 @@ function toggleSelect(element) {
 }
 
 // Refactor this
-function formatMenu(e) {
-  // Activate formatting buttons only when item is selected
-  // console.log(e.target);
-  let isSelected = e.target.classList.contains('selected');
-  // console.log(isSelected);
-  // isSelected ? console.log(e.target.dataset.func) : '';
-  let isItem = e.target.classList.contains('draggable');
-  let isFormat = e.target.classList.contains('control');
-  // Gets selected items and adds class
-  let formatItems = build.querySelectorAll('.draggable.selected');
-  // If item is inside '#label-build' then toggle active
-  let inBuild = build.querySelectorAll('.draggable') != null;
-  // console.log('items in build area? ' + inBuild);
-  // e.target.classList.toggle('selected');
-  // Activates format buttons only when item is selected
-  if (isItem) {
-    if (isSelected) {
-      console.log('ready to format item ' + e.target.id);
-      // console.log(formats);
-      formats.forEach((format) => {
-        format.disabled = false;
-      });
-    } else if (formatItems.length == 0) {
-      // console.log(isSelected);
-      formats.forEach((format) => {
-        format.disabled = true;
-        // format.classList.remove('selected');
-      });
-    }
-  }
-  // If more than on item selected for formatting, reset controls state
-  if (formatItems.length > 1) {
-    console.log('several items selected');
-    formats.forEach((format) => {
-      format.classList.remove('selected');
-    });
-  } else if (formatItems.length == 1) {
-    // console.log('only one item selected');
-    // Show formats selected if any
-    formatItem = build.querySelector('.draggable.selected');
-    // console.log(item.classList);
-    formatList = Array.from(formatItem.classList);
-    // Removes '.draggable' and '.selected' from array
-    formatList.splice(formatList.indexOf('draggable'), 1);
-    formatList.splice(formatList.indexOf('selected'), 1);
-    // console.log(formatList);
-    // Applies remaining styles to state of formats
-    if (formatList.length >= 1) {
-      console.log('one or more formats applied');
-      console.log(formatList.length);
-      formatList.forEach((formatItem) => {
-        // console.log('formatItem: ' + formatItem);
-        formats.forEach((format) => {
-          // Select that format and activate it
-          if (formatItem === format.dataset.func) {
-            format.classList.add('selected');
-          }
-          // console.log(formatItem + ' is active');
-        });
-      });
-    } else {
-      formats.forEach((format) => {
-        format.classList.remove('selected');
-      });
-    }
-  }
+// function formatMenu(e) {
+//   // Activate formatting buttons only when item is selected
+//   // console.log(e.target);
+//   let isSelected = e.target.classList.contains('selected');
+//   // console.log(isSelected);
+//   // isSelected ? console.log(e.target.dataset.func) : '';
+//   let isItem = e.target.classList.contains('draggable');
+//   let isFormat = e.target.classList.contains('control');
+//   // Gets selected items and adds class
+//   let formatItems = build.querySelectorAll('.draggable.selected');
+//   // If item is inside '#label-build' then toggle active
+//   let inBuild = build.querySelectorAll('.draggable') != null;
+//   // console.log('items in build area? ' + inBuild);
+//   // e.target.classList.toggle('selected');
+//   // Activates format buttons only when item is selected
+//   if (isItem) {
+//     if (isSelected) {
+//       console.log('ready to format item ' + e.target.id);
+//       // console.log(formats);
+//       formats.forEach((format) => {
+//         format.disabled = false;
+//       });
+//     } else if (formatItems.length == 0) {
+//       // console.log(isSelected);
+//       formats.forEach((format) => {
+//         format.disabled = true;
+//         // format.classList.remove('selected');
+//       });
+//     }
+//   }
+//   // If more than on item selected for formatting, reset controls state
+//   if (formatItems.length > 1) {
+//     console.log('several items selected');
+//     formats.forEach((format) => {
+//       format.classList.remove('selected');
+//     });
+//   } else if (formatItems.length == 1) {
+//     // console.log('only one item selected');
+//     // Show formats selected if any
+//     formatItem = build.querySelector('.draggable.selected');
+//     // console.log(item.classList);
+//     formatList = Array.from(formatItem.classList);
+//     // Removes '.draggable' and '.selected' from array
+//     formatList.splice(formatList.indexOf('draggable'), 1);
+//     formatList.splice(formatList.indexOf('selected'), 1);
+//     // console.log(formatList);
+//     // Applies remaining styles to state of formats
+//     if (formatList.length >= 1) {
+//       console.log('one or more formats applied');
+//       console.log(formatList.length);
+//       formatList.forEach((formatItem) => {
+//         // console.log('formatItem: ' + formatItem);
+//         formats.forEach((format) => {
+//           // Select that format and activate it
+//           if (formatItem === format.dataset.func) {
+//             format.classList.add('selected');
+//           }
+//           // console.log(formatItem + ' is active');
+//         });
+//       });
+//     } else {
+//       formats.forEach((format) => {
+//         format.classList.remove('selected');
+//       });
+//     }
+//   }
 
-  if (isFormat) {
-    // console.log(formatItems);
-    if (isSelected) {
-      formatItems.forEach((item) => {
-        item.classList.add(e.target.dataset.func);
-        // console.log('added to classList: ' + e.target.dataset.func);
-      });
-    } else {
-      formatItems.forEach((item) => {
-        item.classList.remove(e.target.dataset.func);
-        // console.log('removed from classList: ' + e.target.dataset.func);
-      });
-    }
-  }
-  return false;
-}
+//   if (isFormat) {
+//     // console.log(formatItems);
+//     if (isSelected) {
+//       formatItems.forEach((item) => {
+//         item.classList.add(e.target.dataset.func);
+//         // console.log('added to classList: ' + e.target.dataset.func);
+//       });
+//     } else {
+//       formatItems.forEach((item) => {
+//         item.classList.remove(e.target.dataset.func);
+//         // console.log('removed from classList: ' + e.target.dataset.func);
+//       });
+//     }
+//   }
+//   return false;
+// }
 
 // Activates formatting controls
 function activateControls(bool) {
   controls.forEach((control) => {
     bool ? (control.disabled = false) : (control.disabled = true);
+  });
+}
+
+// Gets selected item state (formatted classes)
+function getState(item) {
+  let formatList = Array.from(item.classList);
+  // Removes '.draggable' and '.selected' from array
+  formatList.splice(formatList.indexOf('draggable'), 1);
+  formatList.splice(formatList.indexOf('selected'), 1);
+  // console.log(formatList);
+  // console.log(formatList.length);
+  if (formatList.length > 0) {
+    // Render state of each formatting button
+    formatList.forEach((formatItem) => {
+      // console.log('formatItem: ' + formatItem);
+      controls.forEach((control) => {
+        // Select that format and activate it
+        if (formatItem === control.dataset.func) {
+          control.classList.add('selected');
+        }
+        // console.log(formatItem + ' is active');
+      });
+    });
+  } else {
+    // controls.forEach((control) => {
+    //   control.classList.remove('selected');
+    // });
+    resetControls();
+  }
+}
+
+// Applies styles
+function toggleStyle(control) {
+  // Gets selected items
+  let formatItems = build.querySelectorAll('.draggable.selected');
+
+  // Toggles class
+  formatItems.forEach((item) => {
+    item.classList.toggle(control.dataset.func);
+  });
+  // console.log(formatItems);
+  // if (isSelected) {
+  //   formatItems.forEach((item) => {
+  //     item.classList.add(control.dataset.func);
+  //     // console.log('added to classList: ' + control.dataset.func);
+  //   });
+  // } else {
+  //   formatItems.forEach((item) => {
+  //     item.classList.remove(control.dataset.func);
+  //     // console.log('removed from classList: ' + control.dataset.func);
+  //   });
+  // }
+}
+
+function resetControls() {
+  controls.forEach((control) => {
+    control.classList.remove('selected');
   });
 }
 
@@ -258,18 +315,35 @@ build.addEventListener('click', (e) => {
   if (e.target && e.target.matches('.draggable')) {
     // formatMenu(e);
     let isSelected = toggleSelect(e.target);
+    // console.log(isSelected);
     // When element is selected, activate formatting buttons
     // depends on number of elements in page (at least one selected).
     let anySelected = build.querySelectorAll('.draggable.selected').length > 0;
     activateControls(anySelected);
-    // console.log(isSelected);
+    let numSelected = build.querySelectorAll('.draggable.selected');
+    // console.log(numSelected.length + ' items selected');
+    // numSelected.length > 1 ? resetControls() : getState(e.target);
   }
 });
 
 // Formatting controls
 controlDiv.addEventListener('click', (e) => {
-  if (e.target && e.target.matches('.control')) {
-    // formatMenu(e);
-    // toggleSelect(e.target);
-  }
+  // if (e.target && e.target.matches('.control')) {
+  //   // formatMenu(e);
+  toggleSelect(e.target);
+  // Apply styles in item
+  toggleStyle(e.target);
+
+  // getState(e.target);
+  // }
+  // Get state of control for selected item(s)
+  // let itemHasStyles = getState(e.target).length > 0;
+  // console.log(itemHasStyles);
 });
+
+// ************** TO DO ************
+// Need to reset controls for when more than one item is selected
+// Load state to controls depending on selected item styles
+// Update preview styles
+// Capture styles in object array
+// Translate object array into JSON in the appropriate format
