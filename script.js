@@ -30,8 +30,9 @@ fieldProps.forEach((field) => {
 const draggables = document.querySelectorAll('.draggable');
 const containers = document.querySelectorAll('.container');
 const build = document.getElementById('build-label');
-const control = document.getElementById('controls');
+const controlDiv = document.getElementById('controls');
 const preview = document.getElementById('preview-label');
+const controls = controlDiv.querySelectorAll('.control');
 
 // Refactor this so that elements are created based on array of elements
 function createPreviewEl(element, parent) {
@@ -102,10 +103,17 @@ function refreshPreview() {
   // console.log('updated labelList');
 }
 
+function toggleSelect(element) {
+  // console.log('element ' + element.target);
+  // console.log('is selected before? ' + element.classList.contains('selected'));
+  element.classList.toggle('selected');
+  // console.log('is selected now? ' + element.classList.contains('selected'));
+  return element.classList.contains('selected');
+}
+
+// Refactor this
 function formatMenu(e) {
   // Activate formatting buttons only when item is selected
-  let formats = controls.querySelectorAll('.control');
-  e.target.classList.toggle('selected');
   // console.log(e.target);
   let isSelected = e.target.classList.contains('selected');
   // console.log(isSelected);
@@ -114,8 +122,11 @@ function formatMenu(e) {
   let isFormat = e.target.classList.contains('control');
   // Gets selected items and adds class
   let formatItems = build.querySelectorAll('.draggable.selected');
-
-  // Only applies style to selected item
+  // If item is inside '#label-build' then toggle active
+  let inBuild = build.querySelectorAll('.draggable') != null;
+  // console.log('items in build area? ' + inBuild);
+  // e.target.classList.toggle('selected');
+  // Activates format buttons only when item is selected
   if (isItem) {
     if (isSelected) {
       console.log('ready to format item ' + e.target.id);
@@ -124,7 +135,7 @@ function formatMenu(e) {
         format.disabled = false;
       });
     } else if (formatItems.length == 0) {
-      console.log(isSelected);
+      // console.log(isSelected);
       formats.forEach((format) => {
         format.disabled = true;
         // format.classList.remove('selected');
@@ -185,6 +196,13 @@ function formatMenu(e) {
   return false;
 }
 
+// Activates formatting controls
+function activateControls(bool) {
+  controls.forEach((control) => {
+    bool ? (control.disabled = false) : (control.disabled = true);
+  });
+}
+
 function handleDragStart(e) {
   dragSrcEl = this;
   this.classList.add('dragging');
@@ -235,14 +253,23 @@ containers.forEach((container) => {
   });
 });
 
+// Elements in '#build-label' that are formattable
 build.addEventListener('click', (e) => {
   if (e.target && e.target.matches('.draggable')) {
-    formatMenu(e);
+    // formatMenu(e);
+    let isSelected = toggleSelect(e.target);
+    // When element is selected, activate formatting buttons
+    // depends on number of elements in page (at least one selected).
+    let anySelected = build.querySelectorAll('.draggable.selected').length > 0;
+    activateControls(anySelected);
+    // console.log(isSelected);
   }
 });
 
-control.addEventListener('click', (e) => {
+// Formatting controls
+controlDiv.addEventListener('click', (e) => {
   if (e.target && e.target.matches('.control')) {
-    formatMenu(e);
+    // formatMenu(e);
+    // toggleSelect(e.target);
   }
 });
