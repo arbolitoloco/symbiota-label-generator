@@ -74,31 +74,7 @@ const labelList = {
   'label-middle': [],
   'label-footer': [],
 };
-// // Everytime label section is updated, refresh preview
-// function refreshPreview(selector) {
-//   // Go through section div and grab all ids
-//   let children = document.querySelectorAll(`#${selector} li`);
-//   // selectorArr = [];
-//   childrenArr = [];
-//   children.forEach((child) => {
-//     childrenArr.push(child.id);
-//   });
-//   // selectorArr.push({ container: selector, children: childrenArr });
-//   // console.log(selectorArr);
-//   // return selectorArr;
-//   // Forms ordered array with ids
-//   labelList[selector] = childrenArr;
-//   console.log(labelList);
-//   // console.log(childrenArr);
-//   // Clears div before refreshing
-//   preview.innerHTML = '';
-//   // Create ordered divs and append to preview
-//   labelList[selector].forEach((labelItem) => {
-//     // console.log(selector, labelItem);
-//     createPreviewEl(labelItem, selector);
-//   });
-//   console.log('updated labelList');
-// }
+
 // Everytime label section is updated, refresh preview
 function refreshPreview() {
   Object.keys(labelList).forEach((selector) => {
@@ -138,7 +114,8 @@ function formatMenu(e) {
   let isFormat = e.target.classList.contains('control');
   // Gets selected items and adds class
   let formatItems = build.querySelectorAll('.draggable.selected');
-  // Only apply style to selected item
+
+  // Only applies style to selected item
   if (isItem) {
     if (isSelected) {
       console.log('ready to format item ' + e.target.id);
@@ -150,6 +127,43 @@ function formatMenu(e) {
       console.log(isSelected);
       formats.forEach((format) => {
         format.disabled = true;
+        // format.classList.remove('selected');
+      });
+    }
+  }
+  // If more than on item selected for formatting, reset controls state
+  if (formatItems.length > 1) {
+    console.log('several items selected');
+    formats.forEach((format) => {
+      format.classList.remove('selected');
+    });
+  } else if (formatItems.length == 1) {
+    // console.log('only one item selected');
+    // Show formats selected if any
+    formatItem = build.querySelector('.draggable.selected');
+    // console.log(item.classList);
+    formatList = Array.from(formatItem.classList);
+    // Removes '.draggable' and '.selected' from array
+    formatList.splice(formatList.indexOf('draggable'), 1);
+    formatList.splice(formatList.indexOf('selected'), 1);
+    // console.log(formatList);
+    // Applies remaining styles to state of formats
+    if (formatList.length >= 1) {
+      console.log('one or more formats applied');
+      console.log(formatList.length);
+      formatList.forEach((formatItem) => {
+        // console.log('formatItem: ' + formatItem);
+        formats.forEach((format) => {
+          // Select that format and activate it
+          if (formatItem === format.dataset.func) {
+            format.classList.add('selected');
+          }
+          // console.log(formatItem + ' is active');
+        });
+      });
+    } else {
+      formats.forEach((format) => {
+        format.classList.remove('selected');
       });
     }
   }
@@ -203,7 +217,8 @@ function handleDragEnd(e) {
   return false;
 }
 
-var dragSrcEl = null;
+// Event Listeners
+let dragSrcEl = null;
 
 [].forEach.call(draggables, function (draggable) {
   draggable.addEventListener('dragstart', handleDragStart, false);
@@ -231,29 +246,3 @@ control.addEventListener('click', (e) => {
     formatMenu(e);
   }
 });
-// Selecting on preview-label
-// preview.addEventListener('click', (e) => {
-//   if (e.target && e.target.matches('div')) {
-//     formatMenu(e);
-//   }
-// });
-
-// Reorders vertically (block elements)
-// function getDragAfterElement(container, y) {
-//   const draggableElements = [
-//     ...container.querySelectorAll('.draggable:not(.dragging)'),
-//   ];
-
-//   return draggableElements.reduce(
-//     (nearest, child) => {
-//       const boundingBox = child.getBoundingClientRect();
-//       const offset = y - boundingBox.top - boundingBox.height / 2;
-//       if (offset < 0 && offset > nearest.offset) {
-//         return { offset: offset, element: child };
-//       } else {
-//         return nearest;
-//       }
-//     },
-//     { offset: Number.NEGATIVE_INFINITY }
-//   ).element;
-// }
