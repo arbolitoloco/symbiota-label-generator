@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=7">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="helpers.css">
+
+  <title>Symbiota Label Format Generator Prototype</title>
+</head>
+
+<body class="font-sans">
+  <h1>Symbiota Label Format Generator Prototype</h1>
+  <main>
+    <div id="fields" class="container">
+      <h2>Available fields</h2>
+      <div draggable="true" class="draggable">Column</div>
+    </div>
+    <div id="build">
+      <h2>Drag and drop here</h2>
+      <div id="controls">
+        <button class='control' data-func="font-bold">B</button><button class='control' data-func="italic">I</button>
+      </div>
+      <div id="build-label">
+        <div id="label-header" class="container">
+          <h5 class='area-title'>Label Header</h5>
+        </div>
+        <div id="label-middle" class="container">
+          <h5 class='area-title'>Label Middle</h5>
+        </div>
+        <div id="label-footer" class="container">
+          <h5 class='area-title'>Label Footer</h5>
+        </div>
+      </div>
+    </div>
+    <div id="preview">
+      <h2>Label preview</h2>
+      <div id="preview-label"></div>
+    </div>
+  </main>
+</body>
+
+<script src="script.js"></script>
+
+</html>

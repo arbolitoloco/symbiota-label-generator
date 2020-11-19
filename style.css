@@ -1,0 +1,149 @@
+/* ----------------------------------------
+* Symbiota Label Generator
+* Author: Laura Rocha Prado
+* Version: Nov 2020
+*-----------------------------------------*/
+
+main {
+  display: grid;
+  grid-template: auto 1fr auto / repeat(2, 1fr);
+  grid-gap: 1em;
+  align-items: start;
+}
+
+li {
+  list-style-type: none;
+  display: inline-block;
+}
+
+#fields {
+  grid-column: 1 / 4;
+}
+
+#build-label {
+  background-color: rgb(143, 143, 143);
+  min-height: 300px;
+  grid-column: 1/2;
+  padding: 0.5em;
+}
+
+#preview-label {
+  border: 1px solid gray;
+  min-height: 300px;
+}
+
+.label-header>div,
+.label-footer>div {
+  display: inline-block;
+  padding: 6px;
+}
+
+#label-header,
+#label-middle,
+#label-footer {
+  border: 1px solid white;
+  margin: 0.5em;
+}
+
+#label-header,
+#label-footer {
+  min-height: 70px;
+}
+
+#label-middle {
+  min-height: 150px;
+}
+
+.area-title {
+  margin: 0;
+  padding-left: 0.25em;
+  color: white;
+  font-weight: 300;
+}
+
+.label-header.content {
+  height: 50px;
+  width: auto 100%;
+  display: flex;
+}
+
+.label-header.content>button {
+  display: block;
+}
+
+
+/** Button stuff **/
+
+
+/**
+ * 1. Change the font styles in all browsers.
+ * 2. Remove the margin in Firefox and Safari.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: 1.15;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+}
+
+li {
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem !important;
+  background: #a972cb;
+  border: 2px solid #a972cb;
+  border-radius: 2px;
+  font: inherit;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 0.25em 0.5em;
+}
+
+#controls {
+  background: darkslategrey;
+}
+
+button.control {
+  color: white;
+  background: darkslategrey;
+  border: none;
+  border-right: 1px solid lightslategray;
+  /* border-radius: 2px; */
+  font: inherit;
+  line-height: 1;
+  padding: 0.5em;
+  outline: none;
+  width: 50px;
+  height: 50px;
+}
+
+button.control:hover {
+  background: rgb(61, 102, 102);
+  border: none;
+  line-height: 1;
+  border-right: 1px solid lightslategrey;
+  outline: none;
+}
+
+.draggable.selected {
+  background-color: darkmagenta;
+  border: 1px solid darkmagenta;
+}
+
+.control.selected,
+.control.selected:hover {
+  background-color: black;
+}
+
+.draggable.dragging {
+  opacity: 1;
+}
