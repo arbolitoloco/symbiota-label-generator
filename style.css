@@ -112,6 +112,16 @@ li {
   background: darkslategrey;
 }
 
+button.control:disabled {
+  background: lightgray;
+}
+
+button.control:disabled,
+button.control[disabled],
+button.control:disabled:hover {
+  background: lightgray;
+}
+
 button.control {
   color: white;
   background: darkslategrey;
