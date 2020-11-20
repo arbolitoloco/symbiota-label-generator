@@ -235,15 +235,16 @@ function getState(item) {
 }
 
 // Applies styles
-function toggleStyle(control) {
+function toggleStyle(control, bool) {
   // Gets selected items
   let formatItems = build.querySelectorAll('.draggable.selected');
 
-  // Toggles class in item
-  formatItems.forEach((item) => {
-    item.classList.toggle(control.dataset.func);
-    // item.dataset.classes.toggle(control.dataset.func);
-  });
+  // Toggles class in item - causes errors when multiple are selected
+  // with conflicting styles...
+  // formatItems.forEach((item) => {
+  //   item.classList.toggle(control.dataset.func);
+  //   // item.dataset.classes.toggle(control.dataset.func);
+  // });
   // console.log(formatItems);
   // if (isSelected) {
   //   formatItems.forEach((item) => {
@@ -256,6 +257,12 @@ function toggleStyle(control) {
   //     // console.log('removed from classList: ' + control.dataset.func);
   //   });
   // }
+  formatItems.forEach((item) => {
+    // if formatting button is selected, add class, else remove
+    bool
+      ? item.classList.add(control.dataset.func)
+      : item.classList.remove(control.dataset.func);
+  });
 }
 
 function resetControls() {
@@ -348,9 +355,9 @@ build.addEventListener('click', (e) => {
 controlDiv.addEventListener('click', (e) => {
   // if (e.target && e.target.matches('.control')) {
   //   // formatMenu(e);
-  toggleSelect(e.target);
+  let isFormatSelected = toggleSelect(e.target);
   // Apply styles in item
-  toggleStyle(e.target);
+  toggleStyle(e.target, isFormatSelected);
 
   // getState(e.target);
   // }
