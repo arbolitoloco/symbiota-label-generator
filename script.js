@@ -90,20 +90,26 @@ function refreshPreview() {
     let hasChildren = children.length > 0;
     if (hasChildren) {
       // selectorArr = [];
-      // childrenArr = [];
-      childrenObj = {};
+      let childrenArr = [];
+      console.log('children ' + children.length);
       children.forEach((child) => {
         // childrenArr.push(child.id);
+        let childObj = new Object();
         let classString = Array.from(child.classList).join(' ');
-        childrenObj.field = child.id;
-        childrenObj.classString = classString;
+        childObj.field = child.id;
+        childObj.classString = classString;
+        childrenArr.push(childObj);
+        // console.log(child.id);
+        // console.log(childrenArr);
+        // pass object to array here
       });
+      console.log(childrenArr);
+      // childrenArr.push(childrenObj);
+      // console.log(childObj);
       // Forms ordered array with ids
       // labelList[selector] = childrenArr;
-      // childrenArr.push(childrenObj);
-      // labelList2[selector].push(childrenArr);
-      labelList2[selector].push(childrenObj);
-      // console.log(childrenArr);
+      labelList2[selector] = childrenArr;
+      // labelList2[selector].push(childrenObj);
     }
   });
   console.log(labelList2);
@@ -119,7 +125,7 @@ function refreshPreview() {
   Object.keys(labelList2).forEach((section) => {
     labelList2[section].forEach((object) => {
       // createPreviewEl(item, selector);
-      console.log(object.field, section);
+      // console.log(object.field, section);
       createPreviewEl(object.field, section);
     });
   });
@@ -287,7 +293,7 @@ function toggleStyle(control, bool) {
       ? item.classList.add(control.dataset.func)
       : item.classList.remove(control.dataset.func);
     //
-    refreshPreview();
+    // refreshPreview();
   });
 }
 
