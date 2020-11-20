@@ -75,28 +75,52 @@ const labelList = {
   'label-middle': [],
   'label-footer': [],
 };
+// Testing adding classes
+const labelList2 = {
+  'label-header': [],
+  'label-middle': [],
+  'label-footer': [],
+};
 
 // Everytime label section is updated, refresh preview
 function refreshPreview() {
   Object.keys(labelList).forEach((selector) => {
     // Go through section div and grab all ids
     let children = document.querySelectorAll(`#${selector} li`);
-    // selectorArr = [];
-    childrenArr = [];
-    children.forEach((child) => {
-      childrenArr.push(child.id);
-    });
-    // Forms ordered array with ids
-    labelList[selector] = childrenArr;
-    // console.log(childrenArr);
+    let hasChildren = children.length > 0;
+    if (hasChildren) {
+      // selectorArr = [];
+      // childrenArr = [];
+      childrenObj = {};
+      children.forEach((child) => {
+        // childrenArr.push(child.id);
+        let classString = Array.from(child.classList).join(' ');
+        childrenObj.field = child.id;
+        childrenObj.classString = classString;
+      });
+      // Forms ordered array with ids
+      // labelList[selector] = childrenArr;
+      // childrenArr.push(childrenObj);
+      // labelList2[selector].push(childrenArr);
+      labelList2[selector].push(childrenObj);
+      // console.log(childrenArr);
+    }
   });
+  console.log(labelList2);
   // Clears div before refreshing
   preview.innerHTML = '';
   // Create ordered divs and append to preview
-  Object.keys(labelList).forEach((selector) => {
-    labelList[selector].forEach((item) => {
-      // console.log(item);
-      createPreviewEl(item, selector);
+  // Object.keys(labelList).forEach((selector) => {
+  //   labelList[selector].forEach((item) => {
+  //     // console.log(item);
+  //     createPreviewEl(item, selector);
+  //   });
+  // });
+  Object.keys(labelList2).forEach((section) => {
+    labelList2[section].forEach((object) => {
+      // createPreviewEl(item, selector);
+      console.log(object.field, section);
+      createPreviewEl(object.field, section);
     });
   });
   // console.log(labelList);
@@ -205,13 +229,13 @@ function activateControls(bool) {
 
 // Gets selected item state (formatted classes)
 function getState(item) {
-  console.log('item is selected: ' + item.classList.contains('selected'));
+  // console.log('item is selected: ' + item.classList.contains('selected'));
   let formatList = Array.from(item.classList);
   // console.log(item.id + ' has ' + formatList);
   // Removes '.draggable' and '.selected' from array
   formatList.splice(formatList.indexOf('selected'), 1);
   formatList.splice(formatList.indexOf('draggable'), 1);
-  console.log(item.id + ' has ' + formatList);
+  // console.log(item.id + ' has ' + formatList);
   // console.log(formatList.length);
   if (formatList.length > 0) {
     // Render state of each formatting button
@@ -262,6 +286,8 @@ function toggleStyle(control, bool) {
     bool
       ? item.classList.add(control.dataset.func)
       : item.classList.remove(control.dataset.func);
+    //
+    refreshPreview();
   });
 }
 
