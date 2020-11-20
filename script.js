@@ -205,11 +205,13 @@ function activateControls(bool) {
 
 // Gets selected item state (formatted classes)
 function getState(item) {
+  console.log('item is selected: ' + item.classList.contains('selected'));
   let formatList = Array.from(item.classList);
+  // console.log(item.id + ' has ' + formatList);
   // Removes '.draggable' and '.selected' from array
-  formatList.splice(formatList.indexOf('draggable'), 1);
   formatList.splice(formatList.indexOf('selected'), 1);
-  // console.log(formatList);
+  formatList.splice(formatList.indexOf('draggable'), 1);
+  console.log(item.id + ' has ' + formatList);
   // console.log(formatList.length);
   if (formatList.length > 0) {
     // Render state of each formatting button
@@ -223,12 +225,13 @@ function getState(item) {
         // console.log(formatItem + ' is active');
       });
     });
-  } else {
-    // controls.forEach((control) => {
-    //   control.classList.remove('selected');
-    // });
-    resetControls();
   }
+  // else {
+  //   // controls.forEach((control) => {
+  //   //   control.classList.remove('selected');
+  //   // });
+  // resetControls();
+  // }
 }
 
 // Applies styles
@@ -236,9 +239,10 @@ function toggleStyle(control) {
   // Gets selected items
   let formatItems = build.querySelectorAll('.draggable.selected');
 
-  // Toggles class
+  // Toggles class in item
   formatItems.forEach((item) => {
     item.classList.toggle(control.dataset.func);
+    // item.dataset.classes.toggle(control.dataset.func);
   });
   // console.log(formatItems);
   // if (isSelected) {
@@ -313,8 +317,12 @@ containers.forEach((container) => {
 // Elements in '#build-label' that are formattable
 build.addEventListener('click', (e) => {
   if (e.target && e.target.matches('.draggable')) {
+    // console.log(e.target.id);
+    // getState(e.target);
     // formatMenu(e);
     let isSelected = toggleSelect(e.target);
+    // Resets formatting buttons state when item is deselected
+    !isSelected ? resetControls() : '';
     // console.log(isSelected);
     // When element is selected, activate formatting buttons
     // depends on number of elements in page (at least one selected).
@@ -322,7 +330,17 @@ build.addEventListener('click', (e) => {
     activateControls(anySelected);
     let numSelected = build.querySelectorAll('.draggable.selected');
     // console.log(numSelected.length + ' items selected');
-    // numSelected.length > 1 ? resetControls() : getState(e.target);
+    // Gets formatting information for individually selected item
+    if (numSelected.length > 1) {
+      resetControls();
+    } else if (numSelected.length == 1) {
+      // console.log(numSelected.length);
+      // Refreshes buttons according to applied styles in selected item
+      let item = build.querySelector('.selected');
+      getState(item);
+    } else {
+      return false;
+    }
   }
 });
 
