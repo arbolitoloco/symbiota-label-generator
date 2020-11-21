@@ -169,9 +169,10 @@ function generateJson() {
   Object.keys(labelList).forEach((section) => {
     let hasItems = labelList[section].length > 0;
     if (hasItems) {
-      let fieldBlocks = [];
+      let fieldBlock = {};
+      let fields = [];
       divBlocks.push({
-        divBlock: { className: section, blocks: fieldBlocks },
+        divBlock: { className: section, blocks: [fieldBlock] },
       });
       console.log(divBlocks);
       console.log(section);
@@ -182,8 +183,10 @@ function generateJson() {
         field.field = item.field;
         field.className = item.className.join(' ');
         // console.log(field);
-        fieldBlocks.push(field);
-        console.log(fieldBlocks);
+        fields.push(field);
+        fieldBlock.fieldBlock = fields;
+
+        // console.log(fields);
       });
     }
   });

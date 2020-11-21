@@ -209,5 +209,43 @@
         }
       }
     ]
+  },
+  {
+    "name": "Label Format Name",
+    "displaySpeciesAuthor": 0,
+    "displayBarcode": 0,
+    "columnCount": "2",
+    "defaultStyles": "font-size:8pt",
+    "defaultCss": "../../css/symb/labelhelpers.css",
+    "customCss": "",
+    "labelDiv": { "className": "label-md" },
+    "labelBlocks": [{
+        "divBlock": {
+          "className": "label-header",
+          "blocks": [{
+            "fieldBlock": [
+              { "field": "family", "className": "" },
+              { "field": "catalognumber", "className": "font-bold" }
+            ]
+          }]
+        }
+      },
+      {
+        "divBlock": {
+          "className": "label-middle",
+          "blocks": [{
+            "fieldBlock": [{ "field": "speciesname", "className": "italic" }]
+          }]
+        }
+      },
+      {
+        "divBlock": {
+          "className": "label-footer",
+          "blocks": [
+            { "fieldBlock": [{ "field": "recordedby", "className": "" }] }
+          ]
+        }
+      }
+    ]
   }
 ]
