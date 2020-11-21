@@ -37,8 +37,9 @@ const controls = controlDiv.querySelectorAll('.control');
 // Refactor this so that elements are created based on array of elements
 function createPreviewEl(element, parent) {
   // console.log(element);
+  // console.log(element.field);
   // console.log(parent);
-  let field = fieldProps[fieldProps.findIndex((x) => x.id === element)];
+  let field = fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
   // console.log(field);
   // Create parents first (if not available), then children inside
   let hasEl = preview.querySelector(`.${parent}`) != null;
@@ -50,14 +51,17 @@ function createPreviewEl(element, parent) {
     let div = document.createElement('div');
     div.innerHTML = field.name;
     div.classList.add(field.id);
+    div.classList.add(...element.classString);
     newParentEl.appendChild(div);
   } else {
     // Check if child already exists div
-    let hasItem = preview.querySelector(`.${parent} > .${element}`) != null;
+    let hasItem =
+      preview.querySelector(`.${parent} > .${element.field}`) != null;
     if (!hasItem) {
       let div = document.createElement('div');
       div.innerHTML = field.name;
       div.classList.add(field.id);
+      div.classList.add(...element.classString);
       preview.querySelector(`.${parent}`).appendChild(div);
     } else {
       // Clear div and append new
@@ -65,6 +69,7 @@ function createPreviewEl(element, parent) {
       let div = document.createElement('div');
       div.innerHTML = field.name;
       div.classList.add(field.id);
+      div.classList.add(...element.classString);
       preview.querySelector(`.${parent}`).appendChild(div);
     }
   }
@@ -82,6 +87,11 @@ const labelList2 = {
   'label-footer': [],
 };
 
+function isPrintStyle(className) {
+  const functionalStyles = ['draggable', 'selected'];
+  return !functionalStyles.includes(className);
+}
+
 // Everytime label section is updated, refresh preview
 function refreshPreview() {
   Object.keys(labelList).forEach((selector) => {
@@ -91,19 +101,30 @@ function refreshPreview() {
     if (hasChildren) {
       // selectorArr = [];
       let childrenArr = [];
-      console.log('children ' + children.length);
+      // console.log('children ' + children.length);
       children.forEach((child) => {
         // childrenArr.push(child.id);
-        let childObj = new Object();
-        let classString = Array.from(child.classList).join(' ');
+        // let childObj = new Object();
+        childObj = {};
+        // let classString = Array.from(child.classList).join(' ');
+        let classString = Array.from(child.classList).filter(isPrintStyle);
         childObj.field = child.id;
         childObj.classString = classString;
+        // if (child.classList.contains('selected')) {
+        //   // Removes '.draggable' and '.selected' from array
+        //   classString.splice(classString.indexOf('selected'), 1);
+        // }
+        // if (child.classList.contains('draggable')) {
+        //   classString.splice(classString.indexOf('draggable'), 1);
+        // }
+        // childObj.classString = ['font-bold', 'italic'];
         childrenArr.push(childObj);
         // console.log(child.id);
         // console.log(childrenArr);
+        console.log(childObj.field + ' ' + childObj.classString);
         // pass object to array here
       });
-      console.log(childrenArr);
+      // console.log(childrenArr);
       // childrenArr.push(childrenObj);
       // console.log(childObj);
       // Forms ordered array with ids
@@ -112,7 +133,7 @@ function refreshPreview() {
       // labelList2[selector].push(childrenObj);
     }
   });
-  console.log(labelList2);
+  // console.log(labelList2);
   // Clears div before refreshing
   preview.innerHTML = '';
   // Create ordered divs and append to preview
@@ -126,7 +147,7 @@ function refreshPreview() {
     labelList2[section].forEach((object) => {
       // createPreviewEl(item, selector);
       // console.log(object.field, section);
-      createPreviewEl(object.field, section);
+      createPreviewEl(object, section);
     });
   });
   // console.log(labelList);
@@ -140,6 +161,195 @@ function toggleSelect(element) {
   // console.log('is selected now? ' + element.classList.contains('selected'));
   return element.classList.contains('selected');
 }
+
+// Activates formatting controls
+function activateControls(bool) {
+  controls.forEach((control) => {
+    bool ? (control.disabled = false) : (control.disabled = true);
+  });
+}
+
+// Gets selected item state (formatted classes)
+function getState(item) {
+  // console.log('item is selected: ' + item.classList.contains('selected'));
+  let formatList = Array.from(item.classList);
+  // console.log(item.id + ' has ' + formatList);
+  // Removes '.draggable' and '.selected' from array
+  formatList.splice(formatList.indexOf('selected'), 1);
+  formatList.splice(formatList.indexOf('draggable'), 1);
+  // console.log(item.id + ' has ' + formatList);
+  // console.log(formatList.length);
+  if (formatList.length > 0) {
+    // Render state of each formatting button
+    formatList.forEach((formatItem) => {
+      // console.log('formatItem: ' + formatItem);
+      controls.forEach((control) => {
+        // Select that format and activate it
+        if (formatItem === control.dataset.func) {
+          control.classList.add('selected');
+        }
+        // console.log(formatItem + ' is active');
+      });
+    });
+  }
+  // else {
+  //   // controls.forEach((control) => {
+  //   //   control.classList.remove('selected');
+  //   // });
+  // resetControls();
+  // }
+}
+
+// Applies styles
+function toggleStyle(control, items, bool) {
+  // Toggles class in item - causes errors when multiple are selected
+  // with conflicting styles...
+  // formatItems.forEach((item) => {
+  //   item.classList.toggle(control.dataset.func);
+  //   // item.dataset.classes.toggle(control.dataset.func);
+  // });
+  // console.log(formatItems);
+  // if (isSelected) {
+  //   formatItems.forEach((item) => {
+  //     item.classList.add(control.dataset.func);
+  //     // console.log('added to classList: ' + control.dataset.func);
+  //   });
+  // } else {
+  //   formatItems.forEach((item) => {
+  //     item.classList.remove(control.dataset.func);
+  //     // console.log('removed from classList: ' + control.dataset.func);
+  //   });
+  // }
+  items.forEach((item) => {
+    if (item.classList.contains('selected')) {
+      console.log('item ' + item.id + ' is selected');
+      // if formatting button is selected, add class, else remove
+      bool
+        ? item.classList.add(control.dataset.func)
+        : item.classList.remove(control.dataset.func);
+      //
+    }
+    refreshPreview();
+    console.log('inside toggleStyle');
+  });
+}
+
+function resetControls() {
+  controls.forEach((control) => {
+    control.classList.remove('selected');
+  });
+}
+
+function handleDragStart(e) {
+  dragSrcEl = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  if (dragSrcEl != this) {
+    this.parentNode.insertBefore(dragSrcEl, this);
+  }
+  return false;
+}
+
+function handleDragEnd(e) {
+  this.classList.remove('dragging');
+  // refreshPreview(e.target.parentNode.id);
+  refreshPreview();
+  console.log('inside handleDragEnd');
+  // createPreviewEl(e.target.id, e.target.parentNode.id);
+  return false;
+}
+
+// Event Listeners
+let dragSrcEl = null;
+
+[].forEach.call(draggables, function (draggable) {
+  draggable.addEventListener('dragstart', handleDragStart, false);
+  draggable.addEventListener('dragover', handleDragOver, false);
+  draggable.addEventListener('drop', handleDrop, false);
+  draggable.addEventListener('dragend', handleDragEnd, false);
+});
+
+containers.forEach((container) => {
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    container.appendChild(dragging);
+  });
+});
+
+// Elements in '#build-label' that are formattable
+build.addEventListener('click', (e) => {
+  if (e.target && e.target.matches('.draggable')) {
+    // console.log(e.target.id);
+    // getState(e.target);
+    // formatMenu(e);
+    let isSelected = toggleSelect(e.target);
+    // Resets formatting buttons state when item is deselected
+    !isSelected ? resetControls() : '';
+    // console.log(isSelected);
+    // When element is selected, activate formatting buttons
+    // depends on number of elements in page (at least one selected).
+    let anySelected = build.querySelectorAll('.selected').length > 0;
+    activateControls(anySelected);
+    let numSelected = build.querySelectorAll('.selected');
+    // console.log(numSelected.length + ' items selected');
+    // Gets formatting information for individually selected item
+    if (numSelected.length > 1) {
+      resetControls();
+    } else if (numSelected.length == 1) {
+      // console.log(numSelected.length);
+      // Refreshes buttons according to applied styles in selected item
+      let item = build.querySelector('.selected');
+      getState(item);
+    } else {
+      return false;
+    }
+  }
+});
+
+// Formatting controls
+controlDiv.addEventListener('click', (e) => {
+  // Gets selected items to format
+  let formatItems = build.querySelectorAll('.selected');
+
+  // if (e.target && e.target.matches('.control')) {
+  //   // formatMenu(e);
+  let isFormatSelected = toggleSelect(e.target);
+  // Apply styles in item
+  // console.log(
+  //   'botão ' +
+  //     e.target.dataset.func +
+  //     ' e item selecionado ' +
+  //     document.querySelector('.draggable.selected').id
+  // );
+  toggleStyle(e.target, formatItems, isFormatSelected);
+  // getState(e.target);
+  // }
+  // Get state of control for selected item(s)
+  // let itemHasStyles = getState(e.target).length > 0;
+  // console.log(itemHasStyles);
+});
+
+// ************** TO DO ************
+// Need to reset controls for when more than one item is selected
+// Load state to controls depending on selected item styles
+// Update preview styles
+// Capture styles in object array
+// Translate object array into JSON in the appropriate format
 
 // Refactor this
 // function formatMenu(e) {
@@ -225,182 +435,3 @@ function toggleSelect(element) {
 //   }
 //   return false;
 // }
-
-// Activates formatting controls
-function activateControls(bool) {
-  controls.forEach((control) => {
-    bool ? (control.disabled = false) : (control.disabled = true);
-  });
-}
-
-// Gets selected item state (formatted classes)
-function getState(item) {
-  // console.log('item is selected: ' + item.classList.contains('selected'));
-  let formatList = Array.from(item.classList);
-  // console.log(item.id + ' has ' + formatList);
-  // Removes '.draggable' and '.selected' from array
-  formatList.splice(formatList.indexOf('selected'), 1);
-  formatList.splice(formatList.indexOf('draggable'), 1);
-  // console.log(item.id + ' has ' + formatList);
-  // console.log(formatList.length);
-  if (formatList.length > 0) {
-    // Render state of each formatting button
-    formatList.forEach((formatItem) => {
-      // console.log('formatItem: ' + formatItem);
-      controls.forEach((control) => {
-        // Select that format and activate it
-        if (formatItem === control.dataset.func) {
-          control.classList.add('selected');
-        }
-        // console.log(formatItem + ' is active');
-      });
-    });
-  }
-  // else {
-  //   // controls.forEach((control) => {
-  //   //   control.classList.remove('selected');
-  //   // });
-  // resetControls();
-  // }
-}
-
-// Applies styles
-function toggleStyle(control, bool) {
-  // Gets selected items
-  let formatItems = build.querySelectorAll('.draggable.selected');
-
-  // Toggles class in item - causes errors when multiple are selected
-  // with conflicting styles...
-  // formatItems.forEach((item) => {
-  //   item.classList.toggle(control.dataset.func);
-  //   // item.dataset.classes.toggle(control.dataset.func);
-  // });
-  // console.log(formatItems);
-  // if (isSelected) {
-  //   formatItems.forEach((item) => {
-  //     item.classList.add(control.dataset.func);
-  //     // console.log('added to classList: ' + control.dataset.func);
-  //   });
-  // } else {
-  //   formatItems.forEach((item) => {
-  //     item.classList.remove(control.dataset.func);
-  //     // console.log('removed from classList: ' + control.dataset.func);
-  //   });
-  // }
-  formatItems.forEach((item) => {
-    // if formatting button is selected, add class, else remove
-    bool
-      ? item.classList.add(control.dataset.func)
-      : item.classList.remove(control.dataset.func);
-    //
-    // refreshPreview();
-  });
-}
-
-function resetControls() {
-  controls.forEach((control) => {
-    control.classList.remove('selected');
-  });
-}
-
-function handleDragStart(e) {
-  dragSrcEl = this;
-  this.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-}
-
-function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault();
-  }
-  e.dataTransfer.dropEffect = 'move';
-  return false;
-}
-
-function handleDrop(e) {
-  if (e.stopPropagation) {
-    e.stopPropagation();
-  }
-  if (dragSrcEl != this) {
-    this.parentNode.insertBefore(dragSrcEl, this);
-  }
-  return false;
-}
-
-function handleDragEnd(e) {
-  this.classList.remove('dragging');
-  // refreshPreview(e.target.parentNode.id);
-  refreshPreview();
-  // createPreviewEl(e.target.id, e.target.parentNode.id);
-  return false;
-}
-
-// Event Listeners
-let dragSrcEl = null;
-
-[].forEach.call(draggables, function (draggable) {
-  draggable.addEventListener('dragstart', handleDragStart, false);
-  draggable.addEventListener('dragover', handleDragOver, false);
-  draggable.addEventListener('drop', handleDrop, false);
-  draggable.addEventListener('dragend', handleDragEnd, false);
-});
-
-containers.forEach((container) => {
-  container.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const draggable = document.querySelector('.dragging');
-    container.appendChild(draggable);
-  });
-});
-
-// Elements in '#build-label' that are formattable
-build.addEventListener('click', (e) => {
-  if (e.target && e.target.matches('.draggable')) {
-    // console.log(e.target.id);
-    // getState(e.target);
-    // formatMenu(e);
-    let isSelected = toggleSelect(e.target);
-    // Resets formatting buttons state when item is deselected
-    !isSelected ? resetControls() : '';
-    // console.log(isSelected);
-    // When element is selected, activate formatting buttons
-    // depends on number of elements in page (at least one selected).
-    let anySelected = build.querySelectorAll('.draggable.selected').length > 0;
-    activateControls(anySelected);
-    let numSelected = build.querySelectorAll('.draggable.selected');
-    // console.log(numSelected.length + ' items selected');
-    // Gets formatting information for individually selected item
-    if (numSelected.length > 1) {
-      resetControls();
-    } else if (numSelected.length == 1) {
-      // console.log(numSelected.length);
-      // Refreshes buttons according to applied styles in selected item
-      let item = build.querySelector('.selected');
-      getState(item);
-    } else {
-      return false;
-    }
-  }
-});
-
-// Formatting controls
-controlDiv.addEventListener('click', (e) => {
-  // if (e.target && e.target.matches('.control')) {
-  //   // formatMenu(e);
-  let isFormatSelected = toggleSelect(e.target);
-  // Apply styles in item
-  toggleStyle(e.target, isFormatSelected);
-
-  // getState(e.target);
-  // }
-  // Get state of control for selected item(s)
-  // let itemHasStyles = getState(e.target).length > 0;
-  // console.log(itemHasStyles);
-});
-
-// ************** TO DO ************
-// Need to reset controls for when more than one item is selected
-// Load state to controls depending on selected item styles
-// Update preview styles
-// Capture styles in object array
-// Translate object array into JSON in the appropriate format
