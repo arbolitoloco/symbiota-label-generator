@@ -51,7 +51,7 @@ function createPreviewEl(element, parent) {
     let div = document.createElement('div');
     div.innerHTML = field.name;
     div.classList.add(field.id);
-    div.classList.add(...element.classString);
+    div.classList.add(...element.className);
     newParentEl.appendChild(div);
   } else {
     // Check if child already exists div
@@ -61,7 +61,7 @@ function createPreviewEl(element, parent) {
       let div = document.createElement('div');
       div.innerHTML = field.name;
       div.classList.add(field.id);
-      div.classList.add(...element.classString);
+      div.classList.add(...element.className);
       preview.querySelector(`.${parent}`).appendChild(div);
     } else {
       // Clear div and append new
@@ -69,19 +69,13 @@ function createPreviewEl(element, parent) {
       let div = document.createElement('div');
       div.innerHTML = field.name;
       div.classList.add(field.id);
-      div.classList.add(...element.classString);
+      div.classList.add(...element.className);
       preview.querySelector(`.${parent}`).appendChild(div);
     }
   }
 }
 
 const labelList = {
-  'label-header': [],
-  'label-middle': [],
-  'label-footer': [],
-};
-// Testing adding classes
-const labelList2 = {
   'label-header': [],
   'label-middle': [],
   'label-footer': [],
@@ -107,9 +101,9 @@ function refreshPreview() {
         // let childObj = new Object();
         childObj = {};
         // let classString = Array.from(child.classList).join(' ');
-        let classString = Array.from(child.classList).filter(isPrintStyle);
+        let className = Array.from(child.classList).filter(isPrintStyle);
         childObj.field = child.id;
-        childObj.classString = classString;
+        childObj.className = className;
         // if (child.classList.contains('selected')) {
         //   // Removes '.draggable' and '.selected' from array
         //   classString.splice(classString.indexOf('selected'), 1);
@@ -121,7 +115,7 @@ function refreshPreview() {
         childrenArr.push(childObj);
         // console.log(child.id);
         // console.log(childrenArr);
-        console.log(childObj.field + ' ' + childObj.classString);
+        // console.log(childObj.field + ' ' + childObj.className);
         // pass object to array here
       });
       // console.log(childrenArr);
@@ -129,11 +123,11 @@ function refreshPreview() {
       // console.log(childObj);
       // Forms ordered array with ids
       // labelList[selector] = childrenArr;
-      labelList2[selector] = childrenArr;
+      labelList[selector] = childrenArr;
       // labelList2[selector].push(childrenObj);
     }
   });
-  // console.log(labelList2);
+  // console.log(labelList);
   // Clears div before refreshing
   preview.innerHTML = '';
   // Create ordered divs and append to preview
@@ -143,8 +137,8 @@ function refreshPreview() {
   //     createPreviewEl(item, selector);
   //   });
   // });
-  Object.keys(labelList2).forEach((section) => {
-    labelList2[section].forEach((object) => {
+  Object.keys(labelList).forEach((section) => {
+    labelList[section].forEach((object) => {
       // createPreviewEl(item, selector);
       // console.log(object.field, section);
       createPreviewEl(object, section);
@@ -152,6 +146,50 @@ function refreshPreview() {
   });
   // console.log(labelList);
   // console.log('updated labelList');
+  generateJson();
+}
+
+// Generate JSON string for current configurations
+function generateJson() {
+  // console.log(labelList);
+  // let json = JSON.stringify(labelList);
+  let labelFormat = {};
+  labelFormat.name = 'Label Format Name';
+  labelFormat.displaySpeciesAuthor = 0;
+  labelFormat.displayBarcode = 0;
+  labelFormat.columnCount = '2';
+  labelFormat.defaultStyles = 'font-size:8pt';
+  labelFormat.defaultCss = '../../css/symb/labelhelpers.css';
+  labelFormat.customCss = '';
+  labelFormat.labelDiv = { className: 'label-md' };
+  // labelFormat.labelBlocks = [labelList['label-header']];
+  // Each section in labelList should be translated into a
+  // divBlock, where the className should include the id
+  let divBlocks = [];
+  Object.keys(labelList).forEach((section) => {
+    let hasItems = labelList[section].length > 0;
+    if (hasItems) {
+      let fieldBlocks = [];
+      divBlocks.push({
+        divBlock: { className: section, blocks: fieldBlocks },
+      });
+      console.log(divBlocks);
+      console.log(section);
+      labelList[section].forEach((item) => {
+        console.log(item);
+        // console.log(item);
+        let field = {};
+        field.field = item.field;
+        field.className = item.className.join(' ');
+        // console.log(field);
+        fieldBlocks.push(field);
+        console.log(fieldBlocks);
+      });
+    }
+  });
+  labelFormat.labelBlocks = divBlocks;
+  let json = JSON.stringify(labelFormat);
+  console.log(json);
 }
 
 function toggleSelect(element) {
@@ -222,7 +260,7 @@ function toggleStyle(control, items, bool) {
   // }
   items.forEach((item) => {
     if (item.classList.contains('selected')) {
-      console.log('item ' + item.id + ' is selected');
+      // console.log('item ' + item.id + ' is selected');
       // if formatting button is selected, add class, else remove
       bool
         ? item.classList.add(control.dataset.func)
@@ -230,7 +268,7 @@ function toggleStyle(control, items, bool) {
       //
     }
     refreshPreview();
-    console.log('inside toggleStyle');
+    // console.log('inside toggleStyle');
   });
 }
 
@@ -268,7 +306,7 @@ function handleDragEnd(e) {
   this.classList.remove('dragging');
   // refreshPreview(e.target.parentNode.id);
   refreshPreview();
-  console.log('inside handleDragEnd');
+  // console.log('inside handleDragEnd');
   // createPreviewEl(e.target.id, e.target.parentNode.id);
   return false;
 }
