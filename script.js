@@ -29,10 +29,11 @@ fieldProps.forEach((field) => {
 
 // Temporary array for buttons
 const formatsArr = [
-  { func: 'font-bold', icon: 'B' },
-  { func: 'italic', icon: 'I' },
-  { func: 'underline', icon: 'U' },
-  { func: 'uppercase', icon: 'Up' },
+  { func: 'font-bold', icon: 'format_bold' },
+  { func: 'italic', icon: 'format_italic' },
+  { func: 'underline', icon: 'format_underlined' },
+  { func: 'uppercase', icon: 'format_size' },
+  { func: 'bar', icon: 'minimize' },
 ];
 
 // Creates formatting controls in page
@@ -41,8 +42,12 @@ formatsArr.forEach((format) => {
   let btn = document.createElement('button');
   btn.classList.add('control');
   btn.disabled = true;
-  btn.innerText = format.icon;
+  // btn.innerText = format.icon;
   btn.dataset.func = format.func;
+  let icon = document.createElement('span');
+  icon.classList.add('material-icons');
+  icon.innerText = format.icon;
+  btn.appendChild(icon);
   controlDiv.appendChild(btn);
 });
 
@@ -108,17 +113,17 @@ function isPrintStyle(className) {
 // Everytime label section is updated, refresh entire preview
 function refreshPreview() {
   let labelList = {};
-  console.log('---------------');
-  console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
+  // console.log('---------------');
+  // console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
   // Go through every section
   const sections = build.querySelectorAll('.container');
   sections.forEach((section) => {
-    console.log(`now in section ${section.id}`);
+    // console.log(`now in section ${section.id}`);
 
     // Get items per section
     let itemsArr = [];
     let items = section.querySelectorAll('.draggable');
-    console.log(`${section.id} has ${items.length}`);
+    // console.log(`${section.id} has ${items.length}`);
     items.forEach((item) => {
       let itemObj = {};
       let className = Array.from(item.classList).filter(isPrintStyle);
@@ -130,7 +135,7 @@ function refreshPreview() {
     // Builds array based on sections
     labelList[section.id] = itemsArr;
   });
-  console.log(labelList);
+  // console.log(labelList);
 
   // Clears preview div before appending elements
   preview.innerHTML = '';
@@ -169,10 +174,9 @@ function generateJson(list) {
       divBlocks.push({
         divBlock: { className: section, blocks: [fieldBlock] },
       });
-      console.log(divBlocks);
-      console.log(section);
+      // console.log(divBlocks);
+      // console.log(section);
       list[section].forEach((item) => {
-        console.log(item);
         // console.log(item);
         let field = {};
         field.field = item.field;
@@ -256,14 +260,36 @@ function toggleStyle(control, items, bool) {
   //     // console.log('removed from classList: ' + control.dataset.func);
   //   });
   // }
+  // Deals with buttons
   items.forEach((item) => {
     if (item.classList.contains('selected')) {
-      // console.log('item ' + item.id + ' is selected');
-      // if formatting button is selected, add class, else remove
-      bool
-        ? item.classList.add(control.dataset.func)
-        : item.classList.remove(control.dataset.func);
-      //
+      // Deals with selection
+      let isDropdown = control.tagName === 'SELECT';
+      if (isDropdown) {
+        let selected = control.value;
+        // Check if item already has styles in this group
+        let group = new RegExp(`${control.id}-*`);
+        let hasGroup = item.className.split(' ').some(function (c) {
+          return group.test(c);
+        });
+        !hasGroup
+          ? // If not, add it
+            item.classList.add(control.value)
+          : // If yes, replace it
+            item.classList.forEach((className) => {
+              if (className.startsWith(control.id)) {
+                item.classList.remove(className);
+              }
+            });
+        item.classList.add(control.value);
+      } else {
+        // console.log('item ' + item.id + ' is selected');
+        // if formatting button is selected, add class, else remove
+        bool
+          ? item.classList.add(control.dataset.func)
+          : item.classList.remove(control.dataset.func);
+        //
+      }
     }
     refreshPreview();
     // console.log('inside toggleStyle');
@@ -389,7 +415,8 @@ controlDiv.addEventListener('click', (e) => {
 // - [x] Capture styles in object array
 // - [x] Translate object array into JSON in the appropriate format
 // - [] Add more format buttons
-// --[] Underline?
+// --[x] Underline
+// --[x] Uppercase
 // --[] Font-type
 // --[] Font-size
 // --[] Spacing

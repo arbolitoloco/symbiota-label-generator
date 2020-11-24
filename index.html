@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=7">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="helpers.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <title>Symbiota Label Format Generator Prototype</title>
 </head>
@@ -23,6 +24,21 @@
       <div id="controls">
         <!-- <button class='control' data-func="font-bold" disabled="true">B</button><button class='control' data-func="italic" disabled="true">I</button><button class='control' data-func="underline" disabled="true">U</button><button class='control' data-func="uppercase"
           disabled="true">uppercase</button> -->
+        <div class="dropdown">
+          <select class="control" name="font-size" id="text" disabled="true">
+              <option value="">Font Size</option>
+              <option value="text-xs">X-Small</option>
+              <option value="text-sm">Small</option>
+              <option value="text-base">Normal</option>
+              <option value="text-lg">Large</option>
+              <option value="text-xl">X-Large</option>
+              <option value="text-2xl">2X-Large</option>
+              <option value="text-3xl">3X-Large</option>
+              <option value="text-4xl">4X-Large</option>
+              <option value="text-5xl">5X-Large</option>
+              <option value="text-6xl">6X-Large</option>
+            </select>
+        </div>
       </div>
       <div id="build-label">
         <div id="label-header" class="container">
