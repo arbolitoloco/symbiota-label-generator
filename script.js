@@ -75,82 +75,58 @@ function createPreviewEl(element, parent) {
   }
 }
 
-const labelList = {
-  'label-header': [],
-  'label-middle': [],
-  'label-footer': [],
-};
+// const labelList = {
+//   'label-header': [],
+//   'label-middle': [],
+//   'label-footer': [],
+// };
 
 function isPrintStyle(className) {
   const functionalStyles = ['draggable', 'selected'];
   return !functionalStyles.includes(className);
 }
 
-// Everytime label section is updated, refresh preview
+// Everytime label section is updated, refresh entire preview
 function refreshPreview() {
-  Object.keys(labelList).forEach((selector) => {
-    // Go through section div and grab all ids
-    let children = document.querySelectorAll(`#${selector} li`);
-    let hasChildren = children.length > 0;
-    if (hasChildren) {
-      // selectorArr = [];
-      let childrenArr = [];
-      // console.log('children ' + children.length);
-      children.forEach((child) => {
-        // childrenArr.push(child.id);
-        // let childObj = new Object();
-        childObj = {};
-        // let classString = Array.from(child.classList).join(' ');
-        let className = Array.from(child.classList).filter(isPrintStyle);
-        childObj.field = child.id;
-        childObj.className = className;
-        // if (child.classList.contains('selected')) {
-        //   // Removes '.draggable' and '.selected' from array
-        //   classString.splice(classString.indexOf('selected'), 1);
-        // }
-        // if (child.classList.contains('draggable')) {
-        //   classString.splice(classString.indexOf('draggable'), 1);
-        // }
-        // childObj.classString = ['font-bold', 'italic'];
-        childrenArr.push(childObj);
-        // console.log(child.id);
-        // console.log(childrenArr);
-        // console.log(childObj.field + ' ' + childObj.className);
-        // pass object to array here
-      });
-      // console.log(childrenArr);
-      // childrenArr.push(childrenObj);
-      // console.log(childObj);
-      // Forms ordered array with ids
-      // labelList[selector] = childrenArr;
-      labelList[selector] = childrenArr;
-      // labelList2[selector].push(childrenObj);
-    }
+  let labelList = {};
+  console.log('---------------');
+  console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
+  // Go through every section
+  const sections = build.querySelectorAll('.container');
+  sections.forEach((section) => {
+    console.log(`now in section ${section.id}`);
+
+    // Get items per section
+    let itemsArr = [];
+    let items = section.querySelectorAll('.draggable');
+    console.log(`${section.id} has ${items.length}`);
+    items.forEach((item) => {
+      let itemObj = {};
+      let className = Array.from(item.classList).filter(isPrintStyle);
+      itemObj.field = item.id;
+      itemObj.className = className;
+      itemsArr.push(itemObj);
+    });
+
+    // Builds array based on sections
+    labelList[section.id] = itemsArr;
   });
-  // console.log(labelList);
-  // Clears div before refreshing
+  console.log(labelList);
+
+  // Clears preview div before appending elements
   preview.innerHTML = '';
-  // Create ordered divs and append to preview
-  // Object.keys(labelList).forEach((selector) => {
-  //   labelList[selector].forEach((item) => {
-  //     // console.log(item);
-  //     createPreviewEl(item, selector);
-  //   });
-  // });
+
+  // // Creates HTML elements and appends to preview div
   Object.keys(labelList).forEach((section) => {
-    labelList[section].forEach((object) => {
-      // createPreviewEl(item, selector);
-      // console.log(object.field, section);
-      createPreviewEl(object, section);
+    labelList[section].forEach((item) => {
+      createPreviewEl(item, section);
     });
   });
-  // console.log(labelList);
-  // console.log('updated labelList');
-  generateJson();
-}
 
+  generateJson(labelList);
+}
 // Generate JSON string for current configurations
-function generateJson() {
+function generateJson(list) {
   // console.log(labelList);
   // let json = JSON.stringify(labelList);
   let labelFormat = {};
@@ -166,8 +142,8 @@ function generateJson() {
   // Each section in labelList should be translated into a
   // divBlock, where the className should include the id
   let divBlocks = [];
-  Object.keys(labelList).forEach((section) => {
-    let hasItems = labelList[section].length > 0;
+  Object.keys(list).forEach((section) => {
+    let hasItems = list[section].length > 0;
     if (hasItems) {
       let fieldBlock = {};
       let fields = [];
@@ -176,7 +152,7 @@ function generateJson() {
       });
       console.log(divBlocks);
       console.log(section);
-      labelList[section].forEach((item) => {
+      list[section].forEach((item) => {
         console.log(item);
         // console.log(item);
         let field = {};
@@ -302,10 +278,12 @@ function handleDrop(e) {
   if (dragSrcEl != this) {
     this.parentNode.insertBefore(dragSrcEl, this);
   }
+  // refreshPreview();
   return false;
 }
 
 function handleDragEnd(e) {
+  // e.preventDefault();
   this.classList.remove('dragging');
   // refreshPreview(e.target.parentNode.id);
   refreshPreview();
@@ -386,93 +364,14 @@ controlDiv.addEventListener('click', (e) => {
 });
 
 // ************** TO DO ************
-// Need to reset controls for when more than one item is selected
-// Load state to controls depending on selected item styles
-// Update preview styles
-// Capture styles in object array
-// Translate object array into JSON in the appropriate format
-
-// Refactor this
-// function formatMenu(e) {
-//   // Activate formatting buttons only when item is selected
-//   // console.log(e.target);
-//   let isSelected = e.target.classList.contains('selected');
-//   // console.log(isSelected);
-//   // isSelected ? console.log(e.target.dataset.func) : '';
-//   let isItem = e.target.classList.contains('draggable');
-//   let isFormat = e.target.classList.contains('control');
-//   // Gets selected items and adds class
-//   let formatItems = build.querySelectorAll('.draggable.selected');
-//   // If item is inside '#label-build' then toggle active
-//   let inBuild = build.querySelectorAll('.draggable') != null;
-//   // console.log('items in build area? ' + inBuild);
-//   // e.target.classList.toggle('selected');
-//   // Activates format buttons only when item is selected
-//   if (isItem) {
-//     if (isSelected) {
-//       console.log('ready to format item ' + e.target.id);
-//       // console.log(formats);
-//       formats.forEach((format) => {
-//         format.disabled = false;
-//       });
-//     } else if (formatItems.length == 0) {
-//       // console.log(isSelected);
-//       formats.forEach((format) => {
-//         format.disabled = true;
-//         // format.classList.remove('selected');
-//       });
-//     }
-//   }
-//   // If more than on item selected for formatting, reset controls state
-//   if (formatItems.length > 1) {
-//     console.log('several items selected');
-//     formats.forEach((format) => {
-//       format.classList.remove('selected');
-//     });
-//   } else if (formatItems.length == 1) {
-//     // console.log('only one item selected');
-//     // Show formats selected if any
-//     formatItem = build.querySelector('.draggable.selected');
-//     // console.log(item.classList);
-//     formatList = Array.from(formatItem.classList);
-//     // Removes '.draggable' and '.selected' from array
-//     formatList.splice(formatList.indexOf('draggable'), 1);
-//     formatList.splice(formatList.indexOf('selected'), 1);
-//     // console.log(formatList);
-//     // Applies remaining styles to state of formats
-//     if (formatList.length >= 1) {
-//       console.log('one or more formats applied');
-//       console.log(formatList.length);
-//       formatList.forEach((formatItem) => {
-//         // console.log('formatItem: ' + formatItem);
-//         formats.forEach((format) => {
-//           // Select that format and activate it
-//           if (formatItem === format.dataset.func) {
-//             format.classList.add('selected');
-//           }
-//           // console.log(formatItem + ' is active');
-//         });
-//       });
-//     } else {
-//       formats.forEach((format) => {
-//         format.classList.remove('selected');
-//       });
-//     }
-//   }
-
-//   if (isFormat) {
-//     // console.log(formatItems);
-//     if (isSelected) {
-//       formatItems.forEach((item) => {
-//         item.classList.add(e.target.dataset.func);
-//         // console.log('added to classList: ' + e.target.dataset.func);
-//       });
-//     } else {
-//       formatItems.forEach((item) => {
-//         item.classList.remove(e.target.dataset.func);
-//         // console.log('removed from classList: ' + e.target.dataset.func);
-//       });
-//     }
-//   }
-//   return false;
-// }
+// - [x] Need to reset controls for when more than one item is selected
+// - [x] Load state to controls depending on selected item styles
+// - [x] Update preview styles
+// - [x] Capture styles in object array
+// - [x] Translate object array into JSON in the appropriate format
+// - [] Add more format buttons
+// --[] Underline?
+// --[] Font-type
+// --[] Font-size
+// --[] Spacing
+// --[] Bar option?
