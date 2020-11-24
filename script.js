@@ -364,93 +364,14 @@ controlDiv.addEventListener('click', (e) => {
 });
 
 // ************** TO DO ************
-// Need to reset controls for when more than one item is selected
-// Load state to controls depending on selected item styles
-// Update preview styles
-// Capture styles in object array
-// Translate object array into JSON in the appropriate format
-
-// Refactor this
-// function formatMenu(e) {
-//   // Activate formatting buttons only when item is selected
-//   // console.log(e.target);
-//   let isSelected = e.target.classList.contains('selected');
-//   // console.log(isSelected);
-//   // isSelected ? console.log(e.target.dataset.func) : '';
-//   let isItem = e.target.classList.contains('draggable');
-//   let isFormat = e.target.classList.contains('control');
-//   // Gets selected items and adds class
-//   let formatItems = build.querySelectorAll('.draggable.selected');
-//   // If item is inside '#label-build' then toggle active
-//   let inBuild = build.querySelectorAll('.draggable') != null;
-//   // console.log('items in build area? ' + inBuild);
-//   // e.target.classList.toggle('selected');
-//   // Activates format buttons only when item is selected
-//   if (isItem) {
-//     if (isSelected) {
-//       console.log('ready to format item ' + e.target.id);
-//       // console.log(formats);
-//       formats.forEach((format) => {
-//         format.disabled = false;
-//       });
-//     } else if (formatItems.length == 0) {
-//       // console.log(isSelected);
-//       formats.forEach((format) => {
-//         format.disabled = true;
-//         // format.classList.remove('selected');
-//       });
-//     }
-//   }
-//   // If more than on item selected for formatting, reset controls state
-//   if (formatItems.length > 1) {
-//     console.log('several items selected');
-//     formats.forEach((format) => {
-//       format.classList.remove('selected');
-//     });
-//   } else if (formatItems.length == 1) {
-//     // console.log('only one item selected');
-//     // Show formats selected if any
-//     formatItem = build.querySelector('.draggable.selected');
-//     // console.log(item.classList);
-//     formatList = Array.from(formatItem.classList);
-//     // Removes '.draggable' and '.selected' from array
-//     formatList.splice(formatList.indexOf('draggable'), 1);
-//     formatList.splice(formatList.indexOf('selected'), 1);
-//     // console.log(formatList);
-//     // Applies remaining styles to state of formats
-//     if (formatList.length >= 1) {
-//       console.log('one or more formats applied');
-//       console.log(formatList.length);
-//       formatList.forEach((formatItem) => {
-//         // console.log('formatItem: ' + formatItem);
-//         formats.forEach((format) => {
-//           // Select that format and activate it
-//           if (formatItem === format.dataset.func) {
-//             format.classList.add('selected');
-//           }
-//           // console.log(formatItem + ' is active');
-//         });
-//       });
-//     } else {
-//       formats.forEach((format) => {
-//         format.classList.remove('selected');
-//       });
-//     }
-//   }
-
-//   if (isFormat) {
-//     // console.log(formatItems);
-//     if (isSelected) {
-//       formatItems.forEach((item) => {
-//         item.classList.add(e.target.dataset.func);
-//         // console.log('added to classList: ' + e.target.dataset.func);
-//       });
-//     } else {
-//       formatItems.forEach((item) => {
-//         item.classList.remove(e.target.dataset.func);
-//         // console.log('removed from classList: ' + e.target.dataset.func);
-//       });
-//     }
-//   }
-//   return false;
-// }
+// - [x] Need to reset controls for when more than one item is selected
+// - [x] Load state to controls depending on selected item styles
+// - [x] Update preview styles
+// - [x] Capture styles in object array
+// - [x] Translate object array into JSON in the appropriate format
+// - [] Add more format buttons
+// --[] Underline?
+// --[] Font-type
+// --[] Font-size
+// --[] Spacing
+// --[] Bar option?
