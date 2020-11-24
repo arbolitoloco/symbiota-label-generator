@@ -75,79 +75,127 @@ function createPreviewEl(element, parent) {
   }
 }
 
-const labelList = {
-  'label-header': [],
-  'label-middle': [],
-  'label-footer': [],
-};
+// const labelList = {
+//   'label-header': [],
+//   'label-middle': [],
+//   'label-footer': [],
+// };
 
 function isPrintStyle(className) {
   const functionalStyles = ['draggable', 'selected'];
   return !functionalStyles.includes(className);
 }
 
-// Everytime label section is updated, refresh preview
+// Everytime label section is updated, refresh entire preview
 function refreshPreview() {
-  Object.keys(labelList).forEach((selector) => {
-    // Go through section div and grab all ids
-    let children = document.querySelectorAll(`#${selector} li`);
-    let hasChildren = children.length > 0;
-    if (hasChildren) {
-      // selectorArr = [];
-      let childrenArr = [];
-      // console.log('children ' + children.length);
-      children.forEach((child) => {
-        // childrenArr.push(child.id);
-        // let childObj = new Object();
-        childObj = {};
-        // let classString = Array.from(child.classList).join(' ');
-        let className = Array.from(child.classList).filter(isPrintStyle);
-        childObj.field = child.id;
-        childObj.className = className;
-        // if (child.classList.contains('selected')) {
-        //   // Removes '.draggable' and '.selected' from array
-        //   classString.splice(classString.indexOf('selected'), 1);
-        // }
-        // if (child.classList.contains('draggable')) {
-        //   classString.splice(classString.indexOf('draggable'), 1);
-        // }
-        // childObj.classString = ['font-bold', 'italic'];
-        childrenArr.push(childObj);
-        // console.log(child.id);
-        // console.log(childrenArr);
-        // console.log(childObj.field + ' ' + childObj.className);
-        // pass object to array here
-      });
-      // console.log(childrenArr);
-      // childrenArr.push(childrenObj);
-      // console.log(childObj);
-      // Forms ordered array with ids
-      // labelList[selector] = childrenArr;
-      labelList[selector] = childrenArr;
-      // labelList2[selector].push(childrenObj);
-    }
-  });
-  // console.log(labelList);
-  // Clears div before refreshing
-  preview.innerHTML = '';
-  // Create ordered divs and append to preview
-  // Object.keys(labelList).forEach((selector) => {
-  //   labelList[selector].forEach((item) => {
-  //     // console.log(item);
-  //     createPreviewEl(item, selector);
-  //   });
-  // });
-  Object.keys(labelList).forEach((section) => {
-    labelList[section].forEach((object) => {
-      // createPreviewEl(item, selector);
-      // console.log(object.field, section);
-      createPreviewEl(object, section);
+  let labelList = {};
+  console.log('---------------');
+  console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
+  // Go through every section
+  const sections = build.querySelectorAll('.container');
+  sections.forEach((section) => {
+    console.log(`now in section ${section.id}`);
+
+    // Get items per section
+    let itemsArr = [];
+    let items = section.querySelectorAll('.draggable');
+    console.log(`${section.id} has ${items.length}`);
+    items.forEach((item) => {
+      // console.log(item.id);
+      // itemsArr.push(item.id);
+      let itemObj = {};
+      // let classString = Array.from(item.classList).join(' ');
+      let className = Array.from(item.classList).filter(isPrintStyle);
+      itemObj.field = item.id;
+      itemObj.className = className;
+      itemsArr.push(itemObj);
     });
+
+    // Builds array based on sections
+    labelList[section.id] = itemsArr;
   });
-  // console.log(labelList);
-  // console.log('updated labelList');
-  generateJson();
+  console.log(labelList);
 }
+
+// function refreshPreview() {
+//   // Gets each section in label build section
+//   const sections = build.querySelectorAll('.container');
+//   // let labelList = {};
+//   let childrenArr = [];
+//   // Loops through each section to grab children
+//   sections.forEach((section) => {
+//     let area = section.id;
+//     let children = build.querySelectorAll(`#${section.id} > .draggable`);
+//     let hasChildren = children.length > 0;
+//     if (hasChildren) {
+//       // childrenArr = [];
+//       // console.log('children ' + children.length + ' in ' + section.id);
+//       children.forEach((child) => {
+//         // childrenArr.push(child.id);
+//         // let childObj = new Object();
+//         childObj = {};
+//         // let classString = Array.from(child.classList).join(' ');
+//         let className = Array.from(child.classList).filter(isPrintStyle);
+//         childObj.field = child.id;
+//         childObj.className = className;
+//         // if (child.classList.contains('selected')) {
+//         //   // Removes '.draggable' and '.selected' from array
+//         //   classString.splice(classString.indexOf('selected'), 1);
+//         // }
+//         // if (child.classList.contains('draggable')) {
+//         //   classString.splice(classString.indexOf('draggable'), 1);
+//         // }
+//         // childObj.classString = ['font-bold', 'italic'];
+//         // childrenArr.push(childObj);
+//         // console.log(child.id);
+//         // console.log(childrenArr);
+//         // console.log(childObj.field + ' ' + childObj.className);
+//         // pass object to array here
+//         childrenArr.push(childObj);
+//       });
+//       labelList[area] = childrenArr;
+//       // console.log(childrenArr);
+//       // console.log(childObj);
+//       // Forms ordered array with ids
+//       // labelList[area] = childrenArr;
+//       // childrenArr.push('children ' + children.length + ' in ' + section.id);
+//     } else {
+//       // childrenArr = [];
+//       console.log('no items yet in ' + section.id);
+//       // childrenArr.push('nothing in ' + section.id);
+//       // labelList = {
+//       //   [area]: childrenArr,
+//       // };
+//     }
+//     console.log(childrenArr);
+//     // Pass children into labelList object
+//     console.log(labelList);
+//     // return labelList;
+//   });
+//   // console.log(childrenArr);
+//   // console.log(labelList);
+//   // Clears div before refreshing
+//   preview.innerHTML = '';
+//   // Create ordered divs and append to preview
+//   // Object.keys(labelList).forEach((selector) => {
+//   //   labelList[selector].forEach((item) => {
+//   //     // console.log(item);
+//   //     createPreviewEl(item, selector);
+//   //   });
+//   // });
+
+//   // Object.keys(labelList).forEach((section) => {
+//   //   labelList[section].forEach((object) => {
+//   //     // createPreviewEl(item, selector);
+//   //     // console.log(object.field, section);
+//   //     createPreviewEl(object, section);
+//   //   });
+//   // });
+
+//   // console.log(labelList);
+//   // console.log('updated labelList');
+//   // generateJson();
+// }
 
 // Generate JSON string for current configurations
 function generateJson() {
@@ -302,10 +350,12 @@ function handleDrop(e) {
   if (dragSrcEl != this) {
     this.parentNode.insertBefore(dragSrcEl, this);
   }
+  // refreshPreview();
   return false;
 }
 
 function handleDragEnd(e) {
+  // e.preventDefault();
   this.classList.remove('dragging');
   // refreshPreview(e.target.parentNode.id);
   refreshPreview();
