@@ -101,10 +101,7 @@ function refreshPreview() {
     let items = section.querySelectorAll('.draggable');
     console.log(`${section.id} has ${items.length}`);
     items.forEach((item) => {
-      // console.log(item.id);
-      // itemsArr.push(item.id);
       let itemObj = {};
-      // let classString = Array.from(item.classList).join(' ');
       let className = Array.from(item.classList).filter(isPrintStyle);
       itemObj.field = item.id;
       itemObj.className = className;
@@ -115,90 +112,21 @@ function refreshPreview() {
     labelList[section.id] = itemsArr;
   });
   console.log(labelList);
+
+  // Clears preview div before appending elements
+  preview.innerHTML = '';
+
+  // // Creates HTML elements and appends to preview div
+  Object.keys(labelList).forEach((section) => {
+    labelList[section].forEach((item) => {
+      createPreviewEl(item, section);
+    });
+  });
+
+  generateJson(labelList);
 }
-
-// function refreshPreview() {
-//   // Gets each section in label build section
-//   const sections = build.querySelectorAll('.container');
-//   // let labelList = {};
-//   let childrenArr = [];
-//   // Loops through each section to grab children
-//   sections.forEach((section) => {
-//     let area = section.id;
-//     let children = build.querySelectorAll(`#${section.id} > .draggable`);
-//     let hasChildren = children.length > 0;
-//     if (hasChildren) {
-//       // childrenArr = [];
-//       // console.log('children ' + children.length + ' in ' + section.id);
-//       children.forEach((child) => {
-//         // childrenArr.push(child.id);
-//         // let childObj = new Object();
-//         childObj = {};
-//         // let classString = Array.from(child.classList).join(' ');
-//         let className = Array.from(child.classList).filter(isPrintStyle);
-//         childObj.field = child.id;
-//         childObj.className = className;
-//         // if (child.classList.contains('selected')) {
-//         //   // Removes '.draggable' and '.selected' from array
-//         //   classString.splice(classString.indexOf('selected'), 1);
-//         // }
-//         // if (child.classList.contains('draggable')) {
-//         //   classString.splice(classString.indexOf('draggable'), 1);
-//         // }
-//         // childObj.classString = ['font-bold', 'italic'];
-//         // childrenArr.push(childObj);
-//         // console.log(child.id);
-//         // console.log(childrenArr);
-//         // console.log(childObj.field + ' ' + childObj.className);
-//         // pass object to array here
-//         childrenArr.push(childObj);
-//       });
-//       labelList[area] = childrenArr;
-//       // console.log(childrenArr);
-//       // console.log(childObj);
-//       // Forms ordered array with ids
-//       // labelList[area] = childrenArr;
-//       // childrenArr.push('children ' + children.length + ' in ' + section.id);
-//     } else {
-//       // childrenArr = [];
-//       console.log('no items yet in ' + section.id);
-//       // childrenArr.push('nothing in ' + section.id);
-//       // labelList = {
-//       //   [area]: childrenArr,
-//       // };
-//     }
-//     console.log(childrenArr);
-//     // Pass children into labelList object
-//     console.log(labelList);
-//     // return labelList;
-//   });
-//   // console.log(childrenArr);
-//   // console.log(labelList);
-//   // Clears div before refreshing
-//   preview.innerHTML = '';
-//   // Create ordered divs and append to preview
-//   // Object.keys(labelList).forEach((selector) => {
-//   //   labelList[selector].forEach((item) => {
-//   //     // console.log(item);
-//   //     createPreviewEl(item, selector);
-//   //   });
-//   // });
-
-//   // Object.keys(labelList).forEach((section) => {
-//   //   labelList[section].forEach((object) => {
-//   //     // createPreviewEl(item, selector);
-//   //     // console.log(object.field, section);
-//   //     createPreviewEl(object, section);
-//   //   });
-//   // });
-
-//   // console.log(labelList);
-//   // console.log('updated labelList');
-//   // generateJson();
-// }
-
 // Generate JSON string for current configurations
-function generateJson() {
+function generateJson(list) {
   // console.log(labelList);
   // let json = JSON.stringify(labelList);
   let labelFormat = {};
@@ -214,8 +142,8 @@ function generateJson() {
   // Each section in labelList should be translated into a
   // divBlock, where the className should include the id
   let divBlocks = [];
-  Object.keys(labelList).forEach((section) => {
-    let hasItems = labelList[section].length > 0;
+  Object.keys(list).forEach((section) => {
+    let hasItems = list[section].length > 0;
     if (hasItems) {
       let fieldBlock = {};
       let fields = [];
@@ -224,7 +152,7 @@ function generateJson() {
       });
       console.log(divBlocks);
       console.log(section);
-      labelList[section].forEach((item) => {
+      list[section].forEach((item) => {
         console.log(item);
         // console.log(item);
         let field = {};
