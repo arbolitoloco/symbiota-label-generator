@@ -27,10 +27,29 @@ fieldProps.forEach((field) => {
   fieldDiv.appendChild(li);
 });
 
+// Temporary array for buttons
+const formatsArr = [
+  { func: 'font-bold', icon: 'B' },
+  { func: 'italic', icon: 'I' },
+  { func: 'underline', icon: 'U' },
+  { func: 'uppercase', icon: 'Up' },
+];
+
+// Creates formatting controls in page
+const controlDiv = document.getElementById('controls');
+formatsArr.forEach((format) => {
+  let btn = document.createElement('button');
+  btn.classList.add('control');
+  btn.disabled = true;
+  btn.innerText = format.icon;
+  btn.dataset.func = format.func;
+  controlDiv.appendChild(btn);
+});
+
+// Grabs elements
 const draggables = document.querySelectorAll('.draggable');
 const containers = document.querySelectorAll('.container');
 const build = document.getElementById('build-label');
-const controlDiv = document.getElementById('controls');
 const preview = document.getElementById('preview-label');
 const controls = controlDiv.querySelectorAll('.control');
 
