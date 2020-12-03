@@ -55,10 +55,14 @@ const dropdownsArr = [
       { value: 'text-6xl', text: '6X-Large' },
     ],
   },
-  { id: 'font', name: 'font-face' },
+  // {
+  //   id: 'font',
+  //   name: 'font-face',
+  //   options: [{ value: '', text: 'Font Family' }],
+  // },
 ];
 
-// Creates formatting controls in page
+// Creates formatting (button) controls in page
 const controlDiv = document.getElementById('controls');
 formatsArr.forEach((format) => {
   let btn = document.createElement('button');
@@ -71,6 +75,23 @@ formatsArr.forEach((format) => {
   icon.innerText = format.icon;
   btn.appendChild(icon);
   controlDiv.appendChild(btn);
+});
+
+// Creates formatting (dropdown) controls in page
+dropdownsArr.forEach((dropObj) => {
+  let slct = document.createElement('select');
+  slct.classList.add('control');
+  slct.name = dropObj.name;
+  slct.id = dropObj.id;
+  slct.disabled = true;
+  dropObj.options.forEach((choice) => {
+    let opt = document.createElement('option');
+    opt.value = choice.value;
+    opt.innerText = choice.text;
+    slct.appendChild(opt);
+  });
+  controlDiv.appendChild(slct);
+  console.log(dropObj);
 });
 
 // Grabs elements
