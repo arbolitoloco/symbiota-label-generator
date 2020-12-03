@@ -205,10 +205,10 @@ function generateJson(list) {
   // console.log(labelList);
   // let json = JSON.stringify(labelList);
   let labelFormat = {};
-  labelFormat.name = 'Label Format Name';
+  labelFormat.title = 'Label Format Title';
   labelFormat.displaySpeciesAuthor = 0;
   labelFormat.displayBarcode = 0;
-  labelFormat.columnCount = '2';
+  labelFormat.labelType = '2';
   labelFormat.defaultStyles = 'font-size:8pt';
   labelFormat.defaultCss = '../../css/symb/labelhelpers.css';
   labelFormat.customCss = '';
@@ -231,11 +231,10 @@ function generateJson(list) {
         // console.log(item);
         let field = {};
         field.field = item.field;
-        field.className = item.className.join(' ');
+        field.className ? (field.className = item.className.join(' ')) : '';
         // console.log(field);
         fields.push(field);
         fieldBlock.fieldBlock = fields;
-
         // console.log(fields);
       });
     }
