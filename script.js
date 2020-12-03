@@ -37,7 +37,7 @@ const formatsArr = [
 ];
 
 // Array for dropdown style groups
-const dropdowns = [
+const dropdownsArr = [
   {
     id: 'text',
     name: 'font-size',
@@ -257,11 +257,11 @@ function getState(item) {
       let strArr = formatItem.split('-');
       let str = strArr[0];
       // Loop through each item in array
-      dropdowns.forEach((dropdown) => {
+      dropdownsArr.forEach((dropdown) => {
         let isDropdownStyle = str === dropdown.id;
         // console.log(strArr[0]);
         // console.log(dropdowns.id);
-        console.log('is style in a dropdown? ' + isDropdownStyle);
+        // console.log('is style in a dropdown? ' + isDropdownStyle);
         if (isDropdownStyle) {
           let selDropdown = document.getElementById(str);
           selDropdown.value = formatItem;
@@ -292,7 +292,7 @@ function getState(item) {
 /**
  * Applies selected control styles to selected items
  * @param {*} control id of style control (button or select)
- * @param {*} selectedItems array of items to be formatted
+ * @param {*} selectedItems array of items to be formatted (selected)
  * @param {*} bool if style will be added or removed, depends on state of control (important for buttons)
  */
 function toggleStyle(control, selectedItems, bool) {
@@ -325,54 +325,65 @@ function toggleStyle(control, selectedItems, bool) {
       // console.log(
       //   `item ${item.id} is selected ${item.classList.contains('selected')}`
       // );
-      // Deals with selection
-      let isDropdown = control.tagName === 'SELECT';
-      if (isDropdown) {
-        // console.log('selected items ' + selectedItems);
-        // console.dir(selectedItems);
-        control.addEventListener('input', function () {
-          let option = control.value;
-          if (option !== '') {
-            // Check if item already has styles in this group
-            let group = new RegExp(`${control.id}-*`);
-            let hasGroup = item.className.split(' ').some(function (c) {
-              return group.test(c);
-            });
-            if (!hasGroup) {
-              // If not, add it
-              item.classList.add(option);
-              // item.classList.add('added-if-no-group');
-              console.log(`added ${option} to ${item.id}`);
-              // console.log(selectedItems);
-            } else {
-              // If yes, replace it
-              item.classList.forEach((className) => {
-                if (className.startsWith(control.id)) {
-                  item.classList.remove(className);
-                }
-              });
-              item.classList.add(option);
-              // console.log('added-after-removing-group');
-            }
-          }
-        });
-        //
-      }
+
       // Deals with buttons
-      else {
-        // console.log('item ' + item.id + ' is selected');
-        // if formatting button is selected, add class, else remove
-        bool
-          ? item.classList.add(control.dataset.func)
-          : item.classList.remove(control.dataset.func);
-        //
-      }
+
+      // console.log('item ' + item.id + ' is selected');
+      // if formatting button is selected, add class, else remove
+      bool
+        ? item.classList.add(control.dataset.func)
+        : item.classList.remove(control.dataset.func);
+      //
     } else {
       return false;
     }
     refreshPreview();
     // console.log('inside toggleStyle');
   });
+}
+
+/**
+ * Applies selected dropdown styles to selected items
+ * @param {*} dropdown id of dropdown
+ * @param {*} selectedItems array of items to be formatted (selected)
+ */
+function addReplaceStyle(dropdown, selectedItems) {
+  // Deals with selection
+  // console.log('selected items ' + selectedItems);
+  // console.dir(selectedItems);
+  dropdown.addEventListener('input', function () {
+    selectedItems.forEach((item) => {
+      let option = dropdown.value;
+      if (option !== '') {
+        // Check if item already has styles in this group
+        let group = new RegExp(`${dropdown.id}-*`);
+        let hasGroup = item.className.split(' ').some(function (c) {
+          return group.test(c);
+        });
+        if (item.classList.contains('selected')) {
+          if (!hasGroup) {
+            // If not, add it
+            item.classList.add(option);
+            // item.classList.add('added-if-no-group');
+            console.log(`added ${option} to ${item.id}`);
+            // console.log(selectedItems);
+          } else {
+            // If yes, replace it
+            item.classList.forEach((className) => {
+              if (className.startsWith(dropdown.id)) {
+                item.classList.remove(className);
+              }
+            });
+            item.classList.add(option);
+            // console.log('added-after-removing-group');
+          }
+        }
+      }
+    });
+  });
+  //
+  // console.dir(selectedItems);
+  refreshPreview();
 }
 
 function resetControls() {
@@ -475,6 +486,10 @@ controlDiv.addEventListener('click', (e) => {
   // if (e.target && e.target.matches('.control')) {
   //   // formatMenu(e);
   let isFormatSelected = toggleSelect(e.target);
+  let isButton = e.target.tagName === 'BUTTON';
+  let isDropdown = e.target.tagName === 'SELECT';
+  // console.log(e.target.tagName);
+  // console.log(isButton, isDropdown);
   // Apply styles in item
   // console.log(
   //   'botão ' +
@@ -483,7 +498,14 @@ controlDiv.addEventListener('click', (e) => {
   //     document.querySelector('.draggable.selected').id
   // );
   // Buttons
-  toggleStyle(e.target, formatItems, isFormatSelected);
+  if (isButton) {
+    // console.log('is a buton');
+    toggleStyle(e.target, formatItems, isFormatSelected);
+  } else if (isDropdown) {
+    // console.log('is a dropdown');
+    addReplaceStyle(e.target, formatItems);
+  }
+
   // getState(e.target);
   // }
   // Get state of control for selected item(s)
