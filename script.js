@@ -55,11 +55,16 @@ const dropdownsArr = [
       { value: 'text-6xl', text: '6X-Large' },
     ],
   },
-  // {
-  //   id: 'font',
-  //   name: 'font-face',
-  //   options: [{ value: '', text: 'Font Family' }],
-  // },
+  {
+    id: 'font',
+    name: 'font-family',
+    options: [
+      { value: '', text: 'Font Family' },
+      { value: 'font-sans', text: 'System Sans Serif' },
+      { value: 'font-serif', text: 'System Serif' },
+      { value: 'font-mono', text: 'System Mono' },
+    ],
+  },
 ];
 
 // Creates formatting (button) controls in page
