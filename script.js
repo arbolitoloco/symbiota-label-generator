@@ -34,6 +34,9 @@ const formatsArr = [
   { func: 'underline', icon: 'format_underlined' },
   { func: 'uppercase', icon: 'format_size' },
   { func: 'bar', icon: 'minimize' },
+  // { func: 'text-center', icon: 'format_align_center' },--> has to be applied to containers and not items themselves
+  // { func: 'text-right', icon: 'format_align_right' },
+  // { func: 'text-left', icon: 'format_align_left' },
 ];
 
 // Array for dropdown style groups
