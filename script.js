@@ -27,10 +27,85 @@ fieldProps.forEach((field) => {
   fieldDiv.appendChild(li);
 });
 
+// Temporary array for buttons
+const formatsArr = [
+  { func: 'font-bold', icon: 'format_bold' },
+  { func: 'italic', icon: 'format_italic' },
+  { func: 'underline', icon: 'format_underlined' },
+  { func: 'uppercase', icon: 'format_size' },
+  { func: 'bar', icon: 'minimize' },
+  // { func: 'text-center', icon: 'format_align_center' },--> has to be applied to containers and not items themselves
+  // { func: 'text-right', icon: 'format_align_right' },
+  // { func: 'text-left', icon: 'format_align_left' },
+];
+
+// Array for dropdown style groups
+const dropdownsArr = [
+  {
+    id: 'text',
+    name: 'font-size',
+    options: [
+      { value: '', text: 'Font Size' },
+      { value: 'text-xs', text: 'X-Small' },
+      { value: 'text-sm', text: 'Small' },
+      { value: 'text-base', text: 'Normal' },
+      { value: 'text-lg', text: 'Large' },
+      { value: 'text-xl', text: 'X-Large' },
+      { value: 'text-2xl', text: '2X-Large' },
+      { value: 'text-3xl', text: '3X-Large' },
+      { value: 'text-4xl', text: '4X-Large' },
+      { value: 'text-5xl', text: '5X-Large' },
+      { value: 'text-6xl', text: '6X-Large' },
+    ],
+  },
+  {
+    id: 'font',
+    name: 'font-family',
+    options: [
+      { value: '', text: 'Font Family' },
+      { value: 'font-sans', text: 'System Sans Serif' },
+      { value: 'font-serif', text: 'System Serif' },
+      { value: 'font-mono', text: 'System Mono' },
+    ],
+  },
+];
+
+// Creates formatting (button) controls in page
+const controlDiv = document.getElementById('controls');
+formatsArr.forEach((format) => {
+  let btn = document.createElement('button');
+  btn.classList.add('control');
+  btn.disabled = true;
+  // btn.innerText = format.icon;
+  btn.dataset.func = format.func;
+  let icon = document.createElement('span');
+  icon.classList.add('material-icons');
+  icon.innerText = format.icon;
+  btn.appendChild(icon);
+  controlDiv.appendChild(btn);
+});
+
+// Creates formatting (dropdown) controls in page
+dropdownsArr.forEach((dropObj) => {
+  let slct = document.createElement('select');
+  slct.classList.add('control');
+  slct.name = dropObj.name;
+  slct.id = dropObj.id;
+  slct.disabled = true;
+  dropObj.options.forEach((choice) => {
+    let opt = document.createElement('option');
+    opt.value = choice.value;
+    opt.innerText = choice.text;
+    slct.appendChild(opt);
+  });
+  controlDiv.appendChild(slct);
+  console.log(dropObj);
+});
+
+// Grabs elements
 const draggables = document.querySelectorAll('.draggable');
 const containers = document.querySelectorAll('.container');
 const build = document.getElementById('build-label');
-const controlDiv = document.getElementById('controls');
 const preview = document.getElementById('preview-label');
 const controls = controlDiv.querySelectorAll('.control');
 
@@ -89,17 +164,17 @@ function isPrintStyle(className) {
 // Everytime label section is updated, refresh entire preview
 function refreshPreview() {
   let labelList = {};
-  console.log('---------------');
-  console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
+  // console.log('---------------');
+  // console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
   // Go through every section
   const sections = build.querySelectorAll('.container');
   sections.forEach((section) => {
-    console.log(`now in section ${section.id}`);
+    // console.log(`now in section ${section.id}`);
 
     // Get items per section
     let itemsArr = [];
     let items = section.querySelectorAll('.draggable');
-    console.log(`${section.id} has ${items.length}`);
+    // console.log(`${section.id} has ${items.length}`);
     items.forEach((item) => {
       let itemObj = {};
       let className = Array.from(item.classList).filter(isPrintStyle);
@@ -111,7 +186,7 @@ function refreshPreview() {
     // Builds array based on sections
     labelList[section.id] = itemsArr;
   });
-  console.log(labelList);
+  // console.log(labelList);
 
   // Clears preview div before appending elements
   preview.innerHTML = '';
@@ -150,10 +225,9 @@ function generateJson(list) {
       divBlocks.push({
         divBlock: { className: section, blocks: [fieldBlock] },
       });
-      console.log(divBlocks);
-      console.log(section);
+      // console.log(divBlocks);
+      // console.log(section);
       list[section].forEach((item) => {
-        console.log(item);
         // console.log(item);
         let field = {};
         field.field = item.field;
@@ -186,7 +260,10 @@ function activateControls(bool) {
   });
 }
 
-// Gets selected item state (formatted classes)
+/**
+ * Gets selected item state (formatted classes)
+ * @param {*} item item to show applied formats
+ */
 function getState(item) {
   // console.log('item is selected: ' + item.classList.contains('selected'));
   let formatList = Array.from(item.classList);
@@ -197,14 +274,38 @@ function getState(item) {
   // console.log(item.id + ' has ' + formatList);
   // console.log(formatList.length);
   if (formatList.length > 0) {
+    // let group = new RegExp(`${control.id}-*`);
+    // let hasGroup = formatItem.className.split(' ').some(function (c) {
+    //   return group.test(c);
+    // });
+
     // Render state of each formatting button
     formatList.forEach((formatItem) => {
       // console.log('formatItem: ' + formatItem);
+      // Check if class is a choice in a dropdown by matching first part of class
+      let strArr = formatItem.split('-');
+      let str = strArr[0];
+      // Loop through each item in array
+      dropdownsArr.forEach((dropdown) => {
+        let isDropdownStyle = str === dropdown.id;
+        // console.log(strArr[0]);
+        // console.log(dropdowns.id);
+        // console.log('is style in a dropdown? ' + isDropdownStyle);
+        if (isDropdownStyle) {
+          let selDropdown = document.getElementById(str);
+          selDropdown.value = formatItem;
+        }
+      });
+      // else if (fomatItem === dropdowns.id)
       controls.forEach((control) => {
         // Select that format and activate it
         if (formatItem === control.dataset.func) {
           control.classList.add('selected');
         }
+        // else if (formatItem === control.value) {
+        //   console.log('select');
+        //   control.value = formatItem;
+        // }
         // console.log(formatItem + ' is active');
       });
     });
@@ -217,8 +318,13 @@ function getState(item) {
   // }
 }
 
-// Applies styles
-function toggleStyle(control, items, bool) {
+/**
+ * Applies selected control styles to selected items
+ * @param {*} control id of style control (button or select)
+ * @param {*} selectedItems array of items to be formatted (selected)
+ * @param {*} bool if style will be added or removed, depends on state of control (important for buttons)
+ */
+function toggleStyle(control, selectedItems, bool) {
   // Toggles class in item - causes errors when multiple are selected
   // with conflicting styles...
   // formatItems.forEach((item) => {
@@ -237,22 +343,83 @@ function toggleStyle(control, items, bool) {
   //     // console.log('removed from classList: ' + control.dataset.func);
   //   });
   // }
-  items.forEach((item) => {
+  // make sure we're getting only selected items
+  // console.log(selectedItems);
+  selectedItems.forEach((item) => {
+    // console.log(`item ${item.id} will be formatted? ${bool}`);
+    // console.log(bool);
+    // console.log(item);
+    // Double-checking if item is selected
     if (item.classList.contains('selected')) {
+      // console.log(
+      //   `item ${item.id} is selected ${item.classList.contains('selected')}`
+      // );
+
+      // Deals with buttons
+
       // console.log('item ' + item.id + ' is selected');
       // if formatting button is selected, add class, else remove
       bool
         ? item.classList.add(control.dataset.func)
         : item.classList.remove(control.dataset.func);
       //
+    } else {
+      return false;
     }
     refreshPreview();
     // console.log('inside toggleStyle');
   });
 }
 
+/**
+ * Applies selected dropdown styles to selected items
+ * @param {*} dropdown id of dropdown
+ * @param {*} selectedItems array of items to be formatted (selected)
+ */
+function addReplaceStyle(dropdown, selectedItems) {
+  // Deals with selection
+  // console.log('selected items ' + selectedItems);
+  // console.dir(selectedItems);
+  dropdown.addEventListener('input', function () {
+    selectedItems.forEach((item) => {
+      let option = dropdown.value;
+      if (option !== '') {
+        // Check if item already has styles in this group
+        let group = new RegExp(`${dropdown.id}-*`);
+        let hasGroup = item.className.split(' ').some(function (c) {
+          return group.test(c);
+        });
+        if (item.classList.contains('selected')) {
+          if (!hasGroup) {
+            // If not, add it
+            item.classList.add(option);
+            // item.classList.add('added-if-no-group');
+            console.log(`added ${option} to ${item.id}`);
+            // console.log(selectedItems);
+          } else {
+            // If yes, replace it
+            item.classList.forEach((className) => {
+              if (className.startsWith(dropdown.id)) {
+                item.classList.remove(className);
+              }
+            });
+            item.classList.add(option);
+            // console.log('added-after-removing-group');
+          }
+        }
+      }
+    });
+  });
+  //
+  // console.dir(selectedItems);
+  refreshPreview();
+}
+
 function resetControls() {
   controls.forEach((control) => {
+    // Deal with select input
+    let isDropdown = control.tagName === 'SELECT';
+    isDropdown ? (control.value = '') : '';
     control.classList.remove('selected');
   });
 }
@@ -343,11 +510,15 @@ build.addEventListener('click', (e) => {
 // Formatting controls
 controlDiv.addEventListener('click', (e) => {
   // Gets selected items to format
-  let formatItems = build.querySelectorAll('.selected');
-
+  let formatItems = build.querySelectorAll('li.selected');
+  // console.log(formatItems);
   // if (e.target && e.target.matches('.control')) {
   //   // formatMenu(e);
   let isFormatSelected = toggleSelect(e.target);
+  let isButton = e.target.tagName === 'BUTTON';
+  let isDropdown = e.target.tagName === 'SELECT';
+  // console.log(e.target.tagName);
+  // console.log(isButton, isDropdown);
   // Apply styles in item
   // console.log(
   //   'botão ' +
@@ -355,7 +526,15 @@ controlDiv.addEventListener('click', (e) => {
   //     ' e item selecionado ' +
   //     document.querySelector('.draggable.selected').id
   // );
-  toggleStyle(e.target, formatItems, isFormatSelected);
+  // Buttons
+  if (isButton) {
+    // console.log('is a buton');
+    toggleStyle(e.target, formatItems, isFormatSelected);
+  } else if (isDropdown) {
+    // console.log('is a dropdown');
+    addReplaceStyle(e.target, formatItems);
+  }
+
   // getState(e.target);
   // }
   // Get state of control for selected item(s)
@@ -370,7 +549,8 @@ controlDiv.addEventListener('click', (e) => {
 // - [x] Capture styles in object array
 // - [x] Translate object array into JSON in the appropriate format
 // - [] Add more format buttons
-// --[] Underline?
+// --[x] Underline
+// --[x] Uppercase
 // --[] Font-type
 // --[] Font-size
 // --[] Spacing

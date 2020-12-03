@@ -134,6 +134,7 @@ button.control {
   outline: none;
   width: 50px;
   height: 50px;
+  cursor: pointer;
 }
 
 button.control:hover {
@@ -144,13 +145,17 @@ button.control:hover {
   outline: none;
 }
 
+button>.material-icons {
+  pointer-events: none;
+}
+
 .draggable.selected {
   background-color: darkmagenta;
   border: 1px solid darkmagenta;
 }
 
-.control.selected,
-.control.selected:hover {
+button.control.selected,
+button.control.selected:hover {
   background-color: black;
 }
 
