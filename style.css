@@ -32,6 +32,7 @@ li {
   min-height: 300px;
 }
 
+#label-header>.header,
 .label-header>div,
 .label-footer>div {
   display: inline-block;
