@@ -5,12 +5,14 @@
  */
 
 //  Temporary array with fields
+//  Add JSON variable where the fields are coming from/to
 const fieldProps = [
-  { name: 'Label Heading', id: 'heading' },
-  { name: 'Family', id: 'family' },
-  { name: 'Scientific Name', id: 'speciesname' },
-  { name: 'Catalog Number', id: 'catalognumber' },
-  { name: 'Collector', id: 'recordedby' },
+  { block: 'labelHeader', name: 'Heading Text', id: 'header' },
+  { block: 'labelFooter', name: 'Footer Text', id: 'footer' },
+  { block: 'labelBlock', name: 'Family', id: 'family' },
+  { block: 'labelBlock', name: 'Scientific Name', id: 'speciesname' },
+  { block: 'labelBlock', name: 'Catalog Number', id: 'catalognumber' },
+  { block: 'labelBlock', name: 'Collector', id: 'recordedby' },
 ];
 
 // Creates draggable elements
@@ -21,10 +23,17 @@ fieldProps.forEach((field) => {
   // fieldElement.innerHTML = field.name;
   li.innerHTML = field.name;
   li.id = field.id;
-  li.draggable = 'true';
-  li.classList.add('draggable');
-  // li.appendChild(fieldElement);
-  fieldDiv.appendChild(li);
+  if (field.block === 'labelBlock') {
+    li.draggable = 'true';
+    li.classList.add('draggable');
+    // li.appendChild(fieldElement);
+    fieldDiv.appendChild(li);
+  } else {
+    let fixedDiv = document.getElementById(`label-${field.id}`);
+    // console.log(field.id);
+    // console.log(fixedDiv);
+    fixedDiv.appendChild(li);
+  }
 });
 
 // Temporary array for buttons
@@ -98,8 +107,8 @@ dropdownsArr.forEach((dropObj) => {
     opt.innerText = choice.text;
     slct.appendChild(opt);
   });
-  controlDiv.appendChild(slct);
-  console.log(dropObj);
+  // controlDiv.appendChild(slct);
+  // console.log(dropObj);
 });
 
 // Grabs elements
@@ -108,14 +117,27 @@ const containers = document.querySelectorAll('.container');
 const build = document.getElementById('build-label');
 const preview = document.getElementById('preview-label');
 const controls = controlDiv.querySelectorAll('.control');
+const inputs = document.querySelectorAll('input');
+
+// Deals with form elements
+inputs.forEach((input) => {
+  input.addEventListener('change', updateInputVal);
+});
+
+let labelHeader = {};
+function updateInputVal(e) {
+  // preview.textContent = e.target.value;
+  // createPreviewEl(e.target, 'label-header');
+  labelHeader[e.target.id] = e.target.value;
+  // console.dir(labelHeader);
+}
 
 // Refactor this so that elements are created based on array of elements
 function createPreviewEl(element, parent) {
-  // console.log(element);
-  // console.log(element.field);
+  console.log(element);
   // console.log(parent);
   let field = fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
-  // console.log(field);
+  console.log(field);
   // Create parents first (if not available), then children inside
   let hasEl = preview.querySelector(`.${parent}`) != null;
   // console.log(hasEl);
@@ -161,16 +183,30 @@ function isPrintStyle(className) {
   return !functionalStyles.includes(className);
 }
 
+// Add header and footer elements and format them (element is either head or foot)
+function refreshFixedEl(elementName) {
+  // Go through header area
+  // get element
+  let element = build.querySelector(`#label-${elementName} li`);
+  // console.log(element);
+  // get parent element
+  let parent = build.querySelector(`#label-${elementName}`);
+  // console.log(parent);
+  // call create element
+  createPreviewEl(element, parent);
+  // call update json
+  // later need to allow heading elements to be clicked and formatted
+}
+
 // Everytime label section is updated, refresh entire preview
 function refreshPreview() {
   let labelList = {};
   // console.log('---------------');
   // console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
-  // Go through every section
+  // Go through every section in Label Middle
   const sections = build.querySelectorAll('.container');
   sections.forEach((section) => {
     // console.log(`now in section ${section.id}`);
-
     // Get items per section
     let itemsArr = [];
     let items = section.querySelectorAll('.draggable');
@@ -186,7 +222,7 @@ function refreshPreview() {
     // Builds array based on sections
     labelList[section.id] = itemsArr;
   });
-  // console.log(labelList);
+  console.log(labelList);
 
   // Clears preview div before appending elements
   preview.innerHTML = '';
@@ -540,6 +576,9 @@ controlDiv.addEventListener('click', (e) => {
   // let itemHasStyles = getState(e.target).length > 0;
   // console.log(itemHasStyles);
 });
+
+//  On load
+refreshFixedEl('header');
 
 // ************** TO DO ************
 // - [x] Need to reset controls for when more than one item is selected
