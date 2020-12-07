@@ -1,8 +1,8 @@
 [{
-    "name": "NEON Fish Label - Experiments by Laura",
+    "title": "NEON Fish Label - Experiments by Laura",
     "displaySpeciesAuthor": 0,
     "displayBarcode": 0,
-    "columnCount": "2",
+    "labelType": "2",
     "defaultStyles": "font-size:12pt",
     "defaultCss": "../../css/symb/labelhelpers.css",
     "customCss": "",
@@ -10,10 +10,10 @@
       "className": "font-sans label-md"
     },
     "labelHeader": {
-      "hPrefix": "ASU NEON Biorepository Fish Collection",
-      "hMidCol": 0,
+      "prefix": "ASU NEON Biorepository Fish Collection",
+      "midText": 0,
       "midStr": "",
-      "hSuffix": "",
+      "suffix": "",
       "style": "",
       "className": "font-bold text-base mb-1"
     },
@@ -182,10 +182,10 @@
     }
   },
   {
-    "name": "Label Format Name",
+    "title": "Label Format Name",
     "displaySpeciesAuthor": 0,
     "displayBarcode": 0,
-    "columnCount": "2",
+    "labelType": "2",
     "defaultStyles": "font-size:8pt",
     "defaultCss": "../../css/symb/labelhelpers.css",
     "customCss": "",
@@ -211,10 +211,10 @@
     ]
   },
   {
-    "name": "Label Format Name",
+    "title": "Label Format Name",
     "displaySpeciesAuthor": 0,
     "displayBarcode": 0,
-    "columnCount": "2",
+    "labelType": "2",
     "defaultStyles": "font-size:8pt",
     "defaultCss": "../../css/symb/labelhelpers.css",
     "customCss": "",
