@@ -29,10 +29,10 @@ fieldProps.forEach((field) => {
     // li.appendChild(fieldElement);
     fieldDiv.appendChild(li);
   } else {
-    let fixedDiv = document.getElementById(`label-${field.id}`);
+    // let fixedDiv = document.getElementById(`label-${field.id}`);
     // console.log(field.id);
     // console.log(fixedDiv);
-    fixedDiv.appendChild(li);
+    // fixedDiv.appendChild(li);
   }
 });
 
@@ -135,9 +135,10 @@ function updateInputVal(e) {
 // Refactor this so that elements are created based on array of elements
 function createPreviewEl(element, parent) {
   console.log(element);
+  // console.log(element.field);
   // console.log(parent);
   let field = fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
-  console.log(field);
+  // console.log(field);
   // Create parents first (if not available), then children inside
   let hasEl = preview.querySelector(`.${parent}`) != null;
   // console.log(hasEl);
@@ -193,7 +194,8 @@ function refreshFixedEl(elementName) {
   let parent = build.querySelector(`#label-${elementName}`);
   // console.log(parent);
   // call create element
-  createPreviewEl(element, parent);
+  // createPreviewEl(element, parent);
+  refreshPreview();
   // call update json
   // later need to allow heading elements to be clicked and formatted
 }
@@ -204,12 +206,14 @@ function refreshPreview() {
   // console.log('---------------');
   // console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
   // Go through every section in Label Middle
-  const sections = build.querySelectorAll('.container');
+  // const sections = build.querySelectorAll('.container');
+  const sections = build.querySelectorAll('div');
   sections.forEach((section) => {
     // console.log(`now in section ${section.id}`);
     // Get items per section
     let itemsArr = [];
-    let items = section.querySelectorAll('.draggable');
+    // let items = section.querySelectorAll('.draggable');
+    let items = section.querySelectorAll('li');
     // console.log(`${section.id} has ${items.length}`);
     items.forEach((item) => {
       let itemObj = {};
@@ -241,14 +245,14 @@ function generateJson(list) {
   // console.log(labelList);
   // let json = JSON.stringify(labelList);
   let labelFormat = {};
-  labelFormat.title = 'Label Format Title';
-  labelFormat.displaySpeciesAuthor = 0;
-  labelFormat.displayBarcode = 0;
-  labelFormat.labelType = '2';
-  labelFormat.defaultStyles = 'font-size:8pt';
-  labelFormat.defaultCss = '../../css/symb/labelhelpers.css';
-  labelFormat.customCss = '';
-  labelFormat.labelDiv = { className: 'label-md' };
+  // labelFormat.title = 'Label Format Title';
+  // labelFormat.displaySpeciesAuthor = 0;
+  // labelFormat.displayBarcode = 0;
+  // labelFormat.labelType = '2';
+  // labelFormat.defaultStyles = 'font-size:8pt';
+  // labelFormat.defaultCss = '../../css/symb/labelhelpers.css';
+  // labelFormat.customCss = '';
+  // labelFormat.labelDiv = { className: 'label-md' };
   // labelFormat.labelBlocks = [labelList['label-header']];
   // Each section in labelList should be translated into a
   // divBlock, where the className should include the id
@@ -275,8 +279,9 @@ function generateJson(list) {
       });
     }
   });
-  labelFormat.labelBlocks = divBlocks;
-  let json = JSON.stringify(labelFormat);
+  // labelFormat.labelBlocks = divBlocks;
+  // let json = JSON.stringify(labelFormat);
+  let json = JSON.stringify(divBlocks);
   console.log(json);
 }
 
