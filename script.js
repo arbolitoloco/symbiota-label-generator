@@ -410,6 +410,16 @@ function getState(item) {
   //   // });
   // resetControls();
   // }
+
+  // Get state of prefix/suffix for fields
+  let hasPrefix = item.dataset.prefix != null;
+  let prefixInput = document.getElementById('prefix');
+  // console.log(hasPrefix);
+  hasPrefix ? (prefixInput.value = item.dataset.prefix) : '';
+  let hasSuffix = item.dataset.suffix != null;
+  let suffixInput = document.getElementById('suffix');
+  // console.log(hasPrefix);
+  hasSuffix ? (suffixInput.value = item.dataset.suffix) : '';
 }
 
 /**
@@ -515,6 +525,8 @@ function resetControls() {
     let isDropdown = control.tagName === 'SELECT';
     isDropdown ? (control.value = '') : '';
     control.classList.remove('selected');
+    let isInput = control.tagName === 'INPUT';
+    isInput ? (control.value = '') : '';
   });
 }
 
@@ -650,15 +662,7 @@ function updateInputVal(el, item) {
   let option = el.id;
   // console.log(option);
   // console.log(item);
-  item.setAttribute(option, el.value);
-  // item.dataset.option = el.value;
-  // let fieldOptions = {};
-  // preview.textContent = e.target.value;
-  // createPreviewEl(e.target, 'label-header');
-  // Get selected item (only one at a time)
-  // Update item object with values from input (prefix/suffix)
-  // fieldOptions[e.target.id] = e.target.value;
-  // console.dir(fieldOptions);
+  item.setAttribute('data-' + option, el.value);
 }
 
 //  On load
