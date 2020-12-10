@@ -96,6 +96,7 @@ formatsArr.forEach((format) => {
 
 // Creates formatting (dropdown) controls in page
 dropdownsArr.forEach((dropObj) => {
+  // console.log('inside dropdownsArr each');
   let slct = document.createElement('select');
   slct.classList.add('control');
   slct.name = dropObj.name;
@@ -107,17 +108,33 @@ dropdownsArr.forEach((dropObj) => {
     opt.innerText = choice.text;
     slct.appendChild(opt);
   });
-  // controlDiv.appendChild(slct);
+  controlDiv.appendChild(slct);
   // console.log(dropObj);
 });
 
 // Grabs elements
-const draggables = document.querySelectorAll('.draggable');
 const containers = document.querySelectorAll('.container');
+const draggables = document.querySelectorAll('.draggable');
 const build = document.getElementById('build-label');
 const preview = document.getElementById('preview-label');
 const controls = controlDiv.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
+
+// Adds line (fieldBlock)
+function addLine() {
+  // console.log('clicked');
+  let line = document.createElement('div');
+  line.classList.add('field-block', 'container');
+  let midBlocks = document.querySelectorAll('#label-middle > .field-block');
+  // console.log(midBlocks);
+  let lastBlock = midBlocks[midBlocks.length - 1];
+  lastBlock.parentNode.insertBefore(line, lastBlock.nextSibling);
+  line.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    line.appendChild(dragging);
+  });
+}
 
 // Deals with form elements
 inputs.forEach((input) => {
@@ -133,44 +150,62 @@ function updateInputVal(e) {
 }
 
 // Refactor this so that elements are created based on array of elements
+// function createPreviewEl(element, parent) {
+//   console.log(element);
+//   // console.log(element.field);
+//   // console.log(parent);
+//   let field = fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
+//   // console.log(field);
+//   // Create parents first (if not available), then children inside
+//   let hasEl = preview.querySelector(`.${element.field}`) != null;
+//   // console.log(hasEl);
+//   if (!hasEl) {
+//     let newParentEl = document.createElement('div');
+//     newParentEl.classList.add(parent);
+//     preview.appendChild(newParentEl);
+//     let div = document.createElement('div');
+//     div.innerHTML = field.name;
+//     div.classList.add(field.id);
+//     div.classList.add(...element.className);
+//     newParentEl.appendChild(div);
+//   } else {
+//     // Check if child already exists div
+//     let hasItem =
+//       preview.querySelector(`.${parent} > .${element.field}`) != null;
+//     if (!hasItem) {
+//       let div = document.createElement('div');
+//       div.innerHTML = field.name;
+//       div.classList.add(field.id);
+//       div.classList.add(...element.className);
+//       preview.querySelector(`.${parent}`).appendChild(div);
+//     } else {
+//       // Clear div and append new
+//       preview.querySelector(`.${parent}`).innerHTML = '';
+//       let div = document.createElement('div');
+//       div.innerHTML = field.name;
+//       div.classList.add(field.id);
+//       div.classList.add(...element.className);
+//       preview.querySelector(`.${parent}`).appendChild(div);
+//     }
+//   }
+// }
+// Iterate throught every field block and add fields
 function createPreviewEl(element, parent) {
   console.log(element);
-  // console.log(element.field);
-  // console.log(parent);
-  let field = fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
-  // console.log(field);
-  // Create parents first (if not available), then children inside
-  let hasEl = preview.querySelector(`.${parent}`) != null;
-  // console.log(hasEl);
-  if (!hasEl) {
-    let newParentEl = document.createElement('div');
-    newParentEl.classList.add(parent);
-    preview.appendChild(newParentEl);
-    let div = document.createElement('div');
-    div.innerHTML = field.name;
-    div.classList.add(field.id);
-    div.classList.add(...element.className);
-    newParentEl.appendChild(div);
-  } else {
-    // Check if child already exists div
-    let hasItem =
-      preview.querySelector(`.${parent} > .${element.field}`) != null;
-    if (!hasItem) {
-      let div = document.createElement('div');
-      div.innerHTML = field.name;
-      div.classList.add(field.id);
-      div.classList.add(...element.className);
-      preview.querySelector(`.${parent}`).appendChild(div);
-    } else {
-      // Clear div and append new
-      preview.querySelector(`.${parent}`).innerHTML = '';
-      let div = document.createElement('div');
-      div.innerHTML = field.name;
-      div.classList.add(field.id);
-      div.classList.add(...element.className);
-      preview.querySelector(`.${parent}`).appendChild(div);
-    }
-  }
+  // console.log(document.querySelector(`#${element.field}`).parentNode);
+  console.log(parent);
+  // Grabs information from fieldProps array to create elements matching on id
+  let fieldInfo =
+    fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
+  // console.log(fieldInfo);
+  //     let newParentEl = document.createElement('div');
+  //     newParentEl.classList.add(parent);
+  //     preview.appendChild(newParentEl);
+  let div = document.createElement('div');
+  div.innerHTML = fieldInfo.name;
+  div.classList.add(fieldInfo.id);
+  div.classList.add(...element.className);
+  parent.appendChild(div);
 }
 
 // const labelList = {
@@ -185,36 +220,40 @@ function isPrintStyle(className) {
 }
 
 // Add header and footer elements and format them (element is either head or foot)
-function refreshFixedEl(elementName) {
-  // Go through header area
-  // get element
-  let element = build.querySelector(`#label-${elementName} li`);
-  // console.log(element);
-  // get parent element
-  let parent = build.querySelector(`#label-${elementName}`);
-  // console.log(parent);
-  // call create element
-  // createPreviewEl(element, parent);
-  refreshPreview();
-  // call update json
-  // later need to allow heading elements to be clicked and formatted
-}
+// function refreshFixedEl(elementName) {
+//   // Go through header area
+//   // get element
+//   let element = build.querySelector(`#label-${elementName} li`);
+//   // console.log(element);
+//   // get parent element
+//   let parent = build.querySelector(`#label-${elementName}`);
+//   // console.log(parent);
+//   // call create element
+//   // createPreviewEl(element, parent);
+//   // refreshPreview();
+//   // call update json
+//   // later need to allow heading elements to be clicked and formatted
+// }
 
 // Everytime label section is updated, refresh entire preview
+// Refactor to go only inside label-middle (eventually remove label-middle altogether)
 function refreshPreview() {
-  let labelList = {};
+  // let labelList = {};
+  // labelList is an array of fieldBlocks
+  let labelList = [];
   // console.log('---------------');
   // console.log(`build has ${build.querySelectorAll('.draggable').length} items`);
   // Go through every section in Label Middle
   // const sections = build.querySelectorAll('.container');
-  const sections = build.querySelectorAll('div');
-  sections.forEach((section) => {
-    // console.log(`now in section ${section.id}`);
-    // Get items per section
+  // const sections = build.querySelectorAll('div');
+
+  // Instead of sections, go through label-middle and gather fieldBlocks (lines)
+  // itemsArr is an array of fields
+  let fieldBlocks = document.querySelectorAll('#build-label .field-block');
+  fieldBlocks.forEach((block) => {
     let itemsArr = [];
-    // let items = section.querySelectorAll('.draggable');
-    let items = section.querySelectorAll('li');
-    // console.log(`${section.id} has ${items.length}`);
+    // Get items per section
+    let items = block.querySelectorAll('li');
     items.forEach((item) => {
       let itemObj = {};
       let className = Array.from(item.classList).filter(isPrintStyle);
@@ -223,28 +262,52 @@ function refreshPreview() {
       itemsArr.push(itemObj);
     });
 
-    // Builds array based on sections
-    labelList[section.id] = itemsArr;
+    labelList.push(itemsArr);
+    // console.log(labelList);
   });
+
+  // sections.forEach((section) => {
+  // console.log(`now in section ${section.id}`);
+
+  // let items = section.querySelectorAll('.draggable');
+  // let items = section.querySelectorAll('li');
+  // console.log(`${section.id} has ${items.length}`);
+
+  // Builds array based on sections
+  // labelList[section.id] = itemsArr;
+  // });
   console.log(labelList);
 
   // Clears preview div before appending elements
   preview.innerHTML = '';
 
   // // Creates HTML elements and appends to preview div
-  Object.keys(labelList).forEach((section) => {
-    labelList[section].forEach((item) => {
-      createPreviewEl(item, section);
+  // Object.keys(labelList).forEach((section) => {
+  //   labelList[section].forEach((item) => {
+  //     // createPreviewEl(item, section);
+  //     createPreviewEl(item);
+  //   });
+  // });
+  labelList.forEach((labelItem) => {
+    console.log(labelItem);
+    // create fieldBlock div
+    let fieldBlock = document.createElement('div');
+    fieldBlock.classList.add('field-block');
+    preview.appendChild(fieldBlock);
+    // create elements inside fieldBlock
+    labelItem.forEach((field) => {
+      createPreviewEl(field, fieldBlock);
     });
+    // createPreviewEl(fieldBlock);
   });
 
-  generateJson(labelList);
+  // generateJson(labelList);
 }
 // Generate JSON string for current configurations
 function generateJson(list) {
   // console.log(labelList);
   // let json = JSON.stringify(labelList);
-  let labelFormat = {};
+  // let labelFormat = {};
   // labelFormat.title = 'Label Format Title';
   // labelFormat.displaySpeciesAuthor = 0;
   // labelFormat.displayBarcode = 0;
@@ -254,9 +317,11 @@ function generateJson(list) {
   // labelFormat.customCss = '';
   // labelFormat.labelDiv = { className: 'label-md' };
   // labelFormat.labelBlocks = [labelList['label-header']];
+  let labelBlocks = [];
   // Each section in labelList should be translated into a
   // divBlock, where the className should include the id
   let divBlocks = [];
+
   Object.keys(list).forEach((section) => {
     let hasItems = list[section].length > 0;
     if (hasItems) {
@@ -583,7 +648,7 @@ controlDiv.addEventListener('click', (e) => {
 });
 
 //  On load
-refreshFixedEl('header');
+// refreshFixedEl('header');
 
 // ************** TO DO ************
 // - [x] Need to reset controls for when more than one item is selected
