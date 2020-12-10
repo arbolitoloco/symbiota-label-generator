@@ -117,7 +117,7 @@ const containers = document.querySelectorAll('.container');
 const draggables = document.querySelectorAll('.draggable');
 const build = document.getElementById('build-label');
 const preview = document.getElementById('preview-label');
-const controls = controlDiv.querySelectorAll('.control');
+const controls = document.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
 
 // Adds line (fieldBlock)
@@ -134,19 +134,6 @@ function addLine() {
     const dragging = document.querySelector('.dragging');
     line.appendChild(dragging);
   });
-}
-
-// Deals with form elements
-inputs.forEach((input) => {
-  input.addEventListener('change', updateInputVal);
-});
-
-let labelHeader = {};
-function updateInputVal(e) {
-  // preview.textContent = e.target.value;
-  // createPreviewEl(e.target, 'label-header');
-  labelHeader[e.target.id] = e.target.value;
-  // console.dir(labelHeader);
 }
 
 // Refactor this so that elements are created based on array of elements
@@ -259,6 +246,8 @@ function refreshPreview() {
       let className = Array.from(item.classList).filter(isPrintStyle);
       itemObj.field = item.id;
       itemObj.className = className;
+      itemObj.prefix = item.dataset.prefix;
+      itemObj.suffix = item.dataset.suffix;
       itemsArr.push(itemObj);
     });
 
@@ -622,6 +611,7 @@ controlDiv.addEventListener('click', (e) => {
   let isFormatSelected = toggleSelect(e.target);
   let isButton = e.target.tagName === 'BUTTON';
   let isDropdown = e.target.tagName === 'SELECT';
+  let isInput = e.target.tagName === 'INPUT';
   // console.log(e.target.tagName);
   // console.log(isButton, isDropdown);
   // Apply styles in item
@@ -639,13 +629,37 @@ controlDiv.addEventListener('click', (e) => {
     // console.log('is a dropdown');
     addReplaceStyle(e.target, formatItems);
   }
-
-  // getState(e.target);
-  // }
-  // Get state of control for selected item(s)
-  // let itemHasStyles = getState(e.target).length > 0;
-  // console.log(itemHasStyles);
 });
+
+// Field and Block options (prefix/suffix, delimiters)
+// Listen to input changes
+inputs.forEach((input) => {
+  input.addEventListener('input', (e) => {
+    let formatItem = build.querySelector('li.selected');
+    updateInputVal(e.target, formatItem);
+  });
+});
+
+// getState(e.target);
+// }
+// Get state of control for selected item(s)
+// let itemHasStyles = getState(e.target).length > 0;
+// console.log(itemHasStyles);
+
+function updateInputVal(el, item) {
+  let option = el.id;
+  // console.log(option);
+  // console.log(item);
+  item.setAttribute(option, el.value);
+  // item.dataset.option = el.value;
+  // let fieldOptions = {};
+  // preview.textContent = e.target.value;
+  // createPreviewEl(e.target, 'label-header');
+  // Get selected item (only one at a time)
+  // Update item object with values from input (prefix/suffix)
+  // fieldOptions[e.target.id] = e.target.value;
+  // console.dir(fieldOptions);
+}
 
 //  On load
 // refreshFixedEl('header');
