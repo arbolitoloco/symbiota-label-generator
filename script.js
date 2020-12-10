@@ -358,7 +358,7 @@ function toggleSelect(element) {
   return element.classList.contains('selected');
 }
 
-// Activates formatting controls
+// Activates formatting controls (for fields)
 function activateControls(bool) {
   controls.forEach((control) => {
     bool ? (control.disabled = false) : (control.disabled = true);
