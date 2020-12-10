@@ -196,9 +196,11 @@ function createPreviewEl(element, parent) {
   let hasPrefix = element.prefix != undefined;
   let hasSuffix = element.suffix != undefined;
   if (hasPrefix) {
-    let prefSpan = document.createElement('span');
-    prefSpan.innerText = element.prefix;
-    div.parentNode.prepend(prefSpan);
+    let currText = div.innerText;
+    // let prefSpan = document.createElement('span');
+    // prefSpan.innerText = element.prefix;
+    let prefSpan = `<span>${element.prefix}</span>`;
+    div.innerHTML = prefSpan + currText;
   }
   if (hasSuffix) {
     let sufSpan = document.createElement('span');
