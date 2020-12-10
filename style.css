@@ -13,12 +13,12 @@
 } */
 
 main {
-  width: 980px;
+  width: 680px;
   margin: 0 auto;
-  display: grid;
+  /* display: grid;
   grid-template: auto 1fr auto / repeat(2, 1fr);
   grid-gap: 1em;
-  align-items: start;
+  align-items: start; */
 }
 
 li {
