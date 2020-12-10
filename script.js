@@ -303,7 +303,7 @@ function refreshPreview() {
     // createPreviewEl(fieldBlock);
   });
 
-  // generateJson(labelList);
+  generateJson(labelList);
 }
 // Generate JSON string for current configurations
 function generateJson(list) {
@@ -319,6 +319,10 @@ function generateJson(list) {
   // labelFormat.customCss = '';
   // labelFormat.labelDiv = { className: 'label-md' };
   // labelFormat.labelBlocks = [labelList['label-header']];
+  console.log(list);
+  list.forEach((field) => {
+    console.log(field);
+  });
   let labelBlocks = [];
   // Each section in labelList should be translated into a
   // divBlock, where the className should include the id
@@ -330,7 +334,8 @@ function generateJson(list) {
       let fieldBlock = {};
       let fields = [];
       divBlocks.push({
-        divBlock: { className: section, blocks: [fieldBlock] },
+        // divBlock: { className: section, blocks: [fieldBlock] },
+        divBlock: { blocks: [fieldBlock] },
       });
       // console.log(divBlocks);
       // console.log(section);
@@ -338,8 +343,10 @@ function generateJson(list) {
         // console.log(item);
         let field = {};
         field.field = item.field;
-        field.className ? (field.className = item.className.join(' ')) : '';
+        item.className ? (field.className = item.className.join(' ')) : '';
         // console.log(field);
+        item.prefix ? (field.prefix = item.prefix) : '';
+        item.suffix ? (field.suffix = item.suffix) : '';
         fields.push(field);
         fieldBlock.fieldBlock = fields;
         // console.log(fields);
