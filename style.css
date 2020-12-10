@@ -4,7 +4,17 @@
 * Version: Nov 2020
 *-----------------------------------------*/
 
+
+/* main {
+  display: grid;
+  grid-template: auto 1fr auto / repeat(2, 1fr);
+  grid-gap: 1em;
+  align-items: start;
+} */
+
 main {
+  width: 980px;
+  margin: 0 auto;
   display: grid;
   grid-template: auto 1fr auto / repeat(2, 1fr);
   grid-gap: 1em;
@@ -16,20 +26,32 @@ li {
   display: inline-block;
 }
 
-#fields {
+
+/* #fields {
   grid-column: 1 / 4;
+} */
+
+#field-options {
+  background-color: white;
+  padding: 1em;
+}
+
+#field-options>div {
+  display: block;
+  margin: 1em 0;
 }
 
 #build-label {
   background-color: rgb(143, 143, 143);
-  min-height: 300px;
+  /* min-height: 300px; */
   grid-column: 1/2;
   padding: 0.5em;
 }
 
-#preview-label {
-  border: 1px solid gray;
-  min-height: 300px;
+#build-label .delimiter {
+  height: 1em;
+  /* background-color: white; */
+  /* color: black; */
 }
 
 #label-header>.header,
@@ -51,10 +73,6 @@ li {
   min-height: 70px;
 }
 
-#label-middle {
-  min-height: 150px;
-}
-
 .area-title {
   margin: 0;
   padding-left: 0.25em;
@@ -74,7 +92,12 @@ li {
 
 #label-middle>.field-block {
   border: 1px dashed white;
-  height: 3em;
+  height: 2em;
+}
+
+#preview-label {
+  border: 1px solid gray;
+  min-height: 100px;
 }
 
 #preview-label>.field-block>div {
