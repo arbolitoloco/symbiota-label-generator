@@ -72,6 +72,15 @@ li {
   display: block;
 }
 
+#label-middle>.field-block {
+  border: 1px dashed white;
+  height: 3em;
+}
+
+#preview-label>.field-block>div {
+  display: inline;
+}
+
 
 /** Button stuff **/
 

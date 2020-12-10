@@ -21,6 +21,9 @@
 /* Page & Label sizes */
 
 @media print {
+  .controls {
+    display: none;
+  }
   .body {
     width: auto;
     margin-left: auto;
@@ -55,12 +58,6 @@
 
 
 /* Placing and ordering things */
-
-.grid {
-  /* Makes container fixed height and adds css-grid*/
-  min-height: 100%;
-  display: grid;
-}
 
 .block {
   display: block;
@@ -155,6 +152,23 @@
 }
 
 
+/* CSS-Grid */
+
+.grid {
+  /* Makes container fixed height and adds css-grid*/
+  /* min-height: 100%; */
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
 /* Fonts */
 
 .font-sans {
@@ -225,6 +239,42 @@
 
 .text-6xl {
   font-size: 4em;
+}
+
+.font-hairline {
+  font-weight: 100;
+}
+
+.font-thin {
+  font-weight: 200;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.font-black {
+  font-weight: 900;
 }
 
 .italic {
