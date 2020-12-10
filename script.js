@@ -180,7 +180,7 @@ function addLine() {
 function createPreviewEl(element, parent) {
   console.log(element);
   // console.log(document.querySelector(`#${element.field}`).parentNode);
-  console.log(parent);
+  // console.log(parent);
   // Grabs information from fieldProps array to create elements matching on id
   let fieldInfo =
     fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
@@ -193,6 +193,18 @@ function createPreviewEl(element, parent) {
   div.classList.add(fieldInfo.id);
   div.classList.add(...element.className);
   parent.appendChild(div);
+  let hasPrefix = element.prefix != undefined;
+  let hasSuffix = element.suffix != undefined;
+  if (hasPrefix) {
+    let prefSpan = document.createElement('span');
+    prefSpan.innerText = element.prefix;
+    div.parentNode.prepend(prefSpan);
+  }
+  if (hasSuffix) {
+    let sufSpan = document.createElement('span');
+    sufSpan.innerText = element.suffix;
+    div.appendChild(sufSpan);
+  }
 }
 
 // const labelList = {
@@ -242,6 +254,7 @@ function refreshPreview() {
     // Get items per section
     let items = block.querySelectorAll('li');
     items.forEach((item) => {
+      console.log(item);
       let itemObj = {};
       let className = Array.from(item.classList).filter(isPrintStyle);
       itemObj.field = item.id;
@@ -252,7 +265,7 @@ function refreshPreview() {
     });
 
     labelList.push(itemsArr);
-    // console.log(labelList);
+    console.log(labelList);
   });
 
   // sections.forEach((section) => {
@@ -623,7 +636,7 @@ controlDiv.addEventListener('click', (e) => {
   let isFormatSelected = toggleSelect(e.target);
   let isButton = e.target.tagName === 'BUTTON';
   let isDropdown = e.target.tagName === 'SELECT';
-  let isInput = e.target.tagName === 'INPUT';
+  // let isInput = e.target.tagName === 'INPUT';
   // console.log(e.target.tagName);
   // console.log(isButton, isDropdown);
   // Apply styles in item
@@ -649,6 +662,8 @@ inputs.forEach((input) => {
   input.addEventListener('input', (e) => {
     let formatItem = build.querySelector('li.selected');
     updateInputVal(e.target, formatItem);
+    // Needs to call refresh to pass values to labelList
+    refreshPreview();
   });
 });
 
