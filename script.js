@@ -18,14 +18,15 @@ const fieldProps = [
 
 // Defines formatting buttons
 const formatsArr = [
-  { func: 'font-bold', icon: 'format_bold' },
-  { func: 'italic', icon: 'format_italic' },
-  { func: 'underline', icon: 'format_underlined' },
-  { func: 'uppercase', icon: 'format_size' },
-  { func: 'bar', icon: 'minimize' },
-  // { func: 'text-center', icon: 'format_align_center' },--> has to be applied to containers and not items themselves
+  { group: 'field', func: 'font-bold', icon: 'format_bold' },
+  { group: 'field', func: 'italic', icon: 'format_italic' },
+  { group: 'field', func: 'underline', icon: 'format_underlined' },
+  { group: 'field', func: 'uppercase', icon: 'format_size' },
+  { group: 'field', func: 'bar', icon: 'minimize' },
+  { group: 'field-block', func: 'text-center', icon: 'format_align_center' },
+  // --> has to be applied to containers and not items themselves
   // { func: 'text-right', icon: 'format_align_right' },
-  // { func: 'text-left', icon: 'format_align_left' },
+  // { func: 'text-left', icon: 'format_align_left' }
 ];
 
 // Defines dropdown style groups
@@ -80,6 +81,7 @@ formatsArr.forEach((format) => {
   btn.classList.add('control');
   btn.disabled = true;
   btn.dataset.func = format.func;
+  btn.dataset.group = format.group;
   let icon = document.createElement('span');
   icon.classList.add('material-icons');
   icon.innerText = format.icon;
@@ -152,13 +154,22 @@ function refreshPreview() {
       itemsArr.push(itemObj);
     });
     labelList.push(itemsArr);
+    let fieldBlockStyles = Array.from(block.classList).filter(isPrintStyle);
+    fieldBlockStyles ? (itemsArr.className = fieldBlockStyles) : '';
+    console.log(itemsArr);
   });
+  console.log(labelList);
   // Clears preview div before appending elements
   preview.innerHTML = '';
   // Creates HTML elements and appends to preview div
   labelList.forEach((labelItem) => {
     let fieldBlock = document.createElement('div');
     fieldBlock.classList.add('field-block');
+    let labelItemStyles = labelItem.className;
+    labelItemStyles.forEach((style) => {
+      fieldBlock.classList.add(style);
+    });
+    // let fieldBlockStyleList = labelItem
     preview.appendChild(fieldBlock);
     labelItem.forEach((field) => {
       createPreviewEl(field, fieldBlock);
@@ -200,7 +211,12 @@ function createPreviewEl(element, parent) {
  * @param {String} className found in item
  */
 function isPrintStyle(className) {
-  const functionalStyles = ['draggable', 'selected'];
+  const functionalStyles = [
+    'draggable',
+    'selected',
+    'field-block',
+    'container',
+  ];
   return !functionalStyles.includes(className);
 }
 
@@ -213,21 +229,20 @@ function generateJson(list) {
   // Parse nested array
   Object.keys(list).forEach((index) => {
     let fieldBlockObj = {};
-    // Joins array of className items
+    // Joins array of className items for fields
     let fieldItem = list[index];
     fieldItem.map((prop) => {
       prop.className.length > 0
         ? (prop.className = prop.className.join(' '))
         : delete prop.className;
-      console.log(prop.className);
     });
-
     fieldBlockObj.fieldBlock = fieldItem;
+    let fieldBlockStyles = fieldItem.className;
+    fieldBlockStyles.length > 0
+      ? (fieldBlockObj.className = fieldItem.className.join(' '))
+      : '';
     labelBlocks.push(fieldBlockObj);
-    console.log(fieldBlockObj);
   });
-  console.dir(labelBlocks);
-
   let json = JSON.stringify(labelBlocks);
   console.log(json);
 }
@@ -243,10 +258,12 @@ function toggleSelect(element) {
 
 /**
  * Activates/Deactivates formatting controls
+ * @param {String} filter Class of formatting control (field or field-block)
  * @param {Boolean} bool
  */
-function activateControls(bool) {
-  controls.forEach((control) => {
+function activateControls(filter, bool) {
+  let filtered = document.querySelectorAll(`[data-group=${filter}]`);
+  filtered.forEach((control) => {
     bool ? (control.disabled = false) : (control.disabled = true);
   });
 }
@@ -434,33 +451,39 @@ containers.forEach((container) => {
 });
 
 // Elements in '#build-label' that are formattable
-build.addEventListener('click', (e) => {
+let formattable = document.getElementById('label-middle');
+formattable.addEventListener('click', (e) => {
+  // Deals with fields
+  let isSelected = toggleSelect(e.target);
+  // Resets formatting buttons state when item is deselected
+  !isSelected ? resetControls() : '';
+  let itemType = '';
   if (e.target && e.target.matches('.draggable')) {
-    let isSelected = toggleSelect(e.target);
-    // Resets formatting buttons state when item is deselected
-    !isSelected ? resetControls() : '';
-    // When element is selected, activate formatting buttons
-    // depends on number of elements in page (at least one selected).
-    let anySelected = build.querySelectorAll('.selected').length > 0;
-    activateControls(anySelected);
-    let numSelected = build.querySelectorAll('.selected');
-    // Gets formatting information for individually selected item
-    if (numSelected.length > 1) {
-      resetControls();
-    } else if (numSelected.length == 1) {
-      // Refreshes buttons according to applied styles in selected item
-      let item = build.querySelector('.selected');
-      getState(item);
-    } else {
-      return false;
-    }
+    itemType = 'field';
+  } else if (e.target && e.target.matches('.field-block')) {
+    itemType = 'field-block';
+  }
+  // When element is selected, activate formatting buttons
+  // depends on number of elements in page (at least one selected).
+  let anySelected = build.querySelectorAll('.selected').length > 0;
+  activateControls(itemType, anySelected);
+  let numSelected = build.querySelectorAll('.selected');
+  // Gets formatting information for individually selected item
+  if (numSelected.length > 1) {
+    resetControls();
+  } else if (numSelected.length == 1) {
+    // Refreshes buttons according to applied styles in selected item
+    let item = build.querySelector('.selected');
+    getState(item);
+  } else {
+    return false;
   }
 });
 
 // Formatting controls
 controlDiv.addEventListener('click', (e) => {
   // Gets selected items to format
-  let formatItems = build.querySelectorAll('li.selected');
+  let formatItems = build.querySelectorAll('.selected');
   let isFormatSelected = toggleSelect(e.target);
   let isButton = e.target.tagName === 'BUTTON';
   let isDropdown = e.target.tagName === 'SELECT';
