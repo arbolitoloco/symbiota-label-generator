@@ -4,6 +4,11 @@
  *  Version: 2020
  */
 
+/** TODO
+ * [x] Fix Prefix/Suffix not being activated when item is selected
+ * [ ] When selecting field, disable clicking fieldblock (and vice-versa)
+ * */
+
 /** Creating Page Elements/Controls
  ******************************
  */
@@ -22,11 +27,7 @@ const formatsArr = [
   { group: 'field', func: 'italic', icon: 'format_italic' },
   { group: 'field', func: 'underline', icon: 'format_underlined' },
   { group: 'field', func: 'uppercase', icon: 'format_size' },
-  { group: 'field', func: 'bar', icon: 'minimize' },
-  // { group: 'field-block', func: 'text-center', icon: 'format_align_center' },
-  // --> has to be applied to containers and not items themselves
-  // { func: 'text-right', icon: 'format_align_right' },
-  // { func: 'text-left', icon: 'format_align_left' }
+  { group: 'field-block', func: 'bar', icon: 'minimize' },
 ];
 
 // Defines dropdown style groups
@@ -69,6 +70,42 @@ const dropdownsArr = [
       { value: 'text-align-center', text: 'Center' },
       { value: 'text-align-right', text: 'Right' },
       { value: 'text-align-justify', text: 'Justify' },
+    ],
+  },
+  {
+    id: 'mt',
+    name: 'spacing-top',
+    group: 'field-block',
+    options: [
+      { value: '', text: 'Line Spacing Top' },
+      { value: 'mt-0', text: 'Top: 0' },
+      { value: 'mt-1', text: 'Top: 1' },
+      { value: 'mt-2', text: 'Top: 2' },
+      { value: 'mt-3', text: 'Top: 3' },
+      { value: 'mt-4', text: 'Top: 4' },
+      { value: 'mt-5', text: 'Top: 5' },
+      { value: 'mt-6', text: 'Top: 6' },
+      { value: 'mt-8', text: 'Top: 8' },
+      { value: 'mt-10', text: 'Top: 10' },
+      { value: 'mt-12', text: 'Top: 12' },
+    ],
+  },
+  {
+    id: 'mb',
+    name: 'spacing-bottom',
+    group: 'field-block',
+    options: [
+      { value: '', text: 'Line Spacing Bottom' },
+      { value: 'mb-0', text: 'Bottom: 0' },
+      { value: 'mb-1', text: 'Bottom: 1' },
+      { value: 'mb-2', text: 'Bottom: 2' },
+      { value: 'mb-3', text: 'Bottom: 3' },
+      { value: 'mb-4', text: 'Bottom: 4' },
+      { value: 'mb-5', text: 'Bottom: 5' },
+      { value: 'mb-6', text: 'Bottom: 6' },
+      { value: 'mb-8', text: 'Bottom: 8' },
+      { value: 'mb-10', text: 'Bottom: 10' },
+      { value: 'mb-12', text: 'Bottom: 12' },
     ],
   },
 ];
