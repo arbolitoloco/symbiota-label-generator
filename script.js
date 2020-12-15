@@ -23,7 +23,7 @@ const formatsArr = [
   { group: 'field', func: 'underline', icon: 'format_underlined' },
   { group: 'field', func: 'uppercase', icon: 'format_size' },
   { group: 'field', func: 'bar', icon: 'minimize' },
-  { group: 'field-block', func: 'text-center', icon: 'format_align_center' },
+  // { group: 'field-block', func: 'text-center', icon: 'format_align_center' },
   // --> has to be applied to containers and not items themselves
   // { func: 'text-right', icon: 'format_align_right' },
   // { func: 'text-left', icon: 'format_align_left' }
@@ -34,6 +34,7 @@ const dropdownsArr = [
   {
     id: 'text',
     name: 'font-size',
+    group: 'field',
     options: [
       { value: '', text: 'Font Size' },
       { value: 'text-xs', text: 'X-Small' },
@@ -51,11 +52,23 @@ const dropdownsArr = [
   {
     id: 'font-type',
     name: 'font-type',
+    group: 'field',
     options: [
       { value: '', text: 'Font Type' },
       { value: 'font-type-sans', text: 'System Sans Serif' },
       { value: 'font-type-serif', text: 'System Serif' },
       { value: 'font-type-mono', text: 'System Mono' },
+    ],
+  },
+  {
+    id: 'text-align',
+    name: 'text-align',
+    group: 'field-block',
+    options: [
+      { value: '', text: 'Text Align' },
+      { value: 'text-align-center', text: 'Center' },
+      { value: 'text-align-right', text: 'Right' },
+      { value: 'text-align-justify', text: 'Justify' },
     ],
   },
 ];
@@ -92,6 +105,7 @@ formatsArr.forEach((format) => {
 // Creates formatting (dropdown) controls in page
 dropdownsArr.forEach((dropObj) => {
   let slct = document.createElement('select');
+  slct.dataset.group = dropObj.group;
   slct.classList.add('control');
   slct.name = dropObj.name;
   slct.id = dropObj.id;
@@ -240,7 +254,7 @@ function generateJson(list) {
     let fieldBlockStyles = fieldItem.className;
     fieldBlockStyles.length > 0
       ? (fieldBlockObj.className = fieldItem.className.join(' '))
-      : '';
+      : delete fieldBlockObj.className;
     labelBlocks.push(fieldBlockObj);
   });
   let json = JSON.stringify(labelBlocks);

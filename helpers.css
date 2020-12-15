@@ -183,15 +183,15 @@
   font-family: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
-.text-center {
+.text-align-center {
   text-align: center;
 }
 
-.text-right {
+.text-align-right {
   text-align: right;
 }
 
-.text-justify {
+.text-align-justify {
   text-align: justify;
 }
 
