@@ -95,6 +95,10 @@ li {
   height: 2em;
 }
 
+.field-block.container.selected {
+  background-color: purple;
+}
+
 #preview-label {
   border: 1px solid gray;
   min-height: 100px;
