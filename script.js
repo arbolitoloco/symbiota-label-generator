@@ -16,9 +16,6 @@ const fieldProps = [
   { block: 'labelBlock', name: 'Collector', id: 'recordedby' },
 ];
 
-const fieldDiv = document.getElementById('fields');
-const controlDiv = document.getElementById('controls');
-
 // Defines formatting buttons
 const formatsArr = [
   { func: 'font-bold', icon: 'format_bold' },
@@ -61,6 +58,9 @@ const dropdownsArr = [
     ],
   },
 ];
+
+const fieldDiv = document.getElementById('fields');
+const controlDiv = document.getElementById('controls');
 
 // Creates draggable elements
 fieldProps.forEach((field) => {
