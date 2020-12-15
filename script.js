@@ -127,6 +127,7 @@ fieldProps.forEach((field) => {
 
 // Creates formatting (button) controls in page
 formatsArr.forEach((format) => {
+  let targetDiv = document.getElementById(`${format.group}-options`);
   let btn = document.createElement('button');
   btn.classList.add('control');
   btn.disabled = true;
@@ -136,11 +137,14 @@ formatsArr.forEach((format) => {
   icon.classList.add('material-icons');
   icon.innerText = format.icon;
   btn.appendChild(icon);
-  controlDiv.appendChild(btn);
+  console.log(format.group);
+  targetDiv.appendChild(btn);
+  // controlDiv.appendChild(targetDiv);
 });
 
 // Creates formatting (dropdown) controls in page
 dropdownsArr.forEach((dropObj) => {
+  let targetDiv = document.getElementById(`${dropObj.group}-options`);
   let slct = document.createElement('select');
   slct.dataset.group = dropObj.group;
   slct.classList.add('control');
@@ -153,7 +157,7 @@ dropdownsArr.forEach((dropObj) => {
     opt.innerText = choice.text;
     slct.appendChild(opt);
   });
-  controlDiv.appendChild(slct);
+  targetDiv.appendChild(slct);
 });
 
 // Grabs elements
