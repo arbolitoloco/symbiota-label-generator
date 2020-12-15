@@ -68,13 +68,13 @@ const dropdownsArr = [
     ],
   },
   {
-    id: 'font',
-    name: 'font-family',
+    id: 'font-type',
+    name: 'font-type',
     options: [
-      { value: '', text: 'Font Family' },
-      { value: 'font-sans', text: 'System Sans Serif' },
-      { value: 'font-serif', text: 'System Serif' },
-      { value: 'font-mono', text: 'System Mono' },
+      { value: '', text: 'Font Type' },
+      { value: 'font-type-sans', text: 'System Sans Serif' },
+      { value: 'font-type-serif', text: 'System Serif' },
+      { value: 'font-type-mono', text: 'System Mono' },
     ],
   },
 ];
@@ -178,7 +178,7 @@ function addLine() {
 // }
 // Iterate throught every field block and add fields
 function createPreviewEl(element, parent) {
-  console.log(element);
+  // console.log(element);
   // console.log(document.querySelector(`#${element.field}`).parentNode);
   // console.log(parent);
   // Grabs information from fieldProps array to create elements matching on id
@@ -256,7 +256,7 @@ function refreshPreview() {
     // Get items per section
     let items = block.querySelectorAll('li');
     items.forEach((item) => {
-      console.log(item);
+      // console.log(item);
       let itemObj = {};
       let className = Array.from(item.classList).filter(isPrintStyle);
       itemObj.field = item.id;
@@ -267,7 +267,7 @@ function refreshPreview() {
     });
 
     labelList.push(itemsArr);
-    console.log(labelList);
+    // console.log(labelList);
   });
 
   // sections.forEach((section) => {
@@ -280,7 +280,7 @@ function refreshPreview() {
   // Builds array based on sections
   // labelList[section.id] = itemsArr;
   // });
-  console.log(labelList);
+  // console.log(labelList);
 
   // Clears preview div before appending elements
   preview.innerHTML = '';
@@ -293,7 +293,7 @@ function refreshPreview() {
   //   });
   // });
   labelList.forEach((labelItem) => {
-    console.log(labelItem);
+    // console.log(labelItem);
     // create fieldBlock div
     let fieldBlock = document.createElement('div');
     fieldBlock.classList.add('field-block');
@@ -321,43 +321,66 @@ function generateJson(list) {
   // labelFormat.customCss = '';
   // labelFormat.labelDiv = { className: 'label-md' };
   // labelFormat.labelBlocks = [labelList['label-header']];
-  console.log(list);
-  list.forEach((field) => {
-    console.log(field);
-  });
-  let labelBlocks = [];
+
+  // "list" is an array of fields --> fieldBlock
+  // place each "list" inside a fieldBlock
+  // then place all fieldBlocks in an array
+
   // Each section in labelList should be translated into a
   // divBlock, where the className should include the id
-  let divBlocks = [];
+  // let divBlocks = [];
+  let labelBlocks = [];
+  // Parse nested array
+  Object.keys(list).forEach((index) => {
+    // console.log(list[index]);
+    // console.log(index);
+    let fieldBlockObj = {};
+    // Joins array of className items
+    let fieldItem = list[index];
+    fieldItem.map((prop) => {
+      prop.className.length > 0
+        ? (prop.className = prop.className.join(' '))
+        : delete prop.className;
+      console.log(prop.className);
+    });
 
-  Object.keys(list).forEach((section) => {
-    let hasItems = list[section].length > 0;
-    if (hasItems) {
-      let fieldBlock = {};
-      let fields = [];
-      divBlocks.push({
-        // divBlock: { className: section, blocks: [fieldBlock] },
-        divBlock: { blocks: [fieldBlock] },
-      });
-      // console.log(divBlocks);
-      // console.log(section);
-      list[section].forEach((item) => {
-        // console.log(item);
-        let field = {};
-        field.field = item.field;
-        item.className ? (field.className = item.className.join(' ')) : '';
-        // console.log(field);
-        item.prefix ? (field.prefix = item.prefix) : '';
-        item.suffix ? (field.suffix = item.suffix) : '';
-        fields.push(field);
-        fieldBlock.fieldBlock = fields;
-        // console.log(fields);
-      });
-    }
+    fieldBlockObj.fieldBlock = fieldItem;
+    labelBlocks.push(fieldBlockObj);
+    console.log(fieldBlockObj);
+    // let fields = [];
+    // fields.push(list[index]);
   });
+  console.dir(labelBlocks);
+
+  // Object.keys(list).forEach((section) => {
+  //   let hasItems = list[section].length > 0;
+  //   if (hasItems) {
+  //     let fieldBlock = {};
+  //     let fields = [];
+  //     divBlocks.push({
+  //       // divBlock: { className: section, blocks: [fieldBlock] },
+  //       divBlock: { blocks: [fieldBlock] },
+  //     });
+  //     // console.log(divBlocks);
+  //     // console.log(section);
+  //     list[section].forEach((item) => {
+  //       // console.log(item);
+  //       let field = {};
+  //       field.field = item.field;
+  //       item.className ? (field.className = item.className.join(' ')) : '';
+  //       // console.log(field);
+  //       item.prefix ? (field.prefix = item.prefix) : '';
+  //       item.suffix ? (field.suffix = item.suffix) : '';
+  //       fields.push(field);
+  //       fieldBlock.fieldBlock = fields;
+  //       // console.log(fields);
+  //     });
+  //   }
+  // });
   // labelFormat.labelBlocks = divBlocks;
   // let json = JSON.stringify(labelFormat);
-  let json = JSON.stringify(divBlocks);
+  // let json = JSON.stringify(divBlocks);
+  let json = JSON.stringify(labelBlocks);
   console.log(json);
 }
 
