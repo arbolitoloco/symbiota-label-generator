@@ -4,31 +4,22 @@
  *  Version: 2020
  */
 
-//  Temporary array with fields
-//  Add JSON variable where the fields are coming from/to
+/** Creating Page Elements/Controls
+ ******************************
+ */
+
+// Defines formattable items in label (also used to create preview elements)
 const fieldProps = [
-  { block: 'labelHeader', name: 'Heading Text', id: 'header' },
-  { block: 'labelFooter', name: 'Footer Text', id: 'footer' },
   { block: 'labelBlock', name: 'Family', id: 'family' },
   { block: 'labelBlock', name: 'Scientific Name', id: 'speciesname' },
   { block: 'labelBlock', name: 'Catalog Number', id: 'catalognumber' },
   { block: 'labelBlock', name: 'Collector', id: 'recordedby' },
 ];
 
-// Creates draggable elements
 const fieldDiv = document.getElementById('fields');
-fieldProps.forEach((field) => {
-  let li = document.createElement('li');
-  li.innerHTML = field.name;
-  li.id = field.id;
-  if (field.block === 'labelBlock') {
-    li.draggable = 'true';
-    li.classList.add('draggable');
-    fieldDiv.appendChild(li);
-  }
-});
+const controlDiv = document.getElementById('controls');
 
-// Temporary array for buttons
+// Defines formatting buttons
 const formatsArr = [
   { func: 'font-bold', icon: 'format_bold' },
   { func: 'italic', icon: 'format_italic' },
@@ -40,7 +31,7 @@ const formatsArr = [
   // { func: 'text-left', icon: 'format_align_left' },
 ];
 
-// Array for dropdown style groups
+// Defines dropdown style groups
 const dropdownsArr = [
   {
     id: 'text',
@@ -71,8 +62,19 @@ const dropdownsArr = [
   },
 ];
 
+// Creates draggable elements
+fieldProps.forEach((field) => {
+  let li = document.createElement('li');
+  li.innerHTML = field.name;
+  li.id = field.id;
+  if (field.block === 'labelBlock') {
+    li.draggable = 'true';
+    li.classList.add('draggable');
+    fieldDiv.appendChild(li);
+  }
+});
+
 // Creates formatting (button) controls in page
-const controlDiv = document.getElementById('controls');
 formatsArr.forEach((format) => {
   let btn = document.createElement('button');
   btn.classList.add('control');
@@ -109,7 +111,14 @@ const preview = document.getElementById('preview-label');
 const controls = document.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
 
-// Adds line (fieldBlock)
+/** Methods
+ ******************************
+ */
+
+/**
+ * Appends line (fieldBlock) to label builder
+ * Binded to button, adds editable div
+ */
 function addLine() {
   let line = document.createElement('div');
   line.classList.add('field-block', 'container');
@@ -123,7 +132,46 @@ function addLine() {
   });
 }
 
-// Iterate throught every field block and add fields
+/**
+ * Refreshes label preview
+ * Triggered every time items are updated
+ */
+function refreshPreview() {
+  let labelList = [];
+  let fieldBlocks = document.querySelectorAll('#build-label .field-block');
+  fieldBlocks.forEach((block) => {
+    let itemsArr = [];
+    let items = block.querySelectorAll('li');
+    items.forEach((item) => {
+      let itemObj = {};
+      let className = Array.from(item.classList).filter(isPrintStyle);
+      itemObj.field = item.id;
+      itemObj.className = className;
+      itemObj.prefix = item.dataset.prefix;
+      itemObj.suffix = item.dataset.suffix;
+      itemsArr.push(itemObj);
+    });
+    labelList.push(itemsArr);
+  });
+  // Clears preview div before appending elements
+  preview.innerHTML = '';
+  // Creates HTML elements and appends to preview div
+  labelList.forEach((labelItem) => {
+    let fieldBlock = document.createElement('div');
+    fieldBlock.classList.add('field-block');
+    preview.appendChild(fieldBlock);
+    labelItem.forEach((field) => {
+      createPreviewEl(field, fieldBlock);
+    });
+  });
+  generateJson(labelList);
+}
+
+/**
+ * Creates elements in preview div, based on controls in build
+ * @param {Object} element Field, constructed in `refreshPreview()`
+ * @param {DOM Node} parent DOM Node where element will be inserted
+ */
 function createPreviewEl(element, parent) {
   // Grabs information from fieldProps array to create elements matching on id
   let fieldInfo =
@@ -147,59 +195,20 @@ function createPreviewEl(element, parent) {
   }
 }
 
+/**
+ * Checks if class should be output in JSON
+ * @param {String} className found in item
+ */
 function isPrintStyle(className) {
   const functionalStyles = ['draggable', 'selected'];
   return !functionalStyles.includes(className);
 }
 
-// Everytime label section is updated, refresh entire preview
-function refreshPreview() {
-  let labelList = [];
-  // Instead of sections, go through label-middle and gather fieldBlocks (lines)
-  // itemsArr is an array of fields
-  let fieldBlocks = document.querySelectorAll('#build-label .field-block');
-  fieldBlocks.forEach((block) => {
-    let itemsArr = [];
-    // Get items per section
-    let items = block.querySelectorAll('li');
-    items.forEach((item) => {
-      // console.log(item);
-      let itemObj = {};
-      let className = Array.from(item.classList).filter(isPrintStyle);
-      itemObj.field = item.id;
-      itemObj.className = className;
-      itemObj.prefix = item.dataset.prefix;
-      itemObj.suffix = item.dataset.suffix;
-      itemsArr.push(itemObj);
-    });
-
-    labelList.push(itemsArr);
-    // console.log(labelList);
-  });
-
-  // Clears preview div before appending elements
-  preview.innerHTML = '';
-
-  // Creates HTML elements and appends to preview div
-  labelList.forEach((labelItem) => {
-    let fieldBlock = document.createElement('div');
-    fieldBlock.classList.add('field-block');
-    preview.appendChild(fieldBlock);
-    labelItem.forEach((field) => {
-      createPreviewEl(field, fieldBlock);
-    });
-  });
-
-  generateJson(labelList);
-}
-// Generate JSON string for current configurations
+/**
+ * Generate JSON string for current configurations
+ * @param {Array} list Array of fields, built by `refreshPreview()`
+ */
 function generateJson(list) {
-  // "list" is an array of fields --> fieldBlock
-  // place each "list" inside a fieldBlock
-  // then place all fieldBlocks in an array
-
-  // Each section in labelList should be translated into a
-  // divBlock, where the className should include the id
   let labelBlocks = [];
   // Parse nested array
   Object.keys(list).forEach((index) => {
@@ -223,12 +232,19 @@ function generateJson(list) {
   console.log(json);
 }
 
+/**
+ * Toggles select/deselect clicked element
+ * @param {DOM Node} element
+ */
 function toggleSelect(element) {
   element.classList.toggle('selected');
   return element.classList.contains('selected');
 }
 
-// Activates formatting controls (for fields)
+/**
+ * Activates/Deactivates formatting controls
+ * @param {Boolean} bool
+ */
 function activateControls(bool) {
   controls.forEach((control) => {
     bool ? (control.disabled = false) : (control.disabled = true);
@@ -237,7 +253,7 @@ function activateControls(bool) {
 
 /**
  * Gets selected item state (formatted classes)
- * @param {*} item item to show applied formats
+ * @param {DOM Node} item Field in build label area
  */
 function getState(item) {
   let formatList = Array.from(item.classList);
@@ -278,9 +294,9 @@ function getState(item) {
 
 /**
  * Applies selected control styles to selected items
- * @param {*} control id of style control (button or select)
- * @param {*} selectedItems array of items to be formatted (selected)
- * @param {*} bool if style will be added or removed, depends on state of control (important for buttons)
+ * @param {String} control ID of formatting control (button or select)
+ * @param {Array} selectedItems Items to be formatted (selected)
+ * @param {Boolean} bool If style will be added or removed, depends on state of control (important for buttons)
  */
 function toggleStyle(control, selectedItems, bool) {
   // Toggles class in item - causes errors when multiple are selected
@@ -303,8 +319,8 @@ function toggleStyle(control, selectedItems, bool) {
 
 /**
  * Applies selected dropdown styles to selected items
- * @param {*} dropdown id of dropdown
- * @param {*} selectedItems array of items to be formatted (selected)
+ * @param {String} dropdown ID of dropdown
+ * @param {Array} selectedItems Items to be formatted (selected)
  */
 function addReplaceStyle(dropdown, selectedItems) {
   // Deals with selection
@@ -338,6 +354,9 @@ function addReplaceStyle(dropdown, selectedItems) {
   refreshPreview();
 }
 
+/**
+ * Clears/resets controls state
+ */
 function resetControls() {
   controls.forEach((control) => {
     // Deal with select input
@@ -349,12 +368,20 @@ function resetControls() {
   });
 }
 
+/**
+ * Tags dragging elements and copies their content
+ * @param {Event} e
+ */
 function handleDragStart(e) {
   dragSrcEl = this;
   this.classList.add('dragging');
   e.dataTransfer.effectAllowed = 'move';
 }
 
+/**
+ * Moves content of dragged element when done moving
+ * @param {Event} e
+ */
 function handleDragOver(e) {
   if (e.preventDefault) {
     e.preventDefault();
@@ -363,6 +390,11 @@ function handleDragOver(e) {
   return false;
 }
 
+/**
+ * Reorders element based on position when dropped
+ * @param {Event} e
+ */
+let dragSrcEl = null;
 function handleDrop(e) {
   if (e.stopPropagation) {
     e.stopPropagation();
@@ -373,15 +405,19 @@ function handleDrop(e) {
   return false;
 }
 
+/**
+ * Removes tag from dragging element
+ * @param {Event} e
+ */
 function handleDragEnd(e) {
   this.classList.remove('dragging');
   refreshPreview();
   return false;
 }
 
-// Event Listeners
-let dragSrcEl = null;
-
+/** Event Listeners
+ ******************************
+ */
 [].forEach.call(draggables, function (draggable) {
   draggable.addEventListener('dragstart', handleDragStart, false);
   draggable.addEventListener('dragover', handleDragOver, false);
@@ -441,13 +477,18 @@ controlDiv.addEventListener('click', (e) => {
 inputs.forEach((input) => {
   input.addEventListener('input', (e) => {
     let formatItem = build.querySelector('li.selected');
-    updateInputVal(e.target, formatItem);
+    updateFieldContent(e.target, formatItem);
     // Needs to call refresh to pass values to labelList
     refreshPreview();
   });
 });
 
-function updateInputVal(el, item) {
-  let option = el.id;
-  item.setAttribute('data-' + option, el.value);
+/**
+ * Updates optional field content (prefix/suffix)
+ * @param {DOM Node} content Optional content input
+ * @param {DOM Node} item Field to be modified
+ */
+function updateFieldContent(content, item) {
+  let option = content.id;
+  item.setAttribute('data-' + option, content.value);
 }
