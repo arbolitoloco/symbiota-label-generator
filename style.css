@@ -33,11 +33,10 @@ li {
 
 #field-options {
   background-color: white;
-  padding: 1em;
 }
 
 #field-options>div {
-  display: block;
+  display: inline-block;
   margin: 1em 0;
 }
 
