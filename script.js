@@ -6,9 +6,9 @@
 
 /** TODO
  * [x] Fix Prefix/Suffix not being activated when item is selected
- * [*] When selecting field, disable clicking fieldblock (and vice-versa)
+ * [x] When selecting field type, disable controls for other type
  * [x] Improve styles for control divs
- * [ ] Get state of line?
+ * [x] Get state of line?
  * [ ] Replace "bar" button
  * */
 
@@ -214,9 +214,9 @@ function refreshPreview() {
     labelList.push(itemsArr);
     let fieldBlockStyles = Array.from(block.classList).filter(isPrintStyle);
     fieldBlockStyles ? (itemsArr.className = fieldBlockStyles) : '';
-    console.log(itemsArr);
+    // console.log(itemsArr);
   });
-  console.log(labelList);
+  // console.log(labelList);
   // Clears preview div before appending elements
   preview.innerHTML = '';
   // Creates HTML elements and appends to preview div
@@ -335,15 +335,25 @@ function activateControls(filter, bool) {
  */
 function getState(item) {
   let formatList = Array.from(item.classList);
+  console.log(formatList);
   // Removes '.draggable' and '.selected' from array
-  formatList.splice(formatList.indexOf('selected'), 1);
-  formatList.splice(formatList.indexOf('draggable'), 1);
-  if (formatList.length > 0) {
+  // formatList.splice(formatList.indexOf('selected'), 1);
+  // formatList.splice(formatList.indexOf('draggable'), 1);
+  // formatList.splice(formatList.indexOf('field-block'), 1);
+  // formatList.splice(formatList.indexOf('container'), 1);
+  printableList = formatList.filter(isPrintStyle);
+  console.log(printableList);
+
+  if (printableList.length > 0) {
     // Render state of each formatting button
-    formatList.forEach((formatItem) => {
+    printableList.forEach((formatItem) => {
       // Check if class is a choice in a dropdown by matching first part of class
       let strArr = formatItem.split('-');
-      let str = strArr[0];
+      let str = '';
+      strArr.length == 3
+        ? (str = strArr[0] + '-' + strArr[1])
+        : (str = strArr[0]);
+      console.log(str);
       // Loop through each item in array
       dropdownsArr.forEach((dropdown) => {
         let isDropdownStyle = str === dropdown.id;
@@ -519,36 +529,39 @@ containers.forEach((container) => {
 // Elements in '#label-middle'
 let formattable = document.getElementById('label-middle');
 formattable.addEventListener('click', (e) => {
-  let isSelected = toggleSelect(e.target);
+  // Toggle select clicked item
+  toggleSelect(e.target);
+
+  // let isSelected = toggleSelect(e.target);
   // Resets formatting buttons state when item is deselected
-  !isSelected ? resetControls() : '';
+  // !isSelected ? resetControls() : '';
 
   // Everytime item is clicked, display list of selected items:
   let selectedItems = build.querySelectorAll('.selected');
-  // console.log(selectedItems);
+  console.log(selectedItems);
 
   // When element is selected, activate formatting buttons
   // depends on number of elements in page (at least one selected).
   let isAnySelected = selectedItems.length > 0;
-  // console.log(anySelected + ' anySelected');
+  // console.log(isAnySelected + ' anySelected');
 
   if (isAnySelected) {
     let itemType = '';
     // get the item type of the SELECTED item instead!!!
     // do matching for every selected item instead on focusing on target
-    if (e.target && e.target.matches('.selected')) {
-      if (e.target && e.target.matches('.draggable')) {
-        itemType = 'field';
-        // deactivate 'field-block' items
-      } else if (e.target && e.target.matches('.field-block')) {
-        itemType = 'field-block';
-        // deactivate 'field' items
-      }
-      // it's passing the itemType of the element clicked, not the one selected!
-      // console.log(itemType);
-      // console.log(anySelected);
-      activateControls(itemType, isAnySelected);
-    }
+    // if (e.target && e.target.matches('.selected')) {
+    //   if (e.target && e.target.matches('.draggable')) {
+    //     itemType = 'field';
+    //     // deactivate 'field-block' items
+    //   } else if (e.target && e.target.matches('.field-block')) {
+    //     itemType = 'field-block';
+    //     // deactivate 'field' items
+    //   }
+    //   // it's passing the itemType of the element clicked, not the one selected!
+    //   // console.log(itemType);
+    //   // console.log(anySelected);
+    //   activateControls(itemType, isAnySelected);
+    // }
 
     let numSelected = build.querySelectorAll('.selected');
     // console.log('num selected: ' + numSelected.length);
@@ -584,11 +597,13 @@ formattable.addEventListener('click', (e) => {
         // deactivate 'field' items
       }
       activateControls(itemType, isAnySelected);
+      console.log(item);
       getState(item);
     } else {
       return false;
     }
   } else {
+    resetControls();
     deactivateControls();
   }
 });
