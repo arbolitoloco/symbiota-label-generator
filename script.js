@@ -6,7 +6,10 @@
 
 /** TODO
  * [x] Fix Prefix/Suffix not being activated when item is selected
- * [ ] When selecting field, disable clicking fieldblock (and vice-versa)
+ * [*] When selecting field, disable clicking fieldblock (and vice-versa)
+ * [x] Improve styles for control divs
+ * [ ] Get state of line?
+ * [ ] Replace "bar" button
  * */
 
 /** Creating Page Elements/Controls
@@ -137,7 +140,7 @@ formatsArr.forEach((format) => {
   icon.classList.add('material-icons');
   icon.innerText = format.icon;
   btn.appendChild(icon);
-  console.log(format.group);
+  // console.log(format.group);
   targetDiv.appendChild(btn);
   // controlDiv.appendChild(targetDiv);
 });
@@ -308,7 +311,8 @@ function generateJson(list) {
  */
 function toggleSelect(element) {
   element.classList.toggle('selected');
-  return element.classList.contains('selected');
+  let isSelected = element.classList.contains('selected');
+  return isSelected;
 }
 
 /**
@@ -317,6 +321,8 @@ function toggleSelect(element) {
  * @param {Boolean} bool
  */
 function activateControls(filter, bool) {
+  // console.log(filter);
+  // console.log(bool);
   let filtered = document.querySelectorAll(`[data-group=${filter}]`);
   filtered.forEach((control) => {
     bool ? (control.disabled = false) : (control.disabled = true);
@@ -505,35 +511,93 @@ containers.forEach((container) => {
   });
 });
 
-// Elements in '#build-label' that are formattable
+/**
+ * REFACTOR THIS!!!!
+ *
+ * Pass item type of SELECTED items to activate controls
+ */
+// Elements in '#label-middle'
 let formattable = document.getElementById('label-middle');
 formattable.addEventListener('click', (e) => {
-  // Deals with fields
   let isSelected = toggleSelect(e.target);
   // Resets formatting buttons state when item is deselected
   !isSelected ? resetControls() : '';
-  let itemType = '';
-  if (e.target && e.target.matches('.draggable')) {
-    itemType = 'field';
-  } else if (e.target && e.target.matches('.field-block')) {
-    itemType = 'field-block';
-  }
+
+  // Everytime item is clicked, display list of selected items:
+  let selectedItems = build.querySelectorAll('.selected');
+  // console.log(selectedItems);
+
   // When element is selected, activate formatting buttons
   // depends on number of elements in page (at least one selected).
-  let anySelected = build.querySelectorAll('.selected').length > 0;
-  activateControls(itemType, anySelected);
-  let numSelected = build.querySelectorAll('.selected');
-  // Gets formatting information for individually selected item
-  if (numSelected.length > 1) {
-    resetControls();
-  } else if (numSelected.length == 1) {
-    // Refreshes buttons according to applied styles in selected item
-    let item = build.querySelector('.selected');
-    getState(item);
+  let isAnySelected = selectedItems.length > 0;
+  // console.log(anySelected + ' anySelected');
+
+  if (isAnySelected) {
+    let itemType = '';
+    // get the item type of the SELECTED item instead!!!
+    // do matching for every selected item instead on focusing on target
+    if (e.target && e.target.matches('.selected')) {
+      if (e.target && e.target.matches('.draggable')) {
+        itemType = 'field';
+        // deactivate 'field-block' items
+      } else if (e.target && e.target.matches('.field-block')) {
+        itemType = 'field-block';
+        // deactivate 'field' items
+      }
+      // it's passing the itemType of the element clicked, not the one selected!
+      // console.log(itemType);
+      // console.log(anySelected);
+      activateControls(itemType, isAnySelected);
+    }
+
+    let numSelected = build.querySelectorAll('.selected');
+    // console.log('num selected: ' + numSelected.length);
+    // Gets formatting information for individually selected item
+    if (numSelected.length > 1) {
+      // If there is more than one type of selected items, deactivate controls
+      let selected = build.querySelectorAll('.selected');
+      let typeArr = [];
+      selected.forEach((item) => {
+        typeArr.push(Array.from(item.classList).join(' '));
+      });
+      // console.log(typeArr);
+      let uniqueTypeSet = new Set(typeArr);
+      console.log(uniqueTypeSet);
+      if (uniqueTypeSet.size > 1) {
+        // deactivate controls
+        deactivateControls();
+      } else {
+        (' ');
+      }
+      resetControls();
+    } else if (numSelected.length == 1) {
+      // Refreshes buttons according to applied styles in selected item
+      let item = build.querySelector('.selected');
+      // console.log(
+      //   'passing itemType' + itemType + ' and anySelected ' + anySelected
+      // );
+      if (item.matches('.draggable')) {
+        itemType = 'field';
+        // deactivate 'field-block' items
+      } else if (item.matches('.field-block')) {
+        itemType = 'field-block';
+        // deactivate 'field' items
+      }
+      activateControls(itemType, isAnySelected);
+      getState(item);
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    deactivateControls();
   }
 });
+
+function deactivateControls() {
+  controls.forEach((control) => {
+    control.disabled = true;
+  });
+}
 
 // Formatting controls
 controlDiv.addEventListener('click', (e) => {
