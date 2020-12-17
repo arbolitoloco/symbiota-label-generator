@@ -30,7 +30,7 @@ const formatsArr = [
   { group: 'field', func: 'italic', icon: 'format_italic' },
   { group: 'field', func: 'underline', icon: 'format_underlined' },
   { group: 'field', func: 'uppercase', icon: 'format_size' },
-  { group: 'field-block', func: 'bar', icon: 'minimize' },
+  { group: 'field-block', func: 'bar', icon: '', name: 'Add Bar' },
 ];
 
 // Defines dropdown style groups
@@ -136,10 +136,14 @@ formatsArr.forEach((format) => {
   btn.disabled = true;
   btn.dataset.func = format.func;
   btn.dataset.group = format.group;
-  let icon = document.createElement('span');
-  icon.classList.add('material-icons');
-  icon.innerText = format.icon;
-  btn.appendChild(icon);
+  if (format.icon !== '') {
+    let icon = document.createElement('span');
+    icon.classList.add('material-icons');
+    icon.innerText = format.icon;
+    btn.appendChild(icon);
+  } else {
+    btn.innerText = format.name;
+  }
   // console.log(format.group);
   targetDiv.appendChild(btn);
   // controlDiv.appendChild(targetDiv);
