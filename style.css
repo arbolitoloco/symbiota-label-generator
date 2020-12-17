@@ -13,12 +13,13 @@
 } */
 
 main {
-  width: 680px;
+  width: 780px;
   margin: 0 auto;
-  /* display: grid;
-  grid-template: auto 1fr auto / repeat(2, 1fr);
+  display: grid;
+  /* grid-template: auto 1fr auto / repeat(2, 1fr); */
+  grid-template-columns: 100px 400px 200px;
   grid-gap: 1em;
-  align-items: start; */
+  align-items: start;
 }
 
 li {
@@ -30,10 +31,6 @@ li {
 /* #fields {
   grid-column: 1 / 4;
 } */
-
-#field-options {
-  background-color: white;
-}
 
 #field-options>div {
   display: inline-block;
@@ -107,6 +104,10 @@ li {
   display: inline;
 }
 
+.unclickable {
+  pointer-events: none !important;
+}
+
 
 /** Button stuff **/
 
@@ -142,10 +143,6 @@ li {
   line-height: 1;
   margin: 0.5em;
   padding: 0.25em 0.5em;
-}
-
-#controls {
-  background: darkslategrey;
 }
 
 button.control:disabled {
