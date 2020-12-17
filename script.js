@@ -9,7 +9,13 @@
  * [x] When selecting field type, disable controls for other type
  * [x] Improve styles for control divs
  * [x] Get state of line?
- * [ ] Replace "bar" button
+ * [x] Replace "bar" button
+ * [ ] Clean methods for unused code
+ * [ ] Improve text information (instructions)
+ * [ ] Show resulting JSON (add button to reveal)
+ * [x] Add full list of current fields
+ * [ ] Add dropdown to filter fields
+ * [ ] Deploy
  * */
 
 /** Creating Page Elements/Controls
@@ -18,10 +24,291 @@
 
 // Defines formattable items in label (also used to create preview elements)
 const fieldProps = [
-  { block: 'labelBlock', name: 'Family', id: 'family' },
-  { block: 'labelBlock', name: 'Scientific Name', id: 'speciesname' },
-  { block: 'labelBlock', name: 'Catalog Number', id: 'catalognumber' },
-  { block: 'labelBlock', name: 'Collector', id: 'recordedby' },
+  {
+    block: 'labelBlock',
+    name: 'Occurrence ID',
+    id: 'occid',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Collection ID',
+    id: 'collid',
+    group: 'collection',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Catalog Number',
+    id: 'catalogNumber',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Other Catalog Numbers',
+    id: 'otherCatalogNumbers',
+    group: 'specimen',
+  },
+  { block: 'labelBlock', name: 'Family', id: 'family', group: 'taxon' },
+  {
+    block: 'labelBlock',
+    name: 'Scientific Name',
+    id: 'scientificName',
+    group: 'taxon',
+  },
+  { block: 'labelBlock', name: 'Taxon Rank', id: 'taxonRank', group: 'taxon' },
+  {
+    block: 'labelBlock',
+    name: 'Infraspecific Epithet',
+    id: 'infraSpecificEpithet',
+    group: 'taxon',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Scientific Name Authorship',
+    id: 'scientificNameAuthorship',
+    group: 'taxon',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Parent Author',
+    id: 'parentAuthor',
+    group: 'taxon',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Identified By',
+    id: 'identifiedBy',
+    group: 'determination',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Date Identified',
+    id: 'dateIdentified',
+    group: 'determination',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Identification References',
+    id: 'identificationReferences',
+    group: 'determination',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Identification Remarks',
+    id: 'identificationRemarks',
+    group: 'determination',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Taxon Remarks',
+    id: 'taxonRemarks',
+    group: 'determination',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Identification Qualifier',
+    id: 'identificationQualifier',
+    group: 'determination',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Type Status',
+    id: 'typeStatus',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Recorded By',
+    id: 'recordedBy',
+    group: 'event',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Record Number',
+    id: 'recordNumber',
+    group: 'event',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Associated Collectors',
+    id: 'associatedCollectors',
+    group: 'event',
+  },
+  { block: 'labelBlock', name: 'Event Date', id: 'eventDate', group: 'event' },
+  { block: 'labelBlock', name: 'Year', id: 'year', group: 'event' },
+  { block: 'labelBlock', name: 'Month', id: 'month', group: 'event' },
+  { block: 'labelBlock', name: 'Month Name', id: 'monthName', group: 'event' },
+  { block: 'labelBlock', name: 'Day', id: 'day', group: 'event' },
+  {
+    block: 'labelBlock',
+    name: 'Verbatim Event Date',
+    id: 'verbatimEventDate',
+    group: 'event',
+  },
+  { block: 'labelBlock', name: 'Habitat', id: 'habitat', group: 'event' },
+  { block: 'labelBlock', name: 'Substrate', id: 'substrate', group: 'event' },
+  {
+    block: 'labelBlock',
+    name: 'Occurrence Remarks',
+    id: 'occurrenceRemarks',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Associated Taxa',
+    id: 'associatedTaxa',
+    group: 'taxon',
+  },
+  // { block: 'labelBlock', name: 'Dynamic Properties', id: 'dynamicProperties' },
+  {
+    block: 'labelBlock',
+    name: 'Verbatim Attributes',
+    id: 'verbatimAttributes',
+    group: 'event',
+  },
+  { block: 'labelBlock', name: 'Behavior', id: 'behavior', group: 'specimen' },
+  {
+    block: 'labelBlock',
+    name: 'Reproductive Condition',
+    id: 'reproductiveCondition',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Cultivation Status',
+    id: 'cultivationStatus',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Establishment Means',
+    id: 'establishmentMeans',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Life Stage',
+    id: 'lifeStage',
+    group: 'specimen',
+  },
+  { block: 'labelBlock', name: 'Sex', id: 'sex', group: 'specimen' },
+  {
+    block: 'labelBlock',
+    name: 'Individual Count',
+    id: 'individualCount',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Sampling Protocol',
+    id: 'samplingProtocol',
+    group: 'specimen',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Preparations',
+    id: 'preparations',
+    group: 'specimen',
+  },
+  { block: 'labelBlock', name: 'Country', id: 'country', group: 'locality' },
+  {
+    block: 'labelBlock',
+    name: 'State/Province',
+    id: 'stateProvince',
+    group: 'locality',
+  },
+  { block: 'labelBlock', name: 'County', id: 'county', group: 'locality' },
+  {
+    block: 'labelBlock',
+    name: 'Municipality',
+    id: 'municipality',
+    group: 'locality',
+  },
+  { block: 'labelBlock', name: 'Locality', id: 'locality', group: 'locality' },
+  {
+    block: 'labelBlock',
+    name: 'Decimal Latitude',
+    id: 'decimalLatitude',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Decimal Longitude',
+    id: 'decimalLongitude',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Geodetic Datum',
+    id: 'geodeticDatum',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Coordinate Uncertainty In Meters',
+    id: 'coordinateUncertaintyInMeters',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Verbatim Coordinates',
+    id: 'verbatimCoordinates',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Elevation In Meters',
+    id: 'elevationInMeters',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Verbatim Elevation',
+    id: 'verbatimElevation',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Minimum Depth In Meters',
+    id: 'minimumDepthInMeters',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Maximum Depth In Meters',
+    id: 'maximumDepthInMeters',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Verbatim Depth',
+    id: 'verbatimDepth',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Disposition',
+    id: 'disposition',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Storage Location',
+    id: 'storageLocation',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Duplicate Quantity',
+    id: 'duplicateQuantity',
+    group: 'locality',
+  },
+  {
+    block: 'labelBlock',
+    name: 'Date Last Modified',
+    id: 'dateLastModified',
+    group: 'event',
+  },
 ];
 
 // Defines formatting buttons
@@ -124,6 +411,7 @@ fieldProps.forEach((field) => {
   if (field.block === 'labelBlock') {
     li.draggable = 'true';
     li.classList.add('draggable');
+    li.dataset.category = field.group;
     fieldDiv.appendChild(li);
   }
 });

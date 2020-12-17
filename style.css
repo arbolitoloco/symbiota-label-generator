@@ -13,18 +13,33 @@
 } */
 
 main {
-  width: 780px;
+  max-width: 780px;
   margin: 0 auto;
   display: grid;
   /* grid-template: auto 1fr auto / repeat(2, 1fr); */
-  grid-template-columns: 100px 400px 200px;
+  grid-template-columns: 30% 45% 25%;
   grid-gap: 1em;
   align-items: start;
+}
+
+@media only screen and (max-width: 780px) {
+  main {
+    grid-template-columns: 100%;
+  }
 }
 
 li {
   list-style-type: none;
   display: inline-block;
+}
+
+select.control {
+  display: block;
+  margin: 0.25em 0;
+}
+
+h1 {
+  text-align: center;
 }
 
 
@@ -50,40 +65,9 @@ li {
   /* color: black; */
 }
 
-#label-header>.header,
-.label-header>div,
-.label-footer>div {
-  display: inline-block;
-  padding: 6px;
-}
-
-#label-header,
-#label-middle,
-#label-footer {
+#label-middle {
   border: 1px solid white;
   margin: 0.5em;
-}
-
-#label-header,
-#label-footer {
-  min-height: 70px;
-}
-
-.area-title {
-  margin: 0;
-  padding-left: 0.25em;
-  color: white;
-  font-weight: 300;
-}
-
-.label-header.content {
-  height: 50px;
-  width: auto 100%;
-  display: flex;
-}
-
-.label-header.content>button {
-  display: block;
 }
 
 #label-middle>.field-block {
@@ -98,6 +82,7 @@ li {
 #preview-label {
   border: 1px solid gray;
   min-height: 100px;
+  padding: 0.5em;
 }
 
 #preview-label>.field-block>div {
@@ -136,8 +121,8 @@ li {
   color: white;
   font-weight: 600;
   font-size: 0.8rem !important;
-  background: #a972cb;
-  border: 2px solid #a972cb;
+  /* background: #a972cb;
+  border: 2px solid #a972cb; */
   border-radius: 2px;
   font: inherit;
   line-height: 1;
@@ -165,8 +150,8 @@ button.control {
   line-height: 1;
   padding: 0.5em;
   outline: none;
-  width: 50px;
-  height: 50px;
+  /* width: 40px; */
+  height: 40px;
   cursor: pointer;
 }
 
@@ -178,13 +163,47 @@ button.control:hover {
   outline: none;
 }
 
+button .material-icons {
+  width: 24px;
+}
+
 button>.material-icons {
   pointer-events: none;
 }
 
 .draggable.selected {
-  background-color: darkmagenta;
-  border: 1px solid darkmagenta;
+  background-color: rgb(168, 13, 39);
+  border: 1px solid rgb(168, 13, 39);
+}
+
+[data-category='specimen'] {
+  background: #0da827;
+  border: 2px solid #0da827;
+}
+
+[data-category='collection'] {
+  background: #0da827;
+  border: 2px solid #0da827;
+}
+
+[data-category='taxon'] {
+  background: #077eb6;
+  border: 2px solid #077eb6;
+}
+
+[data-category='determination'] {
+  background: #1c4eda;
+  border: 2px solid #1c4eda;
+}
+
+[data-category='event'] {
+  background: #ee7bc8;
+  border: 2px solid #ee7bc8;
+}
+
+[data-category='locality'] {
+  background: #952ed1;
+  border: 2px solid#952ed1;
 }
 
 button.control.selected,
