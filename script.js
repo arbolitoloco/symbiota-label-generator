@@ -12,10 +12,9 @@
  * [x] Replace "bar" button
  * [x] Add full list of current fields
  * [x] Add dropdown to filter fields
- * [ ] Clean methods for unused code
+ * [x] Clean methods for unused code
+ * [x] Show resulting JSON (add button to reveal) - improve display (remove alert)
  * [ ] Improve text information (instructions)
- * [ ] Show resulting JSON (add button to reveal)
- * [ ] Remove line?
  * [ ] Deploy
  * */
 
@@ -594,7 +593,8 @@ function refreshPreview() {
       createPreviewEl(field, fieldBlock);
     });
   });
-  generateJson(labelList);
+  // generateJson(labelList);
+  return labelList;
 }
 
 /**
@@ -664,6 +664,46 @@ function generateJson(list) {
   });
   let json = JSON.stringify(labelBlocks);
   console.log(json);
+  return json;
+}
+
+/**
+ * Prints JSON in interface
+ *
+ */
+function printJson() {
+  let list = refreshPreview();
+  let dummy = document.getElementById('dummy');
+  let copyBtn = document.getElementById('copyBtn');
+  console.log(list);
+  console.log(list[0].length);
+  let isEmpty = list[0].length == 0;
+  let message = '';
+  if (isEmpty) {
+    dummy.style.display = 'none';
+    copyBtn.style.display = 'none';
+    alert(
+      'Label format is empty! Please drag some items to the build area before trying again'
+    );
+  } else {
+    let json = generateJson(refreshPreview());
+    copyBtn.style.display = 'inline-block';
+    dummy.value = json;
+    dummy.style.display = 'block';
+    dummy.style.height = '300px';
+    dummy.style.width = '100%';
+  }
+}
+
+/**
+ * Copies JSON output to user's clipboard
+ */
+function copyJson() {
+  dummy.select();
+  dummy.setSelectionRange(0, 99999); /* For mobile devices */
+  document.execCommand('copy');
+  /* Alert the copied text */
+  alert('Copied JSON to clipboard');
 }
 
 /**
