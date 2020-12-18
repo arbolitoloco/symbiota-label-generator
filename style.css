@@ -17,7 +17,7 @@ main {
   margin: 0 auto;
   display: grid;
   /* grid-template: auto 1fr auto / repeat(2, 1fr); */
-  grid-template-columns: 30% 45% 25%;
+  grid-template-columns: 240px 420px 200px;
   grid-gap: 1em;
   align-items: start;
 }
@@ -52,6 +52,11 @@ h1 {
   margin: 1em 0;
 }
 
+#fields-list {
+  overflow-y: scroll;
+  height: 60vh;
+}
+
 #build-label {
   background-color: rgb(143, 143, 143);
   /* min-height: 300px; */
@@ -72,11 +77,11 @@ h1 {
 
 #label-middle>.field-block {
   border: 1px dashed white;
-  height: 2em;
+  min-height: 2em;
 }
 
 .field-block.container.selected {
-  background-color: purple;
+  background-color: black;
 }
 
 #preview-label {
@@ -172,8 +177,8 @@ button>.material-icons {
 }
 
 .draggable.selected {
-  background-color: rgb(168, 13, 39);
-  border: 1px solid rgb(168, 13, 39);
+  background-color: black;
+  border: 1px solid white;
 }
 
 [data-category='specimen'] {

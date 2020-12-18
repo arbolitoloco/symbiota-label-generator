@@ -14,7 +14,8 @@
  * [ ] Improve text information (instructions)
  * [ ] Show resulting JSON (add button to reveal)
  * [x] Add full list of current fields
- * [ ] Add dropdown to filter fields
+ * [x] Add dropdown to filter fields
+ * [ ] Remove line
  * [ ] Deploy
  * */
 
@@ -401,20 +402,125 @@ const dropdownsArr = [
 ];
 
 const fieldDiv = document.getElementById('fields');
+const fieldListDiv = document.getElementById('fields-list');
 const controlDiv = document.getElementById('controls');
 
-// Creates draggable elements
-fieldProps.forEach((field) => {
-  let li = document.createElement('li');
-  li.innerHTML = field.name;
-  li.id = field.id;
-  if (field.block === 'labelBlock') {
-    li.draggable = 'true';
-    li.classList.add('draggable');
-    li.dataset.category = field.group;
-    fieldDiv.appendChild(li);
+/**
+ * Filters array based on desired property
+ * @param {Array} arr Array to be filtered
+ * @param {Object} criteria Pair or pairs of property and criterion
+ */
+function filterObject(arr, criteria) {
+  return arr.filter(function (obj) {
+    return Object.keys(criteria).every(function (c) {
+      return obj[c] == criteria[c];
+    });
+  });
+}
+
+/**
+ * Removes object from array based on desired property
+ * @param {Array} arr Array to be cleaned
+ * @param {Object} criteria Pair or pairs of property and criterion
+ */
+function removeObject(arr, criteria) {
+  return arr.filter(function (obj) {
+    return Object.keys(criteria).every(function (c) {
+      return obj[c] !== criteria[c];
+    });
+  });
+}
+
+// Initially creates all fields
+createFields(fieldProps);
+
+// When selecting option in fields by category select
+const fieldsFilter = document.getElementById('fields-filter');
+fieldsFilter.onchange = filterFields;
+
+// function getUsedFields() {
+//   let usedFields = document.querySelectorAll('#label-middle .draggable');
+//   return usedFields;
+// }
+
+function getCurrFields() {
+  let currFields = fieldProps;
+  let usedFields = document.querySelectorAll('#label-middle .draggable');
+  if (usedFields.length > 0) {
+    usedFields.forEach((usedField) => {
+      currFields = removeObject(currFields, { id: usedField.id });
+    });
+  } else {
+    ('');
   }
-});
+  return currFields;
+}
+
+function filterFields() {
+  /// NAO ESTA FILTRANDO DIREITO, CURRFIELDS/USEDFIELDS NAO ESTA SENDO ATUALIZADO A CADA VEZ
+  // transformar lista de ids em array (matching em fieldProps)
+  // porém pegar a lista "atual" filtrando fields que já estão na label middle
+  // currIds = [];
+
+  // let lis = fieldListDiv.querySelectorAll('li');
+  // lis.forEach((li) => {
+  //   // currIds.push(li.id);
+  //   fieldObj = filterObject(fieldProps, { id: li.id });
+  //   // console.log(fieldObj[0]);
+  //   currFields.push(fieldObj[0]);
+  // });
+  // currIds.forEach((id) => {
+  //   fieldObj = filter(fieldProps, { id: id });
+  //   console.log(fieldObj.typeof);
+  //   currFields.push(fieldObj);
+  // });
+  // console.log(currFields.length);
+  // let currFields = getUsedFields();
+
+  // currFields = [];
+  // let usedFields = getUsedFields();
+  // if (usedFields.length > 0) {
+  //   usedFields.forEach((usedField) => {
+  //     currFields = removeObject(currFields, { id: usedField.id });
+  //   });
+  // } else {
+  //   currFields = fieldProps;
+  // }
+
+  let value = this.value;
+  // console.log(value);
+  // console.log(currFields);
+  let filteredFields = '';
+  value === 'all'
+    ? (filteredFields = getCurrFields())
+    : (filteredFields = filterObject(getCurrFields(), { group: value }));
+  fieldListDiv.innerHTML = '';
+  // console.log(currFields);
+  console.log(filteredFields);
+  createFields(filteredFields);
+}
+
+// filter array
+// replace content with new array objects
+
+// Creates draggable elements
+function createFields(arr) {
+  arr.forEach((field) => {
+    let li = document.createElement('li');
+    li.innerHTML = field.name;
+    li.id = field.id;
+    if (field.block === 'labelBlock') {
+      li.draggable = 'true';
+      li.classList.add('draggable');
+      li.dataset.category = field.group;
+      li.addEventListener('dragstart', handleDragStart, false);
+      li.addEventListener('dragover', handleDragOver, false);
+      li.addEventListener('drop', handleDrop, false);
+      li.addEventListener('dragend', handleDragEnd, false);
+      fieldListDiv.appendChild(li);
+    }
+  });
+}
 
 // Creates formatting (button) controls in page
 formatsArr.forEach((format) => {
@@ -798,7 +904,14 @@ function handleDragEnd(e) {
 /** Event Listeners
  ******************************
  */
-[].forEach.call(draggables, function (draggable) {
+// [].forEach.call(draggables, function (draggable) {
+//   draggable.addEventListener('dragstart', handleDragStart, false);
+//   draggable.addEventListener('dragover', handleDragOver, false);
+//   draggable.addEventListener('drop', handleDrop, false);
+//   draggable.addEventListener('dragend', handleDragEnd, false);
+// });
+
+draggables.forEach((draggable) => {
   draggable.addEventListener('dragstart', handleDragStart, false);
   draggable.addEventListener('dragover', handleDragOver, false);
   draggable.addEventListener('drop', handleDrop, false);

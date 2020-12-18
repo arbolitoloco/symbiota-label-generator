@@ -16,9 +16,19 @@
   <h1>Symbiota Label Format Generator Prototype</h1>
   <main>
     <div>
-      <div id="fields" class="container">
+      <div id="fields">
         <h3>Fields Available</h3>
-        <!-- <div draggable="true" class="draggable">Column</div> -->
+        <label for="fields-filter">Filter fields by category:</label>
+        <select name="fields-filter" id="fields-filter">
+          <option value="all">All</option>
+          <option value="specimen">Specimen</option>
+          <option value="collection">Collection</option>
+          <option value="taxon">Taxon</option>
+          <option value="determination">Determination</option>
+          <option value="event">Event</option>
+          <option value="locality">Locality</option>
+        </select>
+        <div id="fields-list" class="container"></div>
       </div>
     </div>
     <div>
