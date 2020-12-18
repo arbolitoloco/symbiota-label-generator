@@ -12,6 +12,32 @@
   align-items: start;
 } */
 
+html {
+  color: #212529;
+}
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+header {
+  background-color: #f1f6f9;
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 0 auto;
+  max-width: 780px;
+}
+
+.header-content h4 {
+  text-align: right;
+}
+
 main {
   max-width: 780px;
   margin: 0 auto;
@@ -28,18 +54,55 @@ main {
   }
 }
 
-li {
+main li {
   list-style-type: none;
   display: inline-block;
+}
+
+#fields-filter {
+  margin-bottom: 0.25em;
+  width: 100%;
 }
 
 select.control {
   display: block;
   margin: 0.25em 0;
+  width: 100%;
+}
+
+input {
+  width: 100%;
 }
 
 h1 {
-  text-align: center;
+  font-family: 'Playfair Display', serif;
+  /* text-align: center; */
+  font-weight: 400;
+  /* font-style: italic; */
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+h1.title {
+  padding-top: 0.5em;
+}
+
+h1.subtitle {
+  padding-bottom: 0.5em;
+}
+
+h2,
+h3,
+h4 {
+  text-transform: uppercase;
+  font-weight: 400;
+  color: #909090;
+  letter-spacing: 2px;
+}
+
+h4,
+h5 {
+  margin: 0.5em 0;
 }
 
 
@@ -58,10 +121,11 @@ h1 {
 }
 
 #build-label {
-  background-color: rgb(143, 143, 143);
+  background-color: #acacac;
   /* min-height: 300px; */
   grid-column: 1/2;
   padding: 0.5em;
+  margin-top: 1em;
 }
 
 #build-label .delimiter {
@@ -93,8 +157,32 @@ h1 {
   display: inline;
 }
 
+#field-block-options {
+  margin-top: 2em;
+}
+
 .unclickable {
   pointer-events: none !important;
+}
+
+#instructions {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.637);
+  position: absolute;
+  top: 0;
+}
+
+#instructions li {
+  color: initial;
+  line-height: normal;
+}
+
+.instructions-content {
+  max-width: 780px;
+  background-color: #f1f6f9;
+  margin: 2em auto;
+  padding: 2em;
+  border: 1px solid #212529;
 }
 
 
@@ -132,6 +220,25 @@ li {
   line-height: 1;
   margin: 0.5em;
   padding: 0.25em 0.5em;
+}
+
+button.btn {
+  /* width: 220px; */
+  /* // background-color: darkslategrey; */
+  border-color: transparent;
+  border-radius: 2px;
+  /* color: white; */
+  text-transform: uppercase;
+  padding: 0.5em;
+  margin-top: 0.25em;
+}
+
+button.btn:hover {
+  background-color: rgb(168, 167, 167);
+}
+
+button.btn:focus {
+  outline: none;
 }
 
 button.control:disabled {

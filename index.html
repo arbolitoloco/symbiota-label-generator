@@ -8,16 +8,30 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="helpers.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <title>Symbiota Label Content Format Generator</title>
 </head>
 
-<body class="font-type-sans">
-  <h1>Symbiota Label Content Format Generator</h1>
+<body>
+  <header>
+    <div class="header-content">
+      <div>
+        <h1 class="title">Symbiota Label Content</h1>
+        <h1 class="subtitle">Format Generator</h1>
+      </div>
+      <div>
+        <h4>
+          <a href="javascript:void(0)" onclick="openOverlay()">Instructions</a>
+        </h4>
+      </div>
+    </div>
+  </header>
   <main>
     <div>
       <div id="fields">
-        <h3>Fields Available</h3>
+        <h4>Fields Available</h4>
         <label for="fields-filter">Filter fields by category:</label>
         <select name="fields-filter" id="fields-filter">
           <option value="all">All</option>
@@ -33,26 +47,28 @@
     </div>
     <div>
       <div id="build">
-        <h3>Label Format</h3>
+        <!-- <h4>Label Format</h4> -->
         <div id="build-label">
-          <h3>Label Content Area (drag, drop & reorder fields here)</h3>
+          <h4 style="color: #212529">Label Content Area</h4>
+          <h5>drag, drop & reorder fields here; click fields or lines to apply formats; toggle select/deselect by clicking once</h5>
           <!-- <div id="label-header">
           <h5 class='area-title'>Label Heading</h5>
         </div> -->
           <div id="label-middle">
             <div class="field-block container"></div>
           </div>
-          <button onClick="addLine()">Add line (fieldBlock)</button>
+          <button class="btn" onClick="addLine()">Add line (fieldBlock)</button>
           <!-- <div id="label-footer">
           <h5 class='area-title'>Label Footer</h5>
         </div> -->
         </div>
       </div>
       <div id="preview">
-        <h3>Label preview</h3>
+        <h4>Label preview</h4>
+        <h5>content automatically displayed below</h5>
         <div id="preview-label"></div>
-        <button onclick="printJson()">Display JSON</button>
-        <button id='copyBtn' onclick="copyJson()" style="display: none;">Copy JSON to clipboard</button>
+        <button class="btn" onclick="printJson()">Display JSON</button>
+        <button class="btn" id='copyBtn' onclick="copyJson()" style="display: none;">Copy JSON to clipboard</button>
         <textarea id="dummy" style="display: none;"></textarea>
       </div>
     </div>
@@ -77,6 +93,34 @@
       </div>
     </div>
   </main>
+  <div id="instructions" class="hidden">
+    <div class="instructions-content">
+      <h4 class="text-align-right"><a href="javascript:void(0)" onclick="closeOverlay()">Close</a></h4>
+      <h1>How To Use This</h1>
+      <p>The latest release of Symbiota has rolled out the ability to create customized label formats for printing. Check with your portal managers/admins if you have that option installed in your portal.</p>
+      <p>Label formats can be defined in a variety of ways:</p>
+      <ul>
+        <li>Directly in the database, as a property of the collection profile;</li>
+        <li>Directly in the formats file, using JSON definitions;</li>
+        <li>Via User Interface, through the Label Editor ('/collections/reports/labeljsoneditor.php').</li>
+      </ul>
+      <p><span class="font-bold">This is a prototype designed to provide a more user-friendly way to create label formats. It is in the process of being integrated into Symbiota. <a href="mailto:lauraprado@asu.edu">Feedback is appreciated</a>.</span></p>
+      <p>To access the Label Editor, you have to be logged in and have the necessary admin permissions:</p>
+      <ol>
+        <li>Find a collection for which you'd like to print labels (either in your User Profile or in the Sitemap, depending on the permissions you have).</li>
+        <li>In the 'Data Editor Control Panel', click the 'Print Specimen Labels' link.</li>
+        <li>Search for a few specimens (click 'Filter Specimen Records' button) and select the desired ones by clicking their checkboxes in the results.</li>
+        <li>Scroll down to the 'Label Printing' area.
+        </li>
+        <li>Click the edit icon (pencil) next to the 'Label Profiles' option.</li>
+        <li>Find the format you wish to modify or click the green plus icon in the upper right corner to create a new one.</li>
+        <li><span class="font-bold">You can now enter your label definitions in the form. The
+    formats you're defining in this interface (the Symbiota Label Content Format Generator) will generate a JSON output that you have to paste in the 'JSON' field in the form.</span></li>
+        <li>Click the "Save Label Format" and go back to your label printing module to find your format available for printing!</li>
+      </ol>
+      <h4 class="text-align-right"><a href="javascript:void(0)" onclick="closeOverlay()">Close</a></h4>
+    </div>
+  </div>
 </body>
 
 <script src="script.js"></script>

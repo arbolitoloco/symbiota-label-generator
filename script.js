@@ -459,6 +459,21 @@ const inputs = document.querySelectorAll('input');
  */
 
 /**
+ * Displays user instructions overlay
+ */
+const overlay = document.getElementById('instructions');
+function openOverlay() {
+  overlay.classList.remove('hidden');
+}
+
+/**
+ * Hides user instructions overlay
+ */
+function closeOverlay() {
+  overlay.classList.add('hidden');
+}
+
+/**
  * Filters array based on desired property
  * @param {Array} arr Array to be filtered
  * @param {Object} criteria Pair or pairs of property and criterion
