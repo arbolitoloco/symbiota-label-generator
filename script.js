@@ -10,12 +10,12 @@
  * [x] Improve styles for control divs
  * [x] Get state of line?
  * [x] Replace "bar" button
+ * [x] Add full list of current fields
+ * [x] Add dropdown to filter fields
  * [ ] Clean methods for unused code
  * [ ] Improve text information (instructions)
  * [ ] Show resulting JSON (add button to reveal)
- * [x] Add full list of current fields
- * [x] Add dropdown to filter fields
- * [ ] Remove line
+ * [ ] Remove line?
  * [ ] Deploy
  * */
 
@@ -404,123 +404,11 @@ const dropdownsArr = [
 const fieldDiv = document.getElementById('fields');
 const fieldListDiv = document.getElementById('fields-list');
 const controlDiv = document.getElementById('controls');
-
-/**
- * Filters array based on desired property
- * @param {Array} arr Array to be filtered
- * @param {Object} criteria Pair or pairs of property and criterion
- */
-function filterObject(arr, criteria) {
-  return arr.filter(function (obj) {
-    return Object.keys(criteria).every(function (c) {
-      return obj[c] == criteria[c];
-    });
-  });
-}
-
-/**
- * Removes object from array based on desired property
- * @param {Array} arr Array to be cleaned
- * @param {Object} criteria Pair or pairs of property and criterion
- */
-function removeObject(arr, criteria) {
-  return arr.filter(function (obj) {
-    return Object.keys(criteria).every(function (c) {
-      return obj[c] !== criteria[c];
-    });
-  });
-}
+const fieldsFilter = document.getElementById('fields-filter');
+const formattable = document.getElementById('label-middle');
 
 // Initially creates all fields
 createFields(fieldProps);
-
-// When selecting option in fields by category select
-const fieldsFilter = document.getElementById('fields-filter');
-fieldsFilter.onchange = filterFields;
-
-// function getUsedFields() {
-//   let usedFields = document.querySelectorAll('#label-middle .draggable');
-//   return usedFields;
-// }
-
-function getCurrFields() {
-  let currFields = fieldProps;
-  let usedFields = document.querySelectorAll('#label-middle .draggable');
-  if (usedFields.length > 0) {
-    usedFields.forEach((usedField) => {
-      currFields = removeObject(currFields, { id: usedField.id });
-    });
-  } else {
-    ('');
-  }
-  return currFields;
-}
-
-function filterFields() {
-  /// NAO ESTA FILTRANDO DIREITO, CURRFIELDS/USEDFIELDS NAO ESTA SENDO ATUALIZADO A CADA VEZ
-  // transformar lista de ids em array (matching em fieldProps)
-  // porém pegar a lista "atual" filtrando fields que já estão na label middle
-  // currIds = [];
-
-  // let lis = fieldListDiv.querySelectorAll('li');
-  // lis.forEach((li) => {
-  //   // currIds.push(li.id);
-  //   fieldObj = filterObject(fieldProps, { id: li.id });
-  //   // console.log(fieldObj[0]);
-  //   currFields.push(fieldObj[0]);
-  // });
-  // currIds.forEach((id) => {
-  //   fieldObj = filter(fieldProps, { id: id });
-  //   console.log(fieldObj.typeof);
-  //   currFields.push(fieldObj);
-  // });
-  // console.log(currFields.length);
-  // let currFields = getUsedFields();
-
-  // currFields = [];
-  // let usedFields = getUsedFields();
-  // if (usedFields.length > 0) {
-  //   usedFields.forEach((usedField) => {
-  //     currFields = removeObject(currFields, { id: usedField.id });
-  //   });
-  // } else {
-  //   currFields = fieldProps;
-  // }
-
-  let value = this.value;
-  // console.log(value);
-  // console.log(currFields);
-  let filteredFields = '';
-  value === 'all'
-    ? (filteredFields = getCurrFields())
-    : (filteredFields = filterObject(getCurrFields(), { group: value }));
-  fieldListDiv.innerHTML = '';
-  // console.log(currFields);
-  console.log(filteredFields);
-  createFields(filteredFields);
-}
-
-// filter array
-// replace content with new array objects
-
-// Creates draggable elements
-function createFields(arr) {
-  arr.forEach((field) => {
-    let li = document.createElement('li');
-    li.innerHTML = field.name;
-    li.id = field.id;
-    if (field.block === 'labelBlock') {
-      li.draggable = 'true';
-      li.classList.add('draggable');
-      li.dataset.category = field.group;
-      li.addEventListener('dragstart', handleDragStart, false);
-      li.addEventListener('dragover', handleDragOver, false);
-      li.addEventListener('drop', handleDrop, false);
-      li.addEventListener('dragend', handleDragEnd, false);
-      fieldListDiv.appendChild(li);
-    }
-  });
-}
 
 // Creates formatting (button) controls in page
 formatsArr.forEach((format) => {
@@ -538,9 +426,7 @@ formatsArr.forEach((format) => {
   } else {
     btn.innerText = format.name;
   }
-  // console.log(format.group);
   targetDiv.appendChild(btn);
-  // controlDiv.appendChild(targetDiv);
 });
 
 // Creates formatting (dropdown) controls in page
@@ -572,6 +458,83 @@ const inputs = document.querySelectorAll('input');
 /** Methods
  ******************************
  */
+
+/**
+ * Filters array based on desired property
+ * @param {Array} arr Array to be filtered
+ * @param {Object} criteria Pair or pairs of property and criterion
+ */
+function filterObject(arr, criteria) {
+  return arr.filter(function (obj) {
+    return Object.keys(criteria).every(function (c) {
+      return obj[c] == criteria[c];
+    });
+  });
+}
+
+/**
+ * Removes object from array based on desired property
+ * @param {Array} arr Array to be cleaned
+ * @param {Object} criteria Pair or pairs of property and criterion
+ */
+function removeObject(arr, criteria) {
+  return arr.filter(function (obj) {
+    return Object.keys(criteria).every(function (c) {
+      return obj[c] !== criteria[c];
+    });
+  });
+}
+
+/**
+ * Gets list of fields currently available to drag to label build area
+ */
+function getCurrFields() {
+  let currFields = fieldProps;
+  let usedFields = document.querySelectorAll('#label-middle .draggable');
+  if (usedFields.length > 0) {
+    usedFields.forEach((usedField) => {
+      currFields = removeObject(currFields, { id: usedField.id });
+    });
+  } else {
+    ('');
+  }
+  return currFields;
+}
+
+/**
+ * Filters available fields on select option
+ */
+function filterFields() {
+  let value = this.value;
+  let filteredFields = '';
+  value === 'all'
+    ? (filteredFields = getCurrFields())
+    : (filteredFields = filterObject(getCurrFields(), { group: value }));
+  fieldListDiv.innerHTML = '';
+  createFields(filteredFields);
+}
+
+/**
+ * Creates draggable elements
+ * @param {Arr} arr Array with list of currently available fields
+ */
+function createFields(arr) {
+  arr.forEach((field) => {
+    let li = document.createElement('li');
+    li.innerHTML = field.name;
+    li.id = field.id;
+    if (field.block === 'labelBlock') {
+      li.draggable = 'true';
+      li.classList.add('draggable');
+      li.dataset.category = field.group;
+      li.addEventListener('dragstart', handleDragStart, false);
+      li.addEventListener('dragover', handleDragOver, false);
+      li.addEventListener('drop', handleDrop, false);
+      li.addEventListener('dragend', handleDragEnd, false);
+      fieldListDiv.appendChild(li);
+    }
+  });
+}
 
 /**
  * Appends line (fieldBlock) to label builder
@@ -714,7 +677,7 @@ function toggleSelect(element) {
 }
 
 /**
- * Activates/Deactivates formatting controls
+ * Toggles formatting controls based on filter and state
  * @param {String} filter Class of formatting control (field or field-block)
  * @param {Boolean} bool
  */
@@ -728,6 +691,15 @@ function activateControls(filter, bool) {
 }
 
 /**
+ * Deactivates all controls
+ */
+function deactivateControls() {
+  controls.forEach((control) => {
+    control.disabled = true;
+  });
+}
+
+/**
  * Gets selected item state (formatted classes)
  * @param {DOM Node} item Field in build label area
  */
@@ -735,10 +707,6 @@ function getState(item) {
   let formatList = Array.from(item.classList);
   console.log(formatList);
   // Removes '.draggable' and '.selected' from array
-  // formatList.splice(formatList.indexOf('selected'), 1);
-  // formatList.splice(formatList.indexOf('draggable'), 1);
-  // formatList.splice(formatList.indexOf('field-block'), 1);
-  // formatList.splice(formatList.indexOf('container'), 1);
   printableList = formatList.filter(isPrintStyle);
   console.log(printableList);
 
@@ -855,6 +823,16 @@ function resetControls() {
 }
 
 /**
+ * Updates optional field content (prefix/suffix)
+ * @param {DOM Node} content Optional content input
+ * @param {DOM Node} item Field to be modified
+ */
+function updateFieldContent(content, item) {
+  let option = content.id;
+  item.setAttribute('data-' + option, content.value);
+}
+
+/**
  * Tags dragging elements and copies their content
  * @param {Event} e
  */
@@ -904,12 +882,7 @@ function handleDragEnd(e) {
 /** Event Listeners
  ******************************
  */
-// [].forEach.call(draggables, function (draggable) {
-//   draggable.addEventListener('dragstart', handleDragStart, false);
-//   draggable.addEventListener('dragover', handleDragOver, false);
-//   draggable.addEventListener('drop', handleDrop, false);
-//   draggable.addEventListener('dragend', handleDragEnd, false);
-// });
+fieldsFilter.onchange = filterFields;
 
 draggables.forEach((draggable) => {
   draggable.addEventListener('dragstart', handleDragStart, false);
@@ -926,20 +899,10 @@ containers.forEach((container) => {
   });
 });
 
-/**
- * REFACTOR THIS!!!!
- *
- * Pass item type of SELECTED items to activate controls
- */
 // Elements in '#label-middle'
-let formattable = document.getElementById('label-middle');
 formattable.addEventListener('click', (e) => {
   // Toggle select clicked item
   toggleSelect(e.target);
-
-  // let isSelected = toggleSelect(e.target);
-  // Resets formatting buttons state when item is deselected
-  // !isSelected ? resetControls() : '';
 
   // Everytime item is clicked, display list of selected items:
   let selectedItems = build.querySelectorAll('.selected');
@@ -948,28 +911,10 @@ formattable.addEventListener('click', (e) => {
   // When element is selected, activate formatting buttons
   // depends on number of elements in page (at least one selected).
   let isAnySelected = selectedItems.length > 0;
-  // console.log(isAnySelected + ' anySelected');
 
   if (isAnySelected) {
     let itemType = '';
-    // get the item type of the SELECTED item instead!!!
-    // do matching for every selected item instead on focusing on target
-    // if (e.target && e.target.matches('.selected')) {
-    //   if (e.target && e.target.matches('.draggable')) {
-    //     itemType = 'field';
-    //     // deactivate 'field-block' items
-    //   } else if (e.target && e.target.matches('.field-block')) {
-    //     itemType = 'field-block';
-    //     // deactivate 'field' items
-    //   }
-    //   // it's passing the itemType of the element clicked, not the one selected!
-    //   // console.log(itemType);
-    //   // console.log(anySelected);
-    //   activateControls(itemType, isAnySelected);
-    // }
-
     let numSelected = build.querySelectorAll('.selected');
-    // console.log('num selected: ' + numSelected.length);
     // Gets formatting information for individually selected item
     if (numSelected.length > 1) {
       // If there is more than one type of selected items, deactivate controls
@@ -978,7 +923,6 @@ formattable.addEventListener('click', (e) => {
       selected.forEach((item) => {
         typeArr.push(Array.from(item.classList).join(' '));
       });
-      // console.log(typeArr);
       let uniqueTypeSet = new Set(typeArr);
       console.log(uniqueTypeSet);
       if (uniqueTypeSet.size > 1) {
@@ -991,9 +935,6 @@ formattable.addEventListener('click', (e) => {
     } else if (numSelected.length == 1) {
       // Refreshes buttons according to applied styles in selected item
       let item = build.querySelector('.selected');
-      // console.log(
-      //   'passing itemType' + itemType + ' and anySelected ' + anySelected
-      // );
       if (item.matches('.draggable')) {
         itemType = 'field';
         // deactivate 'field-block' items
@@ -1002,7 +943,6 @@ formattable.addEventListener('click', (e) => {
         // deactivate 'field' items
       }
       activateControls(itemType, isAnySelected);
-      console.log(item);
       getState(item);
     } else {
       return false;
@@ -1012,12 +952,6 @@ formattable.addEventListener('click', (e) => {
     deactivateControls();
   }
 });
-
-function deactivateControls() {
-  controls.forEach((control) => {
-    control.disabled = true;
-  });
-}
 
 // Formatting controls
 controlDiv.addEventListener('click', (e) => {
@@ -1044,13 +978,3 @@ inputs.forEach((input) => {
     refreshPreview();
   });
 });
-
-/**
- * Updates optional field content (prefix/suffix)
- * @param {DOM Node} content Optional content input
- * @param {DOM Node} item Field to be modified
- */
-function updateFieldContent(content, item) {
-  let option = content.id;
-  item.setAttribute('data-' + option, content.value);
-}
