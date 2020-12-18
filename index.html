@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="helpers.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-  <title>Symbiota Label Format Generator Prototype</title>
+  <title>Symbiota Label Content Format Generator</title>
 </head>
 
 <body class="font-type-sans">
-  <h1>Symbiota Label Format Generator Prototype</h1>
+  <h1>Symbiota Label Content Format Generator</h1>
   <main>
     <div>
       <div id="fields">
@@ -51,6 +51,9 @@
       <div id="preview">
         <h3>Label preview</h3>
         <div id="preview-label"></div>
+        <button onclick="printJson()">Display JSON</button>
+        <button id='copyBtn' onclick="copyJson()" style="display: none;">Copy JSON to clipboard</button>
+        <textarea id="dummy" style="display: none;"></textarea>
       </div>
     </div>
     <div>
