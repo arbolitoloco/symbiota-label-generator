@@ -17,9 +17,8 @@
  * [x] Improve text information (instructions)
  * [x] Deploy
  * [x] Add delimiter
- * [ ] Capture delimiter state
- * [ ] Only disables delimiter if there is more than one field in fieldBlock
  * [x] Pass delimiter to JSON format
+ * [x] Capture delimiter state
  * */
 
 /** Creating Page Elements/Controls
