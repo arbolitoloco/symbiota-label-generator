@@ -574,6 +574,7 @@ function addLine() {
 function refreshPreview() {
   let labelList = [];
   let fieldBlocks = document.querySelectorAll('#build-label .field-block');
+  // Builds array with directives (labelList)
   fieldBlocks.forEach((block) => {
     let itemsArr = [];
     let items = block.querySelectorAll('li');
@@ -589,26 +590,47 @@ function refreshPreview() {
     labelList.push(itemsArr);
     let fieldBlockStyles = Array.from(block.classList).filter(isPrintStyle);
     fieldBlockStyles ? (itemsArr.className = fieldBlockStyles) : '';
+    let fieldBlockDelim = block.dataset.delimiter;
+    fieldBlockDelim ? (itemsArr.delimiter = fieldBlockDelim) : '';
     // console.log(itemsArr);
   });
+  // if there is a delimiter, append delimiter to preview until last one (length-1)
+
+  // let hasDelim = labelItem.delimiter != undefined;
+  // if (hasDelim) {
+  //   delim = document.createElement('span');
+  //   delim.innerText = parent.dataset.delimiter;
+  //   div.appendChild(delim);
+  // }
   // console.log(labelList);
   // Clears preview div before appending elements
   preview.innerHTML = '';
   // Creates HTML elements and appends to preview div
-  labelList.forEach((labelItem) => {
+  labelList.forEach((labelItem, blockIdx) => {
+    let blockLen = labelItem.length;
+    console.log('blockLen: ' + blockLen);
     let fieldBlock = document.createElement('div');
     fieldBlock.classList.add('field-block');
     let labelItemStyles = labelItem.className;
     labelItemStyles.forEach((style) => {
       fieldBlock.classList.add(style);
     });
-    // let fieldBlockStyleList = labelItem
     preview.appendChild(fieldBlock);
-    labelItem.forEach((field) => {
+    labelItem.forEach((field, fieldIdx) => {
       createPreviewEl(field, fieldBlock);
+      let isLast = fieldIdx == blockLen - 1;
+      // Adds delimiter if existing up to last element
+      if (!isLast) {
+        let preview = document.getElementsByClassName(field.field);
+        let delim = document.createElement('span');
+        delim.innerText = labelItem.delimiter;
+        preview[0].after(delim);
+      }
     });
   });
+
   // generateJson(labelList);
+  console.log(labelList);
   return labelList;
 }
 
@@ -618,6 +640,7 @@ function refreshPreview() {
  * @param {DOM Node} parent DOM Node where element will be inserted
  */
 function createPreviewEl(element, parent) {
+  console.log(parent);
   // Grabs information from fieldProps array to create elements matching on id
   let fieldInfo =
     fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
@@ -885,6 +908,7 @@ function resetControls() {
 function updateFieldContent(content, item) {
   let option = content.id;
   item.setAttribute('data-' + option, content.value);
+  console.log(content, item);
 }
 
 /**
@@ -1027,8 +1051,9 @@ controlDiv.addEventListener('click', (e) => {
 // Listen to input changes
 inputs.forEach((input) => {
   input.addEventListener('input', (e) => {
-    let formatItem = build.querySelector('li.selected');
+    let formatItem = build.querySelector('.selected');
     updateFieldContent(e.target, formatItem);
+    console.log(e.target, formatItem);
     // Needs to call refresh to pass values to labelList
     refreshPreview();
   });
