@@ -19,6 +19,7 @@
  * [x] Add delimiter
  * [x] Pass delimiter to JSON format
  * [x] Capture delimiter state
+ * [ ] Reorder fieldBlocks... how?
  * */
 
 /** Creating Page Elements/Controls
@@ -566,7 +567,8 @@ function addLine() {
   line.addEventListener('dragover', (e) => {
     e.preventDefault();
     const dragging = document.querySelector('.dragging');
-    line.appendChild(dragging);
+    dragging !== null ? line.appendChild(dragging) : '';
+    // line.appendChild(dragging);
   });
 }
 
@@ -767,8 +769,6 @@ function toggleSelect(element) {
  * @param {Boolean} bool
  */
 function activateControls(filter, bool) {
-  // console.log(filter);
-  // console.log(bool);
   let filtered = document.querySelectorAll(`[data-group=${filter}]`);
   filtered.forEach((control) => {
     bool ? (control.disabled = false) : (control.disabled = true);
@@ -981,7 +981,7 @@ containers.forEach((container) => {
   container.addEventListener('dragover', (e) => {
     e.preventDefault();
     const dragging = document.querySelector('.dragging');
-    container.appendChild(dragging);
+    dragging !== null ? container.appendChild(dragging) : '';
   });
 });
 
@@ -1024,12 +1024,16 @@ formattable.addEventListener('click', (e) => {
       if (item.matches('.draggable')) {
         itemType = 'field';
         // deactivate 'field-block' items
+        activateControls(itemType, isAnySelected);
+        getState(item);
       } else if (item.matches('.field-block')) {
         itemType = 'field-block';
         // deactivate 'field' items
+        activateControls(itemType, isAnySelected);
+        getState(item);
       }
-      activateControls(itemType, isAnySelected);
-      getState(item);
+      // activateControls(itemType, isAnySelected);
+      // getState(item);
     } else {
       return false;
     }
