@@ -14,8 +14,12 @@
  * [x] Add dropdown to filter fields
  * [x] Clean methods for unused code
  * [x] Show resulting JSON (add button to reveal) - improve display (remove alert)
- * [ ] Improve text information (instructions)
- * [ ] Deploy
+ * [x] Improve text information (instructions)
+ * [x] Deploy
+ * [x] Add delimiter
+ * [ ] Capture delimiter state
+ * [ ] Only disables delimiter if there is more than one field in fieldBlock
+ * [x] Pass delimiter to JSON format
  * */
 
 /** Creating Page Elements/Controls
@@ -694,6 +698,10 @@ function generateJson(list) {
         : delete prop.className;
     });
     fieldBlockObj.fieldBlock = fieldItem;
+    let fieldBlockDelim = fieldItem.delimiter;
+    fieldBlockDelim !== undefined
+      ? (fieldBlockObj.delimiter = fieldBlockDelim)
+      : '';
     let fieldBlockStyles = fieldItem.className;
     fieldBlockStyles.length > 0
       ? (fieldBlockObj.className = fieldItem.className.join(' '))
