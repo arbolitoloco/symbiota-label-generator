@@ -19,7 +19,9 @@
  * [x] Add delimiter
  * [x] Pass delimiter to JSON format
  * [x] Capture delimiter state
- * [ ] Reorder fieldBlocks... how?
+ * [x] Reorder fieldBlocks... how?
+ * [ ] Clean unused code
+ * [ ] Activate delimeter only when multiple fields exist in line?
  * */
 
 /** Creating Page Elements/Controls
@@ -408,7 +410,7 @@ const fieldDiv = document.getElementById('fields');
 const fieldListDiv = document.getElementById('fields-list');
 const controlDiv = document.getElementById('controls');
 const fieldsFilter = document.getElementById('fields-filter');
-const formattable = document.getElementById('label-middle');
+const labelMid = document.getElementById('label-middle');
 
 // Initially creates all fields
 createFields(fieldProps);
@@ -562,13 +564,22 @@ function addLine() {
   let line = document.createElement('div');
   line.classList.add('field-block', 'container');
   let midBlocks = document.querySelectorAll('#label-middle > .field-block');
+  let up = document.createElement('span');
+  up.classList.add('material-icons');
+  up.innerText = 'keyboard_arrow_up';
+  line.appendChild(up);
+  let down = document.createElement('span');
+  down.classList.add('material-icons');
+  down.innerText = 'keyboard_arrow_down';
+  line.appendChild(down);
   let lastBlock = midBlocks[midBlocks.length - 1];
   lastBlock.parentNode.insertBefore(line, lastBlock.nextSibling);
+  line.draggable = true;
+  // Allows items to be added/reordered inside fieldBlock
   line.addEventListener('dragover', (e) => {
     e.preventDefault();
     const dragging = document.querySelector('.dragging');
     dragging !== null ? line.appendChild(dragging) : '';
-    // line.appendChild(dragging);
   });
 }
 
@@ -613,7 +624,7 @@ function refreshPreview() {
   // Creates HTML elements and appends to preview div
   labelList.forEach((labelItem, blockIdx) => {
     let blockLen = labelItem.length;
-    console.log('blockLen: ' + blockLen);
+    // console.log('blockLen: ' + blockLen);
     let fieldBlock = document.createElement('div');
     fieldBlock.classList.add('field-block');
     let labelItemStyles = labelItem.className;
@@ -635,7 +646,7 @@ function refreshPreview() {
   });
 
   // generateJson(labelList);
-  console.log(labelList);
+  // console.log(labelList);
   return labelList;
 }
 
@@ -645,7 +656,7 @@ function refreshPreview() {
  * @param {DOM Node} parent DOM Node where element will be inserted
  */
 function createPreviewEl(element, parent) {
-  console.log(parent);
+  // console.log(parent);
   // Grabs information from fieldProps array to create elements matching on id
   let fieldInfo =
     fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
@@ -790,10 +801,10 @@ function deactivateControls() {
  */
 function getState(item) {
   let formatList = Array.from(item.classList);
-  console.log(formatList);
+  // console.log(formatList);
   // Removes '.draggable' and '.selected' from array
   printableList = formatList.filter(isPrintStyle);
-  console.log(printableList);
+  // console.log(printableList);
 
   if (printableList.length > 0) {
     // Render state of each formatting button
@@ -986,60 +997,93 @@ containers.forEach((container) => {
 });
 
 // Elements in '#label-middle'
-formattable.addEventListener('click', (e) => {
-  // Toggle select clicked item
-  toggleSelect(e.target);
-
-  // Everytime item is clicked, display list of selected items:
-  let selectedItems = build.querySelectorAll('.selected');
-  console.log(selectedItems);
-
-  // When element is selected, activate formatting buttons
-  // depends on number of elements in page (at least one selected).
-  let isAnySelected = selectedItems.length > 0;
-
-  if (isAnySelected) {
-    let itemType = '';
-    let numSelected = build.querySelectorAll('.selected');
-    // Gets formatting information for individually selected item
-    if (numSelected.length > 1) {
-      // If there is more than one type of selected items, deactivate controls
-      let selected = build.querySelectorAll('.selected');
-      let typeArr = [];
-      selected.forEach((item) => {
-        typeArr.push(Array.from(item.classList).join(' '));
-      });
-      let uniqueTypeSet = new Set(typeArr);
-      console.log(uniqueTypeSet);
-      if (uniqueTypeSet.size > 1) {
-        // deactivate controls
-        deactivateControls();
-      } else {
-        (' ');
+labelMid.addEventListener('click', (e) => {
+  if (e.target.matches('.material-icons')) {
+    // let lines = build.querySelectorAll('.field-block');
+    // let up = e.target.innerText === 'keyboard_arrow_up';
+    // up
+    //   ? console.log(e.target.parentNode.previousSibling)
+    //   : console.log(e.target.parentNode.nextSibling);
+    // console.log(e.target.parentNode);
+    // console.log(lines.length);
+    console.log(e.target.innerText);
+    if (e.target.innerText === 'keyboard_arrow_up') {
+      let first = labelMid.getElementsByClassName('field-block')[0];
+      console.log(first);
+      let curr = e.target.parentNode;
+      // reorder only if item is not first in list already
+      if (curr !== first) {
+        let prev = e.target.parentNode.previousSibling;
+        // move current into prev
+        prev.replaceWith(curr);
+        // insert current after prev
+        curr.parentNode.insertBefore(prev, curr.nextSibling);
       }
-      resetControls();
-    } else if (numSelected.length == 1) {
-      // Refreshes buttons according to applied styles in selected item
-      let item = build.querySelector('.selected');
-      if (item.matches('.draggable')) {
-        itemType = 'field';
-        // deactivate 'field-block' items
-        activateControls(itemType, isAnySelected);
-        getState(item);
-      } else if (item.matches('.field-block')) {
-        itemType = 'field-block';
-        // deactivate 'field' items
-        activateControls(itemType, isAnySelected);
-        getState(item);
+    } else if (e.target.innerText === 'keyboard_arrow_down') {
+      let next = e.target.parentNode.nextSibling;
+      let curr = e.target.parentNode;
+      if (next) {
+        // move current into next
+        curr.replaceWith(next);
+        // insert current after next
+        next.parentNode.insertBefore(curr, next.nextSibling);
       }
-      // activateControls(itemType, isAnySelected);
-      // getState(item);
-    } else {
-      return false;
     }
+    refreshPreview();
   } else {
-    resetControls();
-    deactivateControls();
+    // Toggle select clicked item (on formattables only)
+    toggleSelect(e.target);
+    // Everytime item is clicked, display list of selected items:
+    let selectedItems = build.querySelectorAll('.selected');
+    // console.log(selectedItems);
+
+    // When element is selected, activate formatting buttons
+    // depends on number of elements in page (at least one selected).
+    let isAnySelected = selectedItems.length > 0;
+
+    if (isAnySelected) {
+      let itemType = '';
+      let numSelected = build.querySelectorAll('.selected');
+      // Gets formatting information for individually selected item
+      if (numSelected.length > 1) {
+        // If there is more than one type of selected items, deactivate controls
+        let selected = build.querySelectorAll('.selected');
+        let typeArr = [];
+        selected.forEach((item) => {
+          typeArr.push(Array.from(item.classList).join(' '));
+        });
+        let uniqueTypeSet = new Set(typeArr);
+        // console.log(uniqueTypeSet);
+        if (uniqueTypeSet.size > 1) {
+          // deactivate controls
+          deactivateControls();
+        } else {
+          (' ');
+        }
+        resetControls();
+      } else if (numSelected.length == 1) {
+        // Refreshes buttons according to applied styles in selected item
+        let item = build.querySelector('.selected');
+        if (item.matches('.draggable')) {
+          itemType = 'field';
+          // deactivate 'field-block' items
+          activateControls(itemType, isAnySelected);
+          getState(item);
+        } else if (item.matches('.field-block')) {
+          itemType = 'field-block';
+          // deactivate 'field' items
+          activateControls(itemType, isAnySelected);
+          getState(item);
+        }
+        // activateControls(itemType, isAnySelected);
+        // getState(item);
+      } else {
+        return false;
+      }
+    } else {
+      resetControls();
+      deactivateControls();
+    }
   }
 });
 

@@ -282,9 +282,18 @@ button>.material-icons {
   pointer-events: none;
 }
 
+span.material-icons:hover {
+  background-color: rgb(61, 102, 102);
+}
+
 .draggable.selected {
   background-color: black;
   border: 1px solid white;
+}
+
+.drag-icon {
+  background-color: white;
+  cursor: move;
 }
 
 [data-category='specimen'] {
