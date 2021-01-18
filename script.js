@@ -21,7 +21,11 @@
  * [x] Capture delimiter state
  * [x] Reorder fieldBlocks... how?
  * [x] Clean unused code
+ * [ ] Only alow one field to be selected at once
+ * [ ] Add ability to remove lines/fields
+ * [ ] Default delimiter: space or comma
  * [ ] Activate delimeter only when multiple fields exist in line?
+ * [ ] Add tooltips
  * */
 
 /** Creating Page Elements/Controls
