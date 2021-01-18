@@ -576,7 +576,7 @@ function addLine() {
   line.appendChild(down);
   let lastBlock = midBlocks[midBlocks.length - 1];
   lastBlock.parentNode.insertBefore(line, lastBlock.nextSibling);
-  line.draggable = true;
+  // line.draggable = true;
   // Allows items to be added/reordered inside fieldBlock
   line.addEventListener('dragover', (e) => {
     e.preventDefault();
@@ -670,6 +670,21 @@ function createPreviewEl(element, parent) {
 }
 
 /**
+ * Returns true if item is formattable
+ * @param {Object} element
+ */
+function isFormattable(element) {
+  if (
+    element.classList.contains('field-block') ||
+    element.classList.contains('draggable')
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
  * Checks if class should be output in JSON
  * @param {String} className found in item
  */
@@ -759,8 +774,8 @@ function copyJson() {
  * @param {DOM Node} element
  */
 function toggleSelect(element) {
-  element.classList.toggle('selected');
   let isSelected = element.classList.contains('selected');
+  element.classList.toggle('selected');
   return isSelected;
 }
 
@@ -1010,16 +1025,30 @@ labelMid.addEventListener('click', (e) => {
     }
     refreshPreview();
   } else {
-    // Toggle select clicked item (on formattables only)
-    toggleSelect(e.target);
+    if (isFormattable(e.target)) {
+      // Add ".selected" to clicked item, removing it from others
+      let lines = labelMid.querySelectorAll('.field-block');
+      lines.forEach((line) => {
+        line.classList.remove('selected');
+      });
+      let fields = labelMid.querySelectorAll('.draggable');
+      fields.forEach((field) => {
+        field.classList.remove('selected');
+      });
+      e.target.classList.add('selected');
+      // toggleSelect(e.target);
+    }
+
     // Everytime item is clicked, display list of selected items:
     let selectedItems = build.querySelectorAll('.selected');
-    // console.log(selectedItems);
+    // Toggle select clicked item (on formattables only)
+    // toggleSelect(e.target);
+    // console.log(selectedItems.length);
 
     // When element is selected, activate formatting buttons
     // depends on number of elements in page (at least one selected).
     let isAnySelected = selectedItems.length > 0;
-
+    // console.log(isAnySelected);
     if (isAnySelected) {
       let itemType = '';
       let numSelected = build.querySelectorAll('.selected');
@@ -1055,7 +1084,9 @@ labelMid.addEventListener('click', (e) => {
           getState(item);
         }
       } else {
-        return false;
+        console.log('here');
+        // toggleSelect(e.target);
+        // return false;
       }
     } else {
       resetControls();
