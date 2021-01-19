@@ -42,12 +42,12 @@ const fieldProps = [
     id: 'occid',
     group: 'specimen',
   },
-  {
-    block: 'labelBlock',
-    name: 'Collection ID',
-    id: 'collid',
-    group: 'collection',
-  },
+  // {
+  //   block: 'labelBlock',
+  //   name: 'Collection ID',
+  //   id: 'collid',
+  //   group: 'collection',
+  // },
   {
     block: 'labelBlock',
     name: 'Catalog Number',
