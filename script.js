@@ -497,10 +497,11 @@ function translateJson(source) {
   console.dir(source);
   // each source.fieldBlock is a line
   source.forEach((i) => {
-    Object.keys(i).forEach((key) => {
-      // console.log(key, i[key]);
-      console.log(key === 'fieldBlock');
-    });
+    // Object.keys(i).forEach((key) => {
+    //   // console.log(key, i[key]);
+    //   console.log(key === 'fieldBlock');
+    // });
+    console.log(i);
   });
 
   // Object.keys(source).forEach((key) => {
@@ -717,7 +718,7 @@ function refreshPreview() {
     let fieldBlockDelim = block.dataset.delimiter;
     fieldBlockDelim
       ? (itemsArr.delimiter = fieldBlockDelim)
-      : (itemsArr.delimiter = '');
+      : (itemsArr.delimiter = ' ');
   });
   // Clears preview div before appending elements
   preview.innerHTML = '';
