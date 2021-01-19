@@ -578,14 +578,23 @@ function getCurrFields() {
 /**
  * Filters available fields on select option
  */
-function filterFields() {
-  let value = this.value;
+function filterFields(value) {
+  // let value = this.value;
   let filteredFields = '';
   value === 'all'
     ? (filteredFields = getCurrFields())
     : (filteredFields = filterObject(getCurrFields(), { group: value }));
   fieldListDiv.innerHTML = '';
   createFields(filteredFields);
+}
+
+function refreshAvailFields() {
+  let available = getCurrFields();
+  fieldListDiv.innerHTML = '';
+  let selectedFilter = fieldsFilter.value;
+  selectedFilter != 'all'
+    ? filterFields(selectedFilter)
+    : createFields(available);
 }
 
 /**
@@ -598,6 +607,11 @@ function createFields(arr) {
     li.innerHTML = field.name;
     li.id = field.id;
     if (field.block === 'labelBlock') {
+      let closeBtn = document.createElement('span');
+      closeBtn.classList.add('material-icons');
+      closeBtn.innerText = 'cancel';
+      closeBtn.addEventListener('click', removeField, false);
+      li.appendChild(closeBtn);
       li.draggable = 'true';
       li.classList.add('draggable');
       li.dataset.category = field.group;
@@ -618,6 +632,10 @@ function addLine() {
   let line = document.createElement('div');
   line.classList.add('field-block', 'container');
   let midBlocks = document.querySelectorAll('#label-middle > .field-block');
+  let close = document.createElement('span');
+  close.classList.add('material-icons');
+  close.innerText = 'close';
+  line.appendChild(close);
   let up = document.createElement('span');
   up.classList.add('material-icons');
   up.innerText = 'keyboard_arrow_up';
@@ -628,13 +646,49 @@ function addLine() {
   line.appendChild(down);
   let lastBlock = midBlocks[midBlocks.length - 1];
   lastBlock.parentNode.insertBefore(line, lastBlock.nextSibling);
-  line.draggable = true;
   // Allows items to be added/reordered inside fieldBlock
   line.addEventListener('dragover', (e) => {
     e.preventDefault();
     const dragging = document.querySelector('.dragging');
     dragging !== null ? line.appendChild(dragging) : '';
   });
+  refreshLineState();
+}
+
+/**
+ * Refreshes line state
+ * If there is only one line, disables line controls
+ */
+function refreshLineState() {
+  let lines = labelMid.querySelectorAll('.field-block');
+  let icons = lines[0].querySelectorAll('.material-icons');
+  let isSingleLine = lines.length == 1;
+  icons.forEach((icon) => {
+    isSingleLine
+      ? icon.classList.add('disabled')
+      : icon.classList.remove('disabled');
+  });
+}
+
+/**
+ * Removes line from label-middle
+ * @param {Object} line node to be removed
+ */
+function removeLine(line) {
+  let lineCount = labelMid.querySelectorAll('.field-block').length;
+  lineCount > 1 ? line.remove() : false;
+  refreshLineState();
+  refreshAvailFields();
+}
+
+/**
+ * Removes field from label-middle
+ * @param {Object} field node to be removed
+ */
+function removeField(field) {
+  field.target.parentNode.remove();
+  // Refresh available fields list
+  refreshAvailFields();
 }
 
 /**
@@ -718,6 +772,21 @@ function createPreviewEl(element, parent) {
     let sufSpan = document.createElement('span');
     sufSpan.innerText = element.suffix;
     div.appendChild(sufSpan);
+  }
+}
+
+/**
+ * Returns true if item is formattable
+ * @param {Object} element
+ */
+function isFormattable(element) {
+  if (
+    element.classList.contains('field-block') ||
+    element.classList.contains('draggable')
+  ) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -842,6 +911,7 @@ function deactivateControls() {
  * @param {DOM Node} item Field in build label area
  */
 function getState(item) {
+  console.log(item);
   let formatList = Array.from(item.classList);
   // Removes '.draggable' and '.selected' from array
   printableList = formatList.filter(isPrintStyle);
@@ -855,7 +925,7 @@ function getState(item) {
       strArr.length == 3
         ? (str = strArr[0] + '-' + strArr[1])
         : (str = strArr[0]);
-      console.log(str);
+      // console.log(str);
       // Loop through each item in array
       dropdownsArr.forEach((dropdown) => {
         let isDropdownStyle = str === dropdown.id;
@@ -1017,7 +1087,9 @@ function handleDragEnd(e) {
 /** Event Listeners
  ******************************
  */
-fieldsFilter.onchange = filterFields;
+fieldsFilter.addEventListener('change', function (e) {
+  filterFields(e.target.value);
+});
 
 draggables.forEach((draggable) => {
   draggable.addEventListener('dragstart', handleDragStart, false);
@@ -1037,10 +1109,8 @@ containers.forEach((container) => {
 // Elements in '#label-middle'
 labelMid.addEventListener('click', (e) => {
   if (e.target.matches('.material-icons')) {
-    console.log(e.target.innerText);
     if (e.target.innerText === 'keyboard_arrow_up') {
       let first = labelMid.getElementsByClassName('field-block')[0];
-      console.log(first);
       let curr = e.target.parentNode;
       // reorder only if item is not first in list already
       if (curr !== first) {
@@ -1059,59 +1129,44 @@ labelMid.addEventListener('click', (e) => {
         // insert current after next
         next.parentNode.insertBefore(curr, next.nextSibling);
       }
+    } else if (e.target.innerText === 'close') {
+      let line = e.target.parentNode;
+      removeLine(line);
     }
     refreshPreview();
   } else {
-    // Toggle select clicked item (on formattables only)
-    toggleSelect(e.target);
+    if (isFormattable(e.target)) {
+      // Add ".selected" to clicked item, removing it from others
+      let lines = labelMid.querySelectorAll('.field-block');
+      lines.forEach((line) => {
+        line.classList.remove('selected');
+      });
+      let fields = labelMid.querySelectorAll('.draggable');
+      fields.forEach((field) => {
+        field.classList.remove('selected');
+      });
+      e.target.classList.add('selected');
+    }
     // Everytime item is clicked, display list of selected items:
     let selectedItems = build.querySelectorAll('.selected');
-    // console.log(selectedItems);
-
-    // When element is selected, activate formatting buttons
-    // depends on number of elements in page (at least one selected).
-    let isAnySelected = selectedItems.length > 0;
-
-    if (isAnySelected) {
+    if (selectedItems.length == 1) {
       let itemType = '';
-      let numSelected = build.querySelectorAll('.selected');
-      // Gets formatting information for individually selected item
-      if (numSelected.length > 1) {
-        // If there is more than one type of selected items, deactivate controls
-        let selected = build.querySelectorAll('.selected');
-        let typeArr = [];
-        selected.forEach((item) => {
-          typeArr.push(Array.from(item.classList).join(' '));
-        });
-        let uniqueTypeSet = new Set(typeArr);
-        // console.log(uniqueTypeSet);
-        if (uniqueTypeSet.size > 1) {
-          // deactivate controls
-          deactivateControls();
-        } else {
-          (' ');
-        }
-        resetControls();
-      } else if (numSelected.length == 1) {
-        // Refreshes buttons according to applied styles in selected item
-        let item = build.querySelector('.selected');
-        if (item.matches('.draggable')) {
-          itemType = 'field';
-          // deactivate 'field-block' items
-          activateControls(itemType, isAnySelected);
-          getState(item);
-        } else if (item.matches('.field-block')) {
-          itemType = 'field-block';
-          // deactivate 'field' items
-          activateControls(itemType, isAnySelected);
-          getState(item);
-        }
-      } else {
-        return false;
+      // Refreshes buttons according to applied styles in selected item
+      let item = build.querySelector('.selected');
+      if (item.matches('.draggable')) {
+        itemType = 'field';
+        // deactivate 'field-block' items
+        activateControls('field-block', false);
+      } else if (item.matches('.field-block')) {
+        itemType = 'field-block';
+        // deactivate 'field' items
+        activateControls('field', false);
       }
-    } else {
       resetControls();
-      deactivateControls();
+      activateControls(itemType, true);
+      getState(item);
+    } else {
+      return false;
     }
   }
 });
@@ -1121,6 +1176,7 @@ controlDiv.addEventListener('click', (e) => {
   // Gets selected items to format
   let formatItems = build.querySelectorAll('.selected');
   let isFormatSelected = toggleSelect(e.target);
+  console.log(isFormatSelected);
   let isButton = e.target.tagName === 'BUTTON';
   let isDropdown = e.target.tagName === 'SELECT';
   // Buttons

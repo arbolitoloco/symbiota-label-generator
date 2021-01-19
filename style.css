@@ -120,12 +120,25 @@ h5 {
   height: 65vh;
 }
 
+#fields-list .material-icons {
+  display: none;
+}
+
 #build-label {
   background-color: #acacac;
   /* min-height: 300px; */
   grid-column: 1/2;
   padding: 0.5em;
   margin-top: 1em;
+}
+
+#build-label li .material-icons {
+  font-size: 12px;
+  padding-left: 6px;
+}
+
+#build-label>li span.material-icons:hover {
+  background-color: none !important;
 }
 
 #build-label .delimiter {
@@ -144,7 +157,7 @@ h5 {
 }
 
 .field-block.container.selected {
-  background-color: black;
+  background-color: rgb(0, 75, 34);
 }
 
 #preview-label {
@@ -243,12 +256,14 @@ button.btn:focus {
 
 button.control:disabled {
   background: lightgray;
+  cursor: not-allowed;
 }
 
 button.control:disabled,
 button.control[disabled],
 button.control:disabled:hover {
   background: lightgray;
+  cursor: not-allowed;
 }
 
 button.control {
@@ -282,12 +297,26 @@ button>.material-icons {
   pointer-events: none;
 }
 
+.field-block>span.material-icons.disabled {
+  background: lightgray;
+  color: gray;
+  cursor: not-allowed;
+}
+
+.field-block>span.material-icons.disabled:hover {
+  background: lightgray;
+}
+
+span.material-icons {
+  cursor: pointer;
+}
+
 span.material-icons:hover {
-  background-color: rgb(61, 102, 102);
+  background-color: rgb(148, 148, 148);
 }
 
 .draggable.selected {
-  background-color: black;
+  background-color: rgb(0, 75, 34);
   border: 1px solid white;
 }
 
@@ -328,7 +357,7 @@ span.material-icons:hover {
 
 button.control.selected,
 button.control.selected:hover {
-  background-color: black;
+  background-color: rgb(0, 75, 34);
 }
 
 .draggable.dragging {
