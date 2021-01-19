@@ -21,11 +21,13 @@
  * [x] Capture delimiter state
  * [x] Reorder fieldBlocks... how?
  * [x] Clean unused code
- * [ ] Only alow one field to be selected at once
- * [ ] Add ability to remove lines/fields
+ * [x] Only alow one field to be selected at once
+ * [x] Add ability to remove lines/fields
+ * [ ] "Translator" function -> reads JSON and translates into formats
  * [ ] Default delimiter: space or comma
  * [ ] Activate delimeter only when multiple fields exist in line?
  * [ ] Add tooltips
+ * [ ] Line controls should be fixed on left/right side of line (only apply styles to label preview)
  * */
 
 /** Creating Page Elements/Controls
@@ -463,6 +465,56 @@ const build = document.getElementById('build-label');
 const preview = document.getElementById('preview-label');
 const controls = document.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
+
+// JSON TRANSLATION
+let jsonSource = [
+  {
+    fieldBlock: [
+      {
+        field: 'family',
+        className: 'text-sm uppercase',
+      },
+    ],
+    delimiter: '',
+    className: 'text-align-center',
+  },
+  {
+    fieldBlock: [
+      {
+        field: 'scientificName',
+        className: 'italic font-bold text-xl',
+      },
+      {
+        field: 'scientificNameAuthorship',
+        className: 'text-xl',
+      },
+    ],
+    delimiter: ' ',
+  },
+];
+
+function translateJson(source) {
+  console.dir(source);
+  // each source.fieldBlock is a line
+  source.forEach((i) => {
+    Object.keys(i).forEach((key) => {
+      // console.log(key, i[key]);
+      console.log(key === 'fieldBlock');
+    });
+  });
+
+  // Object.keys(source).forEach((key) => {
+  //   console.log(key, source[key]);
+  // });
+  // each source.fieldBlock.field is a field
+  // field name: fieldBlock.field
+  // field classes: fieldBlock.className
+}
+
+translateJson(jsonSource);
+
+// Initially sets state of lines
+refreshLineState();
 
 /** Methods
  ******************************

@@ -1,0 +1,199 @@
+[{
+  "divBlock": {
+    "className": "label-blocks",
+    "style": "",
+    "blocks": [{
+        "divBlock": {
+          "className": "col-title font-bold text-center",
+          "content": "NEON Biorepository Mammal Collection"
+        }
+      },
+      {
+        "divBlock": {
+          "className": "label-top",
+          "style": "padding-right: 2cm;",
+          "blocks": [{
+              "fieldBlock": [{
+                "field": "family",
+                "className": "text-sm font-normal mb-1"
+              }]
+            },
+            {
+              "divBlock": {
+                "className": "taxonomy",
+                "style": "",
+                "delimiter": " ",
+                "blocks": [{
+                  "fieldBlock": [{
+                      "field": "identificationqualifier",
+                      "style": "margin-right: 4pt"
+                    },
+                    {
+                      "field": "speciesname",
+                      "className": "text-2xl font-bold italic"
+                    },
+                    {
+                      "field": "parentauthor"
+                    },
+                    {
+                      "field": "taxonrank"
+                    },
+                    {
+                      "field": "infraspecificepithet",
+                      "className": "font-bold italic"
+                    }
+                  ]
+                }]
+              }
+            },
+            {
+              "divBlock": {
+                "className": "cat-nums bar mb-4",
+                "blocks": [{
+                  "fieldBlock": [{
+                    "field": "catalognumber",
+                    "className": "text-2xl font-bold block"
+                  }]
+                }]
+              }
+            },
+            {
+              "divBlock": {
+                "className": "local mt-2",
+                "blocks": [{
+                    "fieldBlock": [{
+                        "field": "country",
+                        "className": "font-bold"
+                      },
+                      {
+                        "field": "stateprovince",
+                        "prefix": ", ",
+                        "className": "font-bold"
+                      },
+                      {
+                        "field": "county",
+                        "prefix": ", "
+                      },
+                      {
+                        "field": "municipality",
+                        "prefix": ", ",
+                        "className": "font-bold"
+                      },
+                      {
+                        "field": "locality",
+                        "className": "",
+                        "prefix": ", ",
+                        "suffix": "."
+                      },
+                      {
+                        "field": "decimallatitude",
+                        "prefix": " ",
+                        "suffix": "N"
+                      },
+                      {
+                        "field": "decimallongitude",
+                        "prefix": ", ",
+                        "suffix": "W"
+                      },
+                      {
+                        "field": "coordinateuncertaintyinmeters",
+                        "prefix": "+-",
+                        "suffix": " meters.",
+                        "style": ""
+                      },
+                      {
+                        "field": "elevationinmeters",
+                        "prefix": " Elev: ",
+                        "suffix": "m.",
+                        "className": ""
+                      }
+                    ]
+                  },
+                  {
+                    "divBlock": {
+                      "className": "life-sex",
+                      "blocks": [{
+                        "fieldBlock": [{
+                            "field": "lifestage",
+                            "prefix": "Life stage: ",
+                            "suffix": ".",
+                            "className": "capitalize mb-2"
+                          },
+                          {
+                            "field": "sex",
+                            "prefix": " Sex: ",
+                            "suffix": ".",
+                            "className": "mb-2"
+                          }
+                        ]
+                      }]
+                    }
+                  },
+                  {
+                    "divBlock": {
+                      "className": "event grid grid-cols-2 mt-2",
+                      "blocks": [{
+                          "fieldBlock": [{
+                              "field": "recordedby",
+                              "className": "",
+                              "prefix": "Collector: "
+                            },
+                            {
+                              "field": "recordnumber",
+                              "className": "",
+                              "prefix": "Collector Number "
+                            },
+                            {
+                              "field": "identifiedby",
+                              "className": "block",
+                              "prefix": "Determined by: "
+                            },
+                            {
+                              "field": "dateidentified",
+                              "prefix": " (",
+                              "suffix": ")"
+                            }
+                          ]
+                        },
+                        {
+                          "fieldBlock": [{
+                              "field": "eventdate",
+                              "prefix": " Date: "
+                            },
+                            {
+                              "field": "preparations",
+                              "className": "block",
+                              "prefix": "Prep.: "
+                            }
+                          ],
+                          "className": "text-right"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "divBlock": {
+          "className": "label-bottom mt-2",
+          "style": "padding-right: 1.5cm",
+          "blocks": [{
+            "divBlock": {
+              "className": "event text-base",
+              "blocks": [{
+                "fieldBlock": [{
+                  "field": "othercatalognumbers",
+                  "className": "text-lg font-normal block"
+                }]
+              }]
+            }
+          }]
+        }
+      }
+    ]
+  }
+}]
