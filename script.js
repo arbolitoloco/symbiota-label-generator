@@ -21,8 +21,8 @@
  * [x] Capture delimiter state
  * [x] Reorder fieldBlocks... how?
  * [x] Clean unused code
- * [ ] Only alow one field to be selected at once
- * [ ] Add ability to remove lines/fields
+ * [x] Only alow one field to be selected at once
+ * [x] Add ability to remove lines/fields
  * [ ] Default delimiter: space or comma
  * [ ] Activate delimeter only when multiple fields exist in line?
  * [ ] Add tooltips
@@ -464,6 +464,9 @@ const preview = document.getElementById('preview-label');
 const controls = document.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
 
+// Initially sets state of lines
+refreshLineState();
+
 /** Methods
  ******************************
  */
@@ -566,6 +569,10 @@ function addLine() {
   let line = document.createElement('div');
   line.classList.add('field-block', 'container');
   let midBlocks = document.querySelectorAll('#label-middle > .field-block');
+  let close = document.createElement('span');
+  close.classList.add('material-icons');
+  close.innerText = 'close';
+  line.appendChild(close);
   let up = document.createElement('span');
   up.classList.add('material-icons');
   up.innerText = 'keyboard_arrow_up';
@@ -576,13 +583,38 @@ function addLine() {
   line.appendChild(down);
   let lastBlock = midBlocks[midBlocks.length - 1];
   lastBlock.parentNode.insertBefore(line, lastBlock.nextSibling);
-  // line.draggable = true;
   // Allows items to be added/reordered inside fieldBlock
   line.addEventListener('dragover', (e) => {
     e.preventDefault();
     const dragging = document.querySelector('.dragging');
     dragging !== null ? line.appendChild(dragging) : '';
   });
+  refreshLineState();
+}
+
+/**
+ * Refreshes line state
+ * If there is only one line, disables line controls
+ */
+function refreshLineState() {
+  let lines = labelMid.querySelectorAll('.field-block');
+  let icons = lines[0].querySelectorAll('.material-icons');
+  let isSingleLine = lines.length == 1;
+  icons.forEach((icon) => {
+    isSingleLine
+      ? icon.classList.add('disabled')
+      : icon.classList.remove('disabled');
+  });
+}
+
+/**
+ * Removes line from label-middle
+ * @param {Object} line
+ */
+function removeLine(line) {
+  let lineCount = labelMid.querySelectorAll('.field-block').length;
+  lineCount > 1 ? line.remove() : false;
+  refreshLineState();
 }
 
 /**
@@ -1021,6 +1053,9 @@ labelMid.addEventListener('click', (e) => {
         // insert current after next
         next.parentNode.insertBefore(curr, next.nextSibling);
       }
+    } else if (e.target.innerText === 'close') {
+      let line = e.target.parentNode;
+      removeLine(line);
     }
     refreshPreview();
   } else {

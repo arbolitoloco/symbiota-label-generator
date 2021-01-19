@@ -243,12 +243,14 @@ button.btn:focus {
 
 button.control:disabled {
   background: lightgray;
+  cursor: not-allowed;
 }
 
 button.control:disabled,
 button.control[disabled],
 button.control:disabled:hover {
   background: lightgray;
+  cursor: not-allowed;
 }
 
 button.control {
@@ -280,6 +282,20 @@ button .material-icons {
 
 button>.material-icons {
   pointer-events: none;
+}
+
+span.material-icons.disabled {
+  background: lightgray;
+  color: gray;
+  cursor: not-allowed;
+}
+
+span.material-icons.disabled:hover {
+  background: lightgray;
+}
+
+span.material-icons {
+  cursor: pointer;
 }
 
 span.material-icons:hover {
