@@ -774,8 +774,9 @@ function copyJson() {
  * @param {DOM Node} element
  */
 function toggleSelect(element) {
-  let isSelected = element.classList.contains('selected');
   element.classList.toggle('selected');
+  let isSelected = element.classList.contains('selected');
+  console.log(isSelected);
   return isSelected;
 }
 
@@ -1000,10 +1001,10 @@ containers.forEach((container) => {
 // Elements in '#label-middle'
 labelMid.addEventListener('click', (e) => {
   if (e.target.matches('.material-icons')) {
-    console.log(e.target.innerText);
+    // console.log(e.target.innerText);
     if (e.target.innerText === 'keyboard_arrow_up') {
       let first = labelMid.getElementsByClassName('field-block')[0];
-      console.log(first);
+      // console.log(first);
       let curr = e.target.parentNode;
       // reorder only if item is not first in list already
       if (curr !== first) {
@@ -1038,61 +1039,41 @@ labelMid.addEventListener('click', (e) => {
       e.target.classList.add('selected');
       // toggleSelect(e.target);
     }
-
     // Everytime item is clicked, display list of selected items:
     let selectedItems = build.querySelectorAll('.selected');
     // Toggle select clicked item (on formattables only)
     // toggleSelect(e.target);
-    // console.log(selectedItems.length);
+    // console.log(selectedItems.length == 1);
 
-    // When element is selected, activate formatting buttons
-    // depends on number of elements in page (at least one selected).
-    let isAnySelected = selectedItems.length > 0;
     // console.log(isAnySelected);
-    if (isAnySelected) {
+    if (selectedItems.length == 1) {
       let itemType = '';
-      let numSelected = build.querySelectorAll('.selected');
-      // Gets formatting information for individually selected item
-      if (numSelected.length > 1) {
-        // If there is more than one type of selected items, deactivate controls
-        let selected = build.querySelectorAll('.selected');
-        let typeArr = [];
-        selected.forEach((item) => {
-          typeArr.push(Array.from(item.classList).join(' '));
-        });
-        let uniqueTypeSet = new Set(typeArr);
-        // console.log(uniqueTypeSet);
-        if (uniqueTypeSet.size > 1) {
-          // deactivate controls
-          deactivateControls();
-        } else {
-          (' ');
-        }
-        resetControls();
-      } else if (numSelected.length == 1) {
-        // Refreshes buttons according to applied styles in selected item
-        let item = build.querySelector('.selected');
-        if (item.matches('.draggable')) {
-          itemType = 'field';
-          // deactivate 'field-block' items
-          activateControls(itemType, isAnySelected);
-          getState(item);
-        } else if (item.matches('.field-block')) {
-          itemType = 'field-block';
-          // deactivate 'field' items
-          activateControls(itemType, isAnySelected);
-          getState(item);
-        }
-      } else {
-        console.log('here');
-        // toggleSelect(e.target);
-        // return false;
+      // Refreshes buttons according to applied styles in selected item
+      let item = build.querySelector('.selected');
+      // console.log(item);
+
+      if (item.matches('.draggable')) {
+        itemType = 'field';
+        // // deactivate 'field-block' items
+        activateControls('field-block', false);
+      } else if (item.matches('.field-block')) {
+        itemType = 'field-block';
+        // deactivate 'field' items
+        activateControls('field', false);
+        // getState(item);
       }
+      // console.log(itemType);
+      activateControls(itemType, true);
+      getState(item);
     } else {
-      resetControls();
-      deactivateControls();
+      console.log('here');
+      // toggleSelect(e.target);
+      return false;
     }
   }
+  // resetControls();
+  // deactivateControls();
+  ///// SOMETHING IS WRONG, YOU HAVE TO CLICK FORMAT BUTTON TWICE FOR IT TO WORK FOR THE FIRST TIME!!!!
 });
 
 // Formatting controls
@@ -1100,6 +1081,9 @@ controlDiv.addEventListener('click', (e) => {
   // Gets selected items to format
   let formatItems = build.querySelectorAll('.selected');
   let isFormatSelected = toggleSelect(e.target);
+  console.log(e.target);
+  // let isFormatSelected = e.target.classList.contains('selected');
+  console.log(isFormatSelected);
   let isButton = e.target.tagName === 'BUTTON';
   let isDropdown = e.target.tagName === 'SELECT';
   // Buttons
