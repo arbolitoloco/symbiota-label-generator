@@ -529,14 +529,23 @@ function getCurrFields() {
 /**
  * Filters available fields on select option
  */
-function filterFields() {
-  let value = this.value;
+function filterFields(value) {
+  // let value = this.value;
   let filteredFields = '';
   value === 'all'
     ? (filteredFields = getCurrFields())
     : (filteredFields = filterObject(getCurrFields(), { group: value }));
   fieldListDiv.innerHTML = '';
   createFields(filteredFields);
+}
+
+function refreshAvailFields() {
+  let available = getCurrFields();
+  fieldListDiv.innerHTML = '';
+  let selectedFilter = fieldsFilter.value;
+  selectedFilter != 'all'
+    ? filterFields(selectedFilter)
+    : createFields(available);
 }
 
 /**
@@ -549,6 +558,11 @@ function createFields(arr) {
     li.innerHTML = field.name;
     li.id = field.id;
     if (field.block === 'labelBlock') {
+      let closeBtn = document.createElement('span');
+      closeBtn.classList.add('material-icons');
+      closeBtn.innerText = 'cancel';
+      closeBtn.addEventListener('click', removeField, false);
+      li.appendChild(closeBtn);
       li.draggable = 'true';
       li.classList.add('draggable');
       li.dataset.category = field.group;
@@ -609,12 +623,23 @@ function refreshLineState() {
 
 /**
  * Removes line from label-middle
- * @param {Object} line
+ * @param {Object} line node to be removed
  */
 function removeLine(line) {
   let lineCount = labelMid.querySelectorAll('.field-block').length;
   lineCount > 1 ? line.remove() : false;
   refreshLineState();
+  refreshAvailFields();
+}
+
+/**
+ * Removes field from label-middle
+ * @param {Object} field node to be removed
+ */
+function removeField(field) {
+  field.target.parentNode.remove();
+  // Refresh available fields list
+  refreshAvailFields();
 }
 
 /**
@@ -1013,7 +1038,9 @@ function handleDragEnd(e) {
 /** Event Listeners
  ******************************
  */
-fieldsFilter.onchange = filterFields;
+fieldsFilter.addEventListener('change', function (e) {
+  filterFields(e.target.value);
+});
 
 draggables.forEach((draggable) => {
   draggable.addEventListener('dragstart', handleDragStart, false);
