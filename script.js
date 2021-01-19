@@ -758,7 +758,7 @@ function createPreviewEl(element, parent) {
   let fieldInfo =
     fieldProps[fieldProps.findIndex((x) => x.id === element.field)];
   let div = document.createElement('div');
-  div.innerHTML = fieldInfo.name;
+  div.innerHTML = fieldInfo.name.split(' ').join('');
   div.classList.add(fieldInfo.id);
   div.classList.add(...element.className);
   parent.appendChild(div);
