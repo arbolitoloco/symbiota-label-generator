@@ -776,7 +776,6 @@ function copyJson() {
 function toggleSelect(element) {
   element.classList.toggle('selected');
   let isSelected = element.classList.contains('selected');
-  console.log(isSelected);
   return isSelected;
 }
 
@@ -806,6 +805,7 @@ function deactivateControls() {
  * @param {DOM Node} item Field in build label area
  */
 function getState(item) {
+  console.log(item);
   let formatList = Array.from(item.classList);
   // Removes '.draggable' and '.selected' from array
   printableList = formatList.filter(isPrintStyle);
@@ -819,7 +819,7 @@ function getState(item) {
       strArr.length == 3
         ? (str = strArr[0] + '-' + strArr[1])
         : (str = strArr[0]);
-      console.log(str);
+      // console.log(str);
       // Loop through each item in array
       dropdownsArr.forEach((dropdown) => {
         let isDropdownStyle = str === dropdown.id;
@@ -1001,10 +1001,8 @@ containers.forEach((container) => {
 // Elements in '#label-middle'
 labelMid.addEventListener('click', (e) => {
   if (e.target.matches('.material-icons')) {
-    // console.log(e.target.innerText);
     if (e.target.innerText === 'keyboard_arrow_up') {
       let first = labelMid.getElementsByClassName('field-block')[0];
-      // console.log(first);
       let curr = e.target.parentNode;
       // reorder only if item is not first in list already
       if (curr !== first) {
@@ -1037,43 +1035,29 @@ labelMid.addEventListener('click', (e) => {
         field.classList.remove('selected');
       });
       e.target.classList.add('selected');
-      // toggleSelect(e.target);
     }
     // Everytime item is clicked, display list of selected items:
     let selectedItems = build.querySelectorAll('.selected');
-    // Toggle select clicked item (on formattables only)
-    // toggleSelect(e.target);
-    // console.log(selectedItems.length == 1);
-
-    // console.log(isAnySelected);
     if (selectedItems.length == 1) {
       let itemType = '';
       // Refreshes buttons according to applied styles in selected item
       let item = build.querySelector('.selected');
-      // console.log(item);
-
       if (item.matches('.draggable')) {
         itemType = 'field';
-        // // deactivate 'field-block' items
+        // deactivate 'field-block' items
         activateControls('field-block', false);
       } else if (item.matches('.field-block')) {
         itemType = 'field-block';
         // deactivate 'field' items
         activateControls('field', false);
-        // getState(item);
       }
-      // console.log(itemType);
+      resetControls();
       activateControls(itemType, true);
       getState(item);
     } else {
-      console.log('here');
-      // toggleSelect(e.target);
       return false;
     }
   }
-  // resetControls();
-  // deactivateControls();
-  ///// SOMETHING IS WRONG, YOU HAVE TO CLICK FORMAT BUTTON TWICE FOR IT TO WORK FOR THE FIRST TIME!!!!
 });
 
 // Formatting controls
@@ -1081,8 +1065,6 @@ controlDiv.addEventListener('click', (e) => {
   // Gets selected items to format
   let formatItems = build.querySelectorAll('.selected');
   let isFormatSelected = toggleSelect(e.target);
-  console.log(e.target);
-  // let isFormatSelected = e.target.classList.contains('selected');
   console.log(isFormatSelected);
   let isButton = e.target.tagName === 'BUTTON';
   let isDropdown = e.target.tagName === 'SELECT';
