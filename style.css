@@ -154,6 +154,7 @@ h5 {
 #label-middle>.field-block {
   border: 1px dashed white;
   min-height: 2em;
+  line-height: 10px;
 }
 
 .field-block.container.selected {
@@ -164,6 +165,10 @@ h5 {
   border: 1px solid gray;
   min-height: 100px;
   padding: 0.5em;
+}
+
+#preview-label .field-block {
+  line-height: 1rem;
 }
 
 #preview-label>.field-block>div {
