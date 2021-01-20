@@ -25,7 +25,7 @@
  * [x] Add ability to remove lines/fields
  * [x] Default delimiter: space or comma
  * [x] "Translator" function -> reads JSON and translates into formats
- * [ ] Translator to read "fieldBlock" properties and add to builder
+ * [x] Translator to read "fieldBlock" properties and add to builder
  * [ ] Validate JSON for translation
  * [ ] Activate delimeter only when multiple fields exist in line?
  * [ ] Add tooltips
@@ -413,7 +413,7 @@ const dropdownsArr = [
     ],
   },
 ];
-
+const dummy = document.getElementById('dummy');
 const fieldDiv = document.getElementById('fields');
 const fieldListDiv = document.getElementById('fields-list');
 const controlDiv = document.getElementById('controls');
@@ -520,6 +520,7 @@ let jsonSource = [
 
 function translateJson(source) {
   // Source has to be "simple", as in: following structure output by generateJson()
+  // console.log(source);
   let srcLines = source[0].divBlock.blocks;
   let lineCount = srcLines.length;
   // Create additional blocks in label builder
@@ -563,9 +564,6 @@ function translateJson(source) {
   refreshAvailFields();
   refreshPreview();
 }
-
-translateJson(jsonSource);
-
 // Initially sets state of lines
 refreshLineState();
 
@@ -895,7 +893,7 @@ function generateJson(list) {
     labelBlocks.push(fieldBlockObj);
   });
   wrapper[0].divBlock.blocks = labelBlocks;
-  console.log(wrapper);
+  // console.log(wrapper);
   // let json = JSON.stringify(labelBlocks, null, 2);
   let json = JSON.stringify(wrapper, null, 2);
   // console.log(json);
@@ -908,14 +906,10 @@ function generateJson(list) {
  */
 function printJson() {
   let list = refreshPreview();
-  let dummy = document.getElementById('dummy');
   let copyBtn = document.getElementById('copyBtn');
-  console.log(list);
-  console.log(list[0].length);
   let isEmpty = list[0].length == 0;
   let message = '';
   if (isEmpty) {
-    dummy.style.display = 'none';
     copyBtn.style.display = 'none';
     alert(
       'Label format is empty! Please drag some items to the build area before trying again'
@@ -924,10 +918,29 @@ function printJson() {
     let json = generateJson(refreshPreview());
     copyBtn.style.display = 'inline-block';
     dummy.value = json;
-    dummy.style.display = 'block';
-    dummy.style.height = '300px';
-    dummy.style.width = '100%';
   }
+}
+/**
+ * Provides textarea where users can paste JSON format for validation
+ */
+function loadJson() {
+  let currBlocks = labelMid.querySelectorAll('.field-block');
+  let numBlocks = currBlocks.length;
+  // Clears lines & fields if already used
+  if (numBlocks > 1) {
+    for (i = 1; i < numBlocks; i++) {
+      removeLine(currBlocks[i]);
+    }
+  }
+  let firstBlock = currBlocks[0];
+  let currFields = firstBlock.querySelectorAll('.draggable');
+  currFields.forEach((currField) => {
+    currField.remove();
+  });
+  let sourceStr = dummy.value.replace(/'/g, '"');
+  let sourceJson = JSON.parse(sourceStr);
+  translateJson(sourceJson);
+  refreshLineState();
 }
 
 /**
