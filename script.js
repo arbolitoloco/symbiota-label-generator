@@ -810,6 +810,16 @@ function isPrintStyle(className) {
  * @param {Array} list Array of fields, built by `refreshPreview()`
  */
 function generateJson(list) {
+  let wrapper = [
+    {
+      divBlock: {
+        className: 'label-blocks',
+        style: '',
+        blocks: [],
+      },
+    },
+  ];
+  // console.log(wrapper.divBlock.blocks.length);
   let labelBlocks = [];
   // Parse nested array
   Object.keys(list).forEach((index) => {
@@ -832,7 +842,10 @@ function generateJson(list) {
       : delete fieldBlockObj.className;
     labelBlocks.push(fieldBlockObj);
   });
-  let json = JSON.stringify(labelBlocks, null, 2);
+  wrapper[0].divBlock.blocks = labelBlocks;
+  console.log(wrapper);
+  // let json = JSON.stringify(labelBlocks, null, 2);
+  let json = JSON.stringify(wrapper, null, 2);
   console.log(json);
   return json;
 }
