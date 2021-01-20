@@ -24,7 +24,9 @@
  * [x] Only alow one field to be selected at once
  * [x] Add ability to remove lines/fields
  * [x] Default delimiter: space or comma
- * [ ] "Translator" function -> reads JSON and translates into formats
+ * [x] "Translator" function -> reads JSON and translates into formats
+ * [ ] Translator to read "fieldBlock" properties and add to builder
+ * [ ] Validate JSON for translation
  * [ ] Activate delimeter only when multiple fields exist in line?
  * [ ] Add tooltips
  * [ ] Line controls should be fixed on left/right side of line (only apply styles to label preview)
@@ -467,6 +469,36 @@ const controls = document.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
 
 // JSON TRANSLATION
+// let jsonSource = [
+//   {
+//     divBlock: {
+//       className: 'label-blocks',
+//       style: '',
+//       blocks: [
+//         {
+//           fieldBlock: [
+//             {
+//               field: 'family',
+//               className: 'uppercase text-sm',
+//             },
+//           ],
+//           delimiter: ' ',
+//           className: 'text-align-center',
+//         },
+//         {
+//           fieldBlock: [
+//             {
+//               field: 'scientificname',
+//               className: 'italic font-bold',
+//             },
+//           ],
+//           delimiter: ' ',
+//         },
+//       ],
+//     },
+//   },
+// ];
+
 let jsonSource = [
   {
     divBlock: {
@@ -481,13 +513,28 @@ let jsonSource = [
             },
           ],
           delimiter: ' ',
-          className: 'text-align-center',
         },
         {
           fieldBlock: [
             {
               field: 'scientificname',
               className: 'italic font-bold',
+            },
+            {
+              field: 'scientificnameauthorship',
+            },
+          ],
+          delimiter: ' ',
+        },
+        {
+          fieldBlock: [
+            {
+              field: 'catalognumber',
+              className: 'font-bold text-xl',
+            },
+            {
+              field: 'othercatalognumbers',
+              className: 'font-bold text-xl',
             },
           ],
           delimiter: ' ',
@@ -519,17 +566,19 @@ function translateJson(source) {
       propsArr.push(props);
     });
     createFields(propsArr, lbBlocks[i]);
-  });
-  // Select created item in label build
-  let createdLis = labelMid.querySelectorAll('.draggable');
-  // Add classes from json to item
-  createdLis.forEach((li, i) => {
-    let srcFieldsArr = srcLines[i].fieldBlock;
-    let fieldId = srcFieldsArr[0].field;
-    let classes = srcFieldsArr[0].className;
-    li.id === fieldId
-      ? (li.className = 'draggable ' + classes)
-      : console.log('no match');
+    // Select created item in label build (have to limit to one line at a time)
+    let createdLis = lbBlocks[i].querySelectorAll('.draggable');
+    // Add classes from json to item
+    createdLis.forEach((li, j) => {
+      console.log(li);
+      let srcFieldsArr = srcLines[i].fieldBlock;
+      console.log(srcFieldsArr[j]);
+      let fieldId = srcFieldsArr[j].field;
+      let classes = srcFieldsArr[j].className;
+      li.id === fieldId && classes !== undefined
+        ? (li.className = 'draggable ' + classes)
+        : '';
+    });
   });
   refreshAvailFields();
   refreshPreview();
