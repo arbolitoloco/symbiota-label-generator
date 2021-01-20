@@ -1,0 +1,114 @@
+[{
+  "divBlock": {
+    "className": "label-blocks",
+    "style": "",
+    "blocks": [{
+        "fieldBlock": [{
+            "field": "scientificName",
+            "className": "italic font-bold font-type-serif"
+          },
+          {
+            "field": "scientificNameAuthorship",
+            "className": "font-type-serif"
+          }
+        ],
+        "delimiter": " "
+      },
+      {
+        "fieldBlock": [{
+          "field": "family",
+          "className": "font-type-serif"
+        }],
+        "delimiter": " ",
+        "className": "mb-3"
+      },
+      {
+        "fieldBlock": [{
+          "field": "identifiedBy",
+          "className": "text-sm font-type-serif",
+          "prefix": "Det by: "
+        }],
+        "delimiter": " "
+      },
+      {
+        "fieldBlock": [{
+          "field": "identificationReferences",
+          "className": "text-sm font-type-serif"
+        }],
+        "delimiter": " ",
+        "className": "mb-3"
+      },
+      {
+        "fieldBlock": [{
+            "field": "country",
+            "className": "font-bold text-base font-type-serif"
+          },
+          {
+            "field": "stateProvince",
+            "className": "font-bold font-type-serif"
+          },
+          {
+            "field": "county",
+            "className": "font-type-serif"
+          },
+          {
+            "field": "municipality",
+            "className": "font-type-serif"
+          },
+          {
+            "field": "locality",
+            "className": "font-type-serif"
+          }
+        ],
+        "delimiter": ", "
+      },
+      {
+        "fieldBlock": [{
+            "field": "decimalLatitude",
+            "className": "font-type-serif"
+          },
+          {
+            "field": "decimalLongitude",
+            "className": "font-type-serif"
+          },
+          {
+            "field": "coordinateUncertaintyInMeters",
+            "className": "font-type-serif",
+            "prefix": "+-",
+            "suffix": " meters"
+          },
+          {
+            "field": "geodeticDatum",
+            "className": "font-type-serif",
+            "prefix": "[",
+            "suffix": "]"
+          }
+        ],
+        "delimiter": " "
+      },
+      {
+        "fieldBlock": [{
+          "field": "verbatimCoordinates",
+          "className": "font-type-serif"
+        }],
+        "delimiter": " "
+      },
+      {
+        "fieldBlock": [{
+          "field": "elevationInMeters",
+          "className": "font-type-serif",
+          "prefix": "Eleve:",
+          "suffix": "m."
+        }],
+        "delimiter": " "
+      },
+      {
+        "fieldBlock": [{
+          "field": "verbatimAttributes",
+          "className": "font-type-serif"
+        }],
+        "delimiter": " "
+      }
+    ]
+  }
+}]
