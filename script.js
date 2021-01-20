@@ -23,8 +23,8 @@
  * [x] Clean unused code
  * [x] Only alow one field to be selected at once
  * [x] Add ability to remove lines/fields
+ * [x] Default delimiter: space or comma
  * [ ] "Translator" function -> reads JSON and translates into formats
- * [ ] Default delimiter: space or comma
  * [ ] Activate delimeter only when multiple fields exist in line?
  * [ ] Add tooltips
  * [ ] Line controls should be fixed on left/right side of line (only apply styles to label preview)
@@ -419,7 +419,7 @@ const fieldsFilter = document.getElementById('fields-filter');
 const labelMid = document.getElementById('label-middle');
 
 // Initially creates all fields
-createFields(fieldProps);
+createFields(fieldProps, fieldListDiv);
 
 // Creates formatting (button) controls in page
 formatsArr.forEach((format) => {
@@ -469,47 +469,70 @@ const inputs = document.querySelectorAll('input');
 // JSON TRANSLATION
 let jsonSource = [
   {
-    fieldBlock: [
-      {
-        field: 'family',
-        className: 'text-sm uppercase',
-      },
-    ],
-    delimiter: '',
-    className: 'text-align-center',
-  },
-  {
-    fieldBlock: [
-      {
-        field: 'scientificName',
-        className: 'italic font-bold text-xl',
-      },
-      {
-        field: 'scientificNameAuthorship',
-        className: 'text-xl',
-      },
-    ],
-    delimiter: ' ',
+    divBlock: {
+      className: 'label-blocks',
+      style: '',
+      blocks: [
+        {
+          fieldBlock: [
+            {
+              field: 'family',
+              className: 'uppercase text-sm',
+            },
+          ],
+          delimiter: ' ',
+          className: 'text-align-center',
+        },
+        {
+          fieldBlock: [
+            {
+              field: 'scientificname',
+              className: 'italic font-bold',
+            },
+          ],
+          delimiter: ' ',
+        },
+      ],
+    },
   },
 ];
 
 function translateJson(source) {
-  console.dir(source);
-  // each source.fieldBlock is a line
-  source.forEach((i) => {
-    // Object.keys(i).forEach((key) => {
-    //   // console.log(key, i[key]);
-    //   console.log(key === 'fieldBlock');
-    // });
-    console.log(i);
+  // Source has to be "simple", as in: following structure
+  // output by generateJson()
+  let srcLines = source[0].divBlock.blocks;
+  // Get length of srcLines
+  let lineCount = srcLines.length;
+  // Create additional blocks in label builder
+  for (i = 0; i < lineCount - 1; i++) {
+    addLine();
+  }
+  // Use index of each line to select it
+  let lbBlocks = labelMid.querySelectorAll('.field-block');
+  // Add field(s) inside line[i]
+  srcLines.forEach((srcLine, i) => {
+    // Array of fields based on fieldProps filtered by current fields in json format
+    let fieldsArr = srcLine.fieldBlock;
+    let propsArr = [];
+    fieldsArr.forEach(({ field, className }) => {
+      let props = fieldProps.find((obj) => obj.id === field);
+      propsArr.push(props);
+    });
+    createFields(propsArr, lbBlocks[i]);
   });
-
-  // Object.keys(source).forEach((key) => {
-  //   console.log(key, source[key]);
-  // });
-  // each source.fieldBlock.field is a field
-  // field name: fieldBlock.field
-  // field classes: fieldBlock.className
+  // Select created item in label build
+  let createdLis = labelMid.querySelectorAll('.draggable');
+  // Add classes from json to item
+  createdLis.forEach((li, i) => {
+    let srcFieldsArr = srcLines[i].fieldBlock;
+    let fieldId = srcFieldsArr[0].field;
+    let classes = srcFieldsArr[0].className;
+    li.id === fieldId
+      ? (li.className = 'draggable ' + classes)
+      : console.log('no match');
+  });
+  refreshAvailFields();
+  refreshPreview();
 }
 
 translateJson(jsonSource);
@@ -586,7 +609,7 @@ function filterFields(value) {
     ? (filteredFields = getCurrFields())
     : (filteredFields = filterObject(getCurrFields(), { group: value }));
   fieldListDiv.innerHTML = '';
-  createFields(filteredFields);
+  createFields(filteredFields, fieldListDiv);
 }
 
 function refreshAvailFields() {
@@ -595,14 +618,14 @@ function refreshAvailFields() {
   let selectedFilter = fieldsFilter.value;
   selectedFilter != 'all'
     ? filterFields(selectedFilter)
-    : createFields(available);
+    : createFields(available, fieldListDiv);
 }
 
 /**
  * Creates draggable elements
  * @param {Arr} arr Array with list of currently available fields
  */
-function createFields(arr) {
+function createFields(arr, target) {
   arr.forEach((field) => {
     let li = document.createElement('li');
     li.innerHTML = field.name;
@@ -620,7 +643,7 @@ function createFields(arr) {
       li.addEventListener('dragover', handleDragOver, false);
       li.addEventListener('drop', handleDrop, false);
       li.addEventListener('dragend', handleDragEnd, false);
-      fieldListDiv.appendChild(li);
+      target.appendChild(li);
     }
   });
 }
@@ -846,7 +869,7 @@ function generateJson(list) {
   console.log(wrapper);
   // let json = JSON.stringify(labelBlocks, null, 2);
   let json = JSON.stringify(wrapper, null, 2);
-  console.log(json);
+  // console.log(json);
   return json;
 }
 
