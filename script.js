@@ -493,6 +493,8 @@ let jsonSource = [
             },
             {
               field: 'scientificnameauthorship',
+              prefix: '(',
+              suffix: ')',
             },
           ],
           delimiter: ' ',
@@ -546,11 +548,16 @@ function translateJson(source) {
     // Add classes from json to item
     createdLis.forEach((li, j) => {
       let srcFieldsArr = srcLines[i].fieldBlock;
-      let fieldId = srcFieldsArr[j].field;
-      let classes = srcFieldsArr[j].className;
-      li.id === fieldId && classes !== undefined
-        ? (li.className = 'draggable ' + classes)
-        : '';
+      let srcPropsArr = srcFieldsArr[j];
+      let fieldId = srcPropsArr.field;
+      let classes = srcPropsArr.className;
+      let prefix = srcPropsArr.prefix;
+      let suffix = srcPropsArr.suffix;
+      if (li.id === fieldId) {
+        classes !== undefined ? (li.className = 'draggable ' + classes) : '';
+        prefix !== undefined ? (li.dataset.prefix = prefix) : '';
+        suffix !== undefined ? (li.dataset.suffix = suffix) : '';
+      }
     });
   });
   refreshAvailFields();
@@ -970,12 +977,16 @@ function deactivateControls() {
  * @param {DOM Node} item Field in build label area
  */
 function getState(item) {
-  console.log(item);
+  // console.log(item);
   let delimiter = item.dataset.delimiter;
+  if (delimiter) {
+    let delimiterInput = document.getElementById('delimiter');
+    delimiterInput.value = delimiter;
+  }
   let formatList = Array.from(item.classList);
   // Removes '.draggable' and '.selected' from array
   printableList = formatList.filter(isPrintStyle);
-  console.log(printableList);
+  // console.log(printableList);
   if (printableList.length > 0) {
     // Render state of each formatting button
     printableList.forEach((formatItem) => {
