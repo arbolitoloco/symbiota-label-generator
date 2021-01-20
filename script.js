@@ -469,36 +469,6 @@ const controls = document.querySelectorAll('.control');
 const inputs = document.querySelectorAll('input');
 
 // JSON TRANSLATION
-// let jsonSource = [
-//   {
-//     divBlock: {
-//       className: 'label-blocks',
-//       style: '',
-//       blocks: [
-//         {
-//           fieldBlock: [
-//             {
-//               field: 'family',
-//               className: 'uppercase text-sm',
-//             },
-//           ],
-//           delimiter: ' ',
-//           className: 'text-align-center',
-//         },
-//         {
-//           fieldBlock: [
-//             {
-//               field: 'scientificname',
-//               className: 'italic font-bold',
-//             },
-//           ],
-//           delimiter: ' ',
-//         },
-//       ],
-//     },
-//   },
-// ];
-
 let jsonSource = [
   {
     divBlock: {
@@ -513,6 +483,7 @@ let jsonSource = [
             },
           ],
           delimiter: ' ',
+          className: 'text-align-center mb-4',
         },
         {
           fieldBlock: [
@@ -537,7 +508,8 @@ let jsonSource = [
               className: 'font-bold text-xl',
             },
           ],
-          delimiter: ' ',
+          delimiter: ', ',
+          className: 'mt-10',
         },
       ],
     },
@@ -545,19 +517,22 @@ let jsonSource = [
 ];
 
 function translateJson(source) {
-  // Source has to be "simple", as in: following structure
-  // output by generateJson()
+  // Source has to be "simple", as in: following structure output by generateJson()
   let srcLines = source[0].divBlock.blocks;
-  // Get length of srcLines
   let lineCount = srcLines.length;
   // Create additional blocks in label builder
   for (i = 0; i < lineCount - 1; i++) {
     addLine();
   }
-  // Use index of each line to select it
   let lbBlocks = labelMid.querySelectorAll('.field-block');
   // Add field(s) inside line[i]
   srcLines.forEach((srcLine, i) => {
+    // Style fieldblocks
+    let lbBlock = lbBlocks[i];
+    lbBlock.dataset.delimiter = srcLine.delimiter;
+    srcLine.className !== undefined
+      ? (lbBlock.className = lbBlock.className + ' ' + srcLine.className)
+      : '';
     // Array of fields based on fieldProps filtered by current fields in json format
     let fieldsArr = srcLine.fieldBlock;
     let propsArr = [];
@@ -570,9 +545,7 @@ function translateJson(source) {
     let createdLis = lbBlocks[i].querySelectorAll('.draggable');
     // Add classes from json to item
     createdLis.forEach((li, j) => {
-      console.log(li);
       let srcFieldsArr = srcLines[i].fieldBlock;
-      console.log(srcFieldsArr[j]);
       let fieldId = srcFieldsArr[j].field;
       let classes = srcFieldsArr[j].className;
       li.id === fieldId && classes !== undefined
@@ -998,10 +971,11 @@ function deactivateControls() {
  */
 function getState(item) {
   console.log(item);
+  let delimiter = item.dataset.delimiter;
   let formatList = Array.from(item.classList);
   // Removes '.draggable' and '.selected' from array
   printableList = formatList.filter(isPrintStyle);
-
+  console.log(printableList);
   if (printableList.length > 0) {
     // Render state of each formatting button
     printableList.forEach((formatItem) => {
