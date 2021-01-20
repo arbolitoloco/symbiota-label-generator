@@ -522,6 +522,7 @@ function translateJson(source) {
   // Source has to be "simple", as in: following structure output by generateJson()
   // console.log(source);
   let srcLines = source[0].divBlock.blocks;
+  srcLines ? '' : (preview.innerText = '<h1>ERROR</h1>');
   let lineCount = srcLines.length;
   // Create additional blocks in label builder
   for (i = 0; i < lineCount - 1; i++) {
@@ -938,9 +939,19 @@ function loadJson() {
     currField.remove();
   });
   let sourceStr = dummy.value.replace(/'/g, '"');
-  let sourceJson = JSON.parse(sourceStr);
-  translateJson(sourceJson);
-  refreshLineState();
+  sourceJson = false;
+  try {
+    sourceJson = JSON.parse(sourceStr);
+  } catch (error) {
+    console.log(error);
+  }
+  if (sourceJson) {
+    translateJson(sourceJson);
+    refreshLineState();
+  } else {
+    preview.innerText =
+      'Your label format is not translatable at this time. Please adjust your JSON definition and try again.';
+  }
 }
 
 /**
