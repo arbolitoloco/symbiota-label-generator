@@ -160,6 +160,7 @@ h5 {
 }
 
 #label-middle .draggable {
+  font-family: inherit !important;
   font-size: normal !important;
   font-weight: normal !important;
   font-style: normal !important;
