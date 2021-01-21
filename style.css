@@ -165,6 +165,7 @@ h5 {
   font-weight: normal !important;
   font-style: normal !important;
   text-transform: none !important;
+  float: none !important;
 }
 
 .field-block.container.selected {
