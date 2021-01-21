@@ -337,6 +337,16 @@ const dropdownsArr = [
     ],
   },
   {
+    id: 'float',
+    name: 'float',
+    group: 'field',
+    options: [
+      { value: '', text: 'Position in Line' },
+      { value: 'float-left', text: 'Left' },
+      { value: 'float-right', text: 'Right' },
+    ],
+  },
+  {
     id: 'font-family',
     name: 'font-family',
     group: 'field',
