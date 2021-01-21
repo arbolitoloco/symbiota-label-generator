@@ -183,6 +183,46 @@
   font-family: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
+.font-family-arial {
+  font-family: 'Arial', sans-serif;
+}
+
+.font-family-verdana {
+  font-family: 'Verdana', sans-serif;
+}
+
+.font-family-helvetica {
+  font-family: 'Helvetica', sans-serif;
+}
+
+.font-family-tahoma {
+  font-family: 'Tahoma', sans-serif;
+}
+
+.font-family-trebuchet {
+  font-family: 'Trebuchet', sans-serif;
+}
+
+.font-family-times {
+  font-family: 'Times New Roman', serif;
+}
+
+.font-family-georgia {
+  font-family: 'Georgia', serif;
+}
+
+.font-family-garamond {
+  font-family: 'Garamond', serif;
+}
+
+.font-family-courier {
+  font-family: 'Courier New', monospace;
+}
+
+.font-family-brush {
+  font-family: 'Brush Script MT', cursive;
+}
+
 .text-align-center {
   text-align: center;
 }
