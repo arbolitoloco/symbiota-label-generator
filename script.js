@@ -27,8 +27,7 @@
  * [x] "Translator" function -> reads JSON and translates into formats
  * [x] Translator to read "fieldBlock" properties and add to builder
  * [x] Validate JSON for translation
- * [ ] Activate delimeter only when multiple fields exist in line?
- * [ ] Add tooltips
+ * [x] Add tooltips
  * [x] Line controls should be fixed on left/right side of line (only apply styles to label preview)
  * */
 
