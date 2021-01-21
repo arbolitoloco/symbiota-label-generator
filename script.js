@@ -26,10 +26,10 @@
  * [x] Default delimiter: space or comma
  * [x] "Translator" function -> reads JSON and translates into formats
  * [x] Translator to read "fieldBlock" properties and add to builder
- * [ ] Validate JSON for translation
+ * [x] Validate JSON for translation
  * [ ] Activate delimeter only when multiple fields exist in line?
  * [ ] Add tooltips
- * [ ] Line controls should be fixed on left/right side of line (only apply styles to label preview)
+ * [x] Line controls should be fixed on left/right side of line (only apply styles to label preview)
  * */
 
 /** Creating Page Elements/Controls
@@ -327,11 +327,27 @@ const fieldProps = [
 
 // Defines formatting buttons
 const formatsArr = [
-  { group: 'field', func: 'font-bold', icon: 'format_bold' },
-  { group: 'field', func: 'italic', icon: 'format_italic' },
-  { group: 'field', func: 'underline', icon: 'format_underlined' },
-  { group: 'field', func: 'uppercase', icon: 'format_size' },
-  { group: 'field-block', func: 'bar', icon: '', name: 'Add Bar' },
+  { group: 'field', func: 'font-bold', icon: 'format_bold', title: 'Bold' },
+  { group: 'field', func: 'italic', icon: 'format_italic', title: 'Italic' },
+  {
+    group: 'field',
+    func: 'underline',
+    icon: 'format_underlined',
+    title: 'Underline',
+  },
+  {
+    group: 'field',
+    func: 'uppercase',
+    icon: 'format_size',
+    title: 'Uppercase',
+  },
+  {
+    group: 'field-block',
+    func: 'bar',
+    icon: '',
+    name: 'Add Bar',
+    title: 'Add bar below line',
+  },
 ];
 
 // Defines dropdown style groups
@@ -431,6 +447,7 @@ formatsArr.forEach((format) => {
   btn.disabled = true;
   btn.dataset.func = format.func;
   btn.dataset.group = format.group;
+  btn.title = format.title;
   if (format.icon !== '') {
     let icon = document.createElement('span');
     icon.classList.add('material-icons');
