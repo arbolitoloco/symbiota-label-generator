@@ -4,33 +4,6 @@
  *  Version: 2020
  */
 
-/** TODO
- * [x] Fix Prefix/Suffix not being activated when item is selected
- * [x] When selecting field type, disable controls for other type
- * [x] Improve styles for control divs
- * [x] Get state of line?
- * [x] Replace "bar" button
- * [x] Add full list of current fields
- * [x] Add dropdown to filter fields
- * [x] Clean methods for unused code
- * [x] Show resulting JSON (add button to reveal) - improve display (remove alert)
- * [x] Improve text information (instructions)
- * [x] Deploy
- * [x] Add delimiter
- * [x] Pass delimiter to JSON format
- * [x] Capture delimiter state
- * [x] Reorder fieldBlocks... how?
- * [x] Clean unused code
- * [x] Only alow one field to be selected at once
- * [x] Add ability to remove lines/fields
- * [x] Default delimiter: space or comma
- * [x] "Translator" function -> reads JSON and translates into formats
- * [x] Translator to read "fieldBlock" properties and add to builder
- * [x] Validate JSON for translation
- * [x] Add tooltips
- * [x] Line controls should be fixed on left/right side of line (only apply styles to label preview)
- * */
-
 /** Creating Page Elements/Controls
  ******************************
  */
@@ -43,12 +16,6 @@ const fieldProps = [
     id: 'occid',
     group: 'specimen',
   },
-  // {
-  //   block: 'labelBlock',
-  //   name: 'Collection ID',
-  //   id: 'collid',
-  //   group: 'collection',
-  // },
   {
     block: 'labelBlock',
     name: 'Catalog Number',
