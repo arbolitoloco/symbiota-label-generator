@@ -12,6 +12,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed -->
 
+## [v2.2](https://github.com/arbolitoloco/symbiota-label-generator/releases/tag/v2.2) - 2021-02-02
+
+### Added
+
+- Formats labels to improve user readability
+- This changelog.
+
+### Fixed
+
+- There was a bug where fields that were positioned at the right side of the line were not being placed in their correct position.
+
 ## [v2.1](https://github.com/arbolitoloco/symbiota-label-generator/releases/tag/v2.1) - 2021-01-21
 
 ### Added
