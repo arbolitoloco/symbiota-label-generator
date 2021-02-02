@@ -6,6 +6,8 @@ Currently being integrated into [Symbiota-Light](https://github.com/BioKIC/Symbi
 
 Releases with changelogs available [here](https://github.com/arbolitoloco/symbiota-label-generator/releases).
 
+Changelog available [here](https://github.com/arbolitoloco/symbiota-label-generator/blob/main/CHANGELOG.md).
+
 ## Installation
 
 If you'd like to have this generator working in your local machine as a standalone option, all you have to do is:
