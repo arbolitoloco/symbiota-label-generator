@@ -342,8 +342,8 @@ const dropdownsArr = [
     group: 'field',
     options: [
       { value: '', text: 'Position in Line' },
-      { value: 'float-none', text: 'Original' },
-      { value: 'float-left', text: 'Left' },
+      { value: 'float-none', text: 'Original (Left)' },
+      // { value: 'float-left', text: 'Left' },
       { value: 'float-right', text: 'Right' },
     ],
   },
@@ -373,7 +373,8 @@ const dropdownsArr = [
       { value: '', text: 'Text Align' },
       { value: 'text-align-center', text: 'Center' },
       { value: 'text-align-right', text: 'Right' },
-      { value: 'text-align-justify', text: 'Justify' },
+      // { value: 'text-align-justify', text: 'Justify' },
+      { value: 'text-align-left', text: 'Left' },
     ],
   },
   {
@@ -382,16 +383,16 @@ const dropdownsArr = [
     group: 'field-block',
     options: [
       { value: '', text: 'Line Spacing Top' },
-      { value: 'mt-0', text: 'Top: 0' },
-      { value: 'mt-1', text: 'Top: 1' },
-      { value: 'mt-2', text: 'Top: 2' },
-      { value: 'mt-3', text: 'Top: 3' },
-      { value: 'mt-4', text: 'Top: 4' },
-      { value: 'mt-5', text: 'Top: 5' },
-      { value: 'mt-6', text: 'Top: 6' },
-      { value: 'mt-8', text: 'Top: 8' },
-      { value: 'mt-10', text: 'Top: 10' },
-      { value: 'mt-12', text: 'Top: 12' },
+      { value: 'mt-0', text: '0' },
+      { value: 'mt-1', text: '1' },
+      { value: 'mt-2', text: '2' },
+      { value: 'mt-3', text: '3' },
+      { value: 'mt-4', text: '4' },
+      { value: 'mt-5', text: '5' },
+      { value: 'mt-6', text: '6' },
+      { value: 'mt-8', text: '8' },
+      { value: 'mt-10', text: '10' },
+      { value: 'mt-12', text: '12' },
     ],
   },
   {
@@ -400,16 +401,16 @@ const dropdownsArr = [
     group: 'field-block',
     options: [
       { value: '', text: 'Line Spacing Bottom' },
-      { value: 'mb-0', text: 'Bottom: 0' },
-      { value: 'mb-1', text: 'Bottom: 1' },
-      { value: 'mb-2', text: 'Bottom: 2' },
-      { value: 'mb-3', text: 'Bottom: 3' },
-      { value: 'mb-4', text: 'Bottom: 4' },
-      { value: 'mb-5', text: 'Bottom: 5' },
-      { value: 'mb-6', text: 'Bottom: 6' },
-      { value: 'mb-8', text: 'Bottom: 8' },
-      { value: 'mb-10', text: 'Bottom: 10' },
-      { value: 'mb-12', text: 'Bottom: 12' },
+      { value: 'mb-0', text: '0' },
+      { value: 'mb-1', text: '1' },
+      { value: 'mb-2', text: '2' },
+      { value: 'mb-3', text: '3' },
+      { value: 'mb-4', text: '4' },
+      { value: 'mb-5', text: '5' },
+      { value: 'mb-6', text: '6' },
+      { value: 'mb-8', text: '8' },
+      { value: 'mb-10', text: '10' },
+      { value: 'mb-12', text: '12' },
     ],
   },
 ];
@@ -446,6 +447,10 @@ formatsArr.forEach((format) => {
 // Creates formatting (dropdown) controls in page
 dropdownsArr.forEach((dropObj) => {
   let targetDiv = document.getElementById(`${dropObj.group}-options`);
+  let lbl = document.createElement('label');
+  lbl.htmlFor = dropObj.id;
+  lbl.innerText = dropObj.options[0].text + ':';
+  lbl.style = 'display: block;';
   let slct = document.createElement('select');
   slct.dataset.group = dropObj.group;
   slct.classList.add('control');
@@ -458,6 +463,7 @@ dropdownsArr.forEach((dropObj) => {
     opt.innerText = choice.text;
     slct.appendChild(opt);
   });
+  targetDiv.appendChild(lbl);
   targetDiv.appendChild(slct);
 });
 

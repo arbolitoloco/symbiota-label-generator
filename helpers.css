@@ -231,6 +231,10 @@
   text-align: right;
 }
 
+.text-align-left {
+  text-align: left;
+}
+
 .text-align-justify {
   text-align: justify;
 }
