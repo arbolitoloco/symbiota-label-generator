@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed -->
 
+## [unreleased]
+
+### Fixed
+
+- There was a bug where the default delimiter space couldn't be removed.
+
 ## [v2.2](https://github.com/arbolitoloco/symbiota-label-generator/releases/tag/v2.2) - 2021-02-02
 
 ### Added

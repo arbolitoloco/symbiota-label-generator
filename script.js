@@ -690,6 +690,7 @@ function createFields(arr, target) {
 function addLine() {
   let line = document.createElement('div');
   line.classList.add('field-block', 'container');
+  line.dataset.delimiter = ' ';
   let midBlocks = document.querySelectorAll('#label-middle > .field-block');
   let close = document.createElement('span');
   close.classList.add('material-icons');
@@ -774,9 +775,9 @@ function refreshPreview() {
     let fieldBlockStyles = Array.from(block.classList).filter(isPrintStyle);
     fieldBlockStyles ? (itemsArr.className = fieldBlockStyles) : '';
     let fieldBlockDelim = block.dataset.delimiter;
-    fieldBlockDelim
-      ? (itemsArr.delimiter = fieldBlockDelim)
-      : (itemsArr.delimiter = ' ');
+    fieldBlockDelim == undefined
+      ? (itemsArr.delimiter = ' ')
+      : (itemsArr.delimiter = fieldBlockDelim);
   });
   // Clears preview div before appending elements
   preview.innerHTML = '';
