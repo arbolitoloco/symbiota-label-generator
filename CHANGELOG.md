@@ -18,9 +18,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Button to add a bar above line.
 
+### Changed
+
+- Added position "none" for field in line.
+
 ### Fixed
 
 - There was a bug where the default delimiter space couldn't be removed.
+- The preview label sometimes would display the fields in weird positions when they were positioned in the line.
 
 ## [v2.2](https://github.com/arbolitoloco/symbiota-label-generator/releases/tag/v2.2) - 2021-02-02
 

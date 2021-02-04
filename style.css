@@ -188,6 +188,7 @@ h5 {
 
 #preview-label .field-block {
   line-height: 1.1rem;
+  overflow: auto;
 }
 
 #preview-label>.field-block>div {
