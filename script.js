@@ -311,8 +311,15 @@ const formatsArr = [
     group: 'field-block',
     func: 'bar',
     icon: '',
-    name: 'Add Bar',
+    name: 'Bar Below',
     title: 'Add bar below line',
+  },
+  {
+    group: 'field-block',
+    func: 'bar-top',
+    icon: '',
+    name: 'Bar Above',
+    title: 'Add bar above line',
   },
 ];
 

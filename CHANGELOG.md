@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## Added
+
+- Button to add a bar above line.
+
 ### Fixed
 
 - There was a bug where the default delimiter space couldn't be removed.
