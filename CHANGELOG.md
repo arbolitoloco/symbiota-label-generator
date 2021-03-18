@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed -->
 
-## [unreleased]
+## [v2.3](https://github.com/arbolitoloco/symbiota-label-generator/releases/tag/v2.2) - 2021-03-18
 
 ## Added
 
